@@ -3,82 +3,72 @@
     {
       "tag": "greeting",
       "patterns": [
-        "Hi",
-        "Hey",
-        "How are you",
-        "Is anyone there?",
-        "Hello",
-        "Good day"
+        "Salam",
+        "Labas",
+        "Kif rak",
+        "Merhba",
+        "Sbah l-khir"
       ],
       "responses": [
-        "Hey :-)",
-        "Hello, thanks for visiting",
-        "Hi there, what can I do for you?",
-        "Hi there, how can I help?"
+        "Salam ",
+        "Merhba, shukran 3la ziyaratk",
+        "Labas, wach kayn chi 7aja nqdr n3awnek fiha?",
+        "Merhba, kifach nqdr n3awnek?"
       ]
     },
     {
       "tag": "goodbye",
-      "patterns": ["Bye", "See you later", "Goodbye"],
+      "patterns": ["Bslama", "Thala f rask", "Bslema"],
       "responses": [
-        "See you later, thanks for visiting",
-        "Have a nice day",
-        "Bye! Come back again soon."
+        "shukran 3la zyaratk",
+        "inchallah, ykun nhark mzyan",
+        "Bslama!",
+        "Thala frask",
+        "Salam alaikom"
       ]
     },
     {
       "tag": "thanks",
-      "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!"],
-      "responses": ["Happy to help!", "Any time!", "My pleasure"]
+      "patterns": ["Shukran", "Choukran", "layr7am biha lwalidin", "Choukran bzzaf!"],
+      "responses": ["Machi mouchkil!", "Kul wqt!", "3la rasi","Walidina o walidik"]
     },
     {
       "tag": "items",
       "patterns": [
-        "Which items do you have?",
-        "What kinds of items are there?",
-        "What do you sell?"
+        "achno kayn f sel3a?",
+        "Chno les produits li kaynin?",
+        "ach kat tbi3?",
+        "Wach kayn chi jadid?"
       ],
       "responses": [
-        "We sell coffee and tea",
-        "We have coffee and tea"
+        "Kanbi3 qehwa w atay",
+        "Kayn qehwa w atay"
       ]
     },
     {
       "tag": "payments",
       "patterns": [
-        "Do you take credit cards?",
-        "Do you accept Mastercard?",
-        "Can I pay with Paypal?",
-        "Are you cash only?"
+        "Wach katkhelso b credit cards?",
+        "Wach katkhelso b Mastercard?",
+        "Wach nqdr nkh b Paypal?",
+        "Wach dima f lflouss?"
       ],
       "responses": [
-        "We accept VISA, Mastercard and Paypal",
-        "We accept most major credit cards, and Paypal"
+        "Kanqblo VISA, Mastercard w Paypal",
+        "Kanqblo l2aghlabiyacredit cards o Paypal"
       ]
     },
     {
       "tag": "delivery",
       "patterns": [
-        "How long does delivery take?",
-        "How long does shipping take?",
-        "When do I get my delivery?"
+        "Chhal dial lwe9t katched livraison?",
+        "Fin n9ed nakhod ma livraison?"
       ],
       "responses": [
-        "Delivery takes 2-4 days",
-        "Shipping takes 2-4 days"
-      ]
-    },
-    {
-      "tag": "funny",
-      "patterns": [
-        "Tell me a joke!",
-        "Tell me something funny!",
-        "Do you know a joke?"
-      ],
-      "responses": [
-        "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
-        "What did the buffalo say when his son left for college? Bison."
+        "Tfout kaykhd 2-4 ayam",
+        "Shipping kaykhd 2-4 ayam"
       ]
     }
+    
   ]
 }

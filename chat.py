@@ -25,12 +25,12 @@ model = NeuralNet(input_size, hidden_size, output_size).to(device)
 model.load_state_dict(model_state)
 model.eval()
 
-bot_name = "Sam"
-print("Let's chat! (type 'quit' to exit)")
+bot_name = "Sahbek"
+print("Salamoalaikom! (kteb 'Salina' bach tkhroj )")
 while True:
     # sentence = "do you use credit cards?"
-    sentence = input("You: ")
-    if sentence == "quit":
+    sentence = input("user: ")
+    if sentence == "salina":
         break
 
     sentence = tokenize(sentence)
