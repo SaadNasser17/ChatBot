@@ -1,74 +1,115 @@
 {
   "intents": [
     {
-      "tag": "greeting",
+      "tag": "greeting1",
       "patterns": [
-        "Salam",
-        "Labas",
-        "Kif rak",
-        "Merhba",
-        "Sbah l-khir"
+        "Salam"
       ],
       "responses": [
-        "Salam ",
-        "Merhba, shukran 3la ziyaratk",
-        "Labas, wach kayn chi 7aja nqdr n3awnek fiha?",
-        "Merhba, kifach nqdr n3awnek?"
+        "Salam , wach kayn chi 7aja nqdr n3awnek fiha?",
+        "wa alaikom salam, wach kayn chi 7aja nqdr n3awnek fiha?"
+      ]
+    },
+    {
+      "tag": "greeting2",
+      "patterns": [
+        "Sbah lkhir",
+        "Sbah lkhire",
+        "Sbah lkher"
+      ],
+      "responses": [
+        "Sbah nor, wach kayn chi 7aja nqdr n3awnek fiha? "
+      ]
+    },
+    {
+      "tag": "greeting3",
+      "patterns": [
+        "سلام",
+        "سلام"
+      ],
+      "responses": [
+        "سلام ,واش كاين شي حاجة نقدرو نعاونك فيها؟",
+        "وعليكم السلام ،واش كاين شي حاجة نقدر نعاونك فيها؟"
+      ]
+    },
+    {
+      "tag": "greeting4",
+      "patterns": [
+        "صباح الخير"
+      ],
+      "responses": [
+        "صباح النور، واش كاين شي حاجة نقدر نعاونك فيها؟"
+      ]
+    },
+    {
+      "tag": "greeting5",
+      "patterns": [
+        "صباح النور"
+      ],
+      "responses": [
+        "صباح الخير،واش كاين شي حاجة نقدرو نعاونك فيها؟"
       ]
     },
     {
       "tag": "goodbye",
-      "patterns": ["Bslama", "Thala f rask", "Bslema"],
+      "patterns": [
+        "Bslama",
+        "Bslema"
+      ],
       "responses": [
-        "shukran 3la zyaratk",
-        "inchallah, ykun nhark mzyan",
-        "Bslama!",
-        "Thala frask",
-        "Salam alaikom"
+        "Bslama, shukran 3la zyaratk",
+        "Bslama, shukran 7it ta9ti fina"
       ]
     },
     {
       "tag": "thanks",
-      "patterns": ["Shukran", "Choukran", "layr7am biha lwalidin", "Choukran bzzaf!"],
-      "responses": ["Machi mouchkil!", "Kul wqt!", "3la rasi","Walidina o walidik"]
-    },
-    {
-      "tag": "items",
       "patterns": [
-        "achno kayn f sel3a?",
-        "Chno les produits li kaynin?",
-        "ach kat tbi3?",
-        "Wach kayn chi jadid?"
+        "Shukran",
+        "Choukran",
+        "Choukran bzzaf!"
       ],
       "responses": [
-        "Kanbi3 qehwa w atay",
-        "Kayn qehwa w atay"
+        "Machi mouchkil, marhba"
       ]
     },
     {
-      "tag": "payments",
+      "tag": "thanks",
       "patterns": [
-        "Wach katkhelso b credit cards?",
-        "Wach katkhelso b Mastercard?",
-        "Wach nqdr nkh b Paypal?",
-        "Wach dima f lflouss?"
+        "layr7am biha lwalidin"
       ],
       "responses": [
-        "Kanqblo VISA, Mastercard w Paypal",
-        "Kanqblo l2aghlabiyacredit cards o Paypal"
+        "Walidina o walidik"
       ]
     },
     {
-      "tag": "delivery",
+      "tag": "goodbye",
       "patterns": [
-        "Chhal dial lwe9t katched livraison?",
-        "Fin n9ed nakhod ma livraison?"
+        "بسلامة"
       ],
       "responses": [
-        "Tfout kaykhd 2-4 ayam",
-        "Shipping kaykhd 2-4 ayam"
+        "بسلامة، شكرا على زيارتك",
+        "بسلامة، شكرا حتى تقتي فينا"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "شكرا",
+        "شكرا جزيلاً",
+        "شكرا بزاف"
+      ],
+      "responses": [
+        "ماشي مشكل، مرحبا"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "الله يرحم بيها الوليدين"
+      ],
+      "responses": [
+        "والدينا ووالديك"
       ]
     }
-    
   ]
 }
