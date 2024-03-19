@@ -1,15 +1,16 @@
+from flask import Flask, render_template, request, jsonify
 import random
 import json
-
 import torch
-
-from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
+from model import NeuralNet
+
+app = Flask(__name__)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('intents.json', 'r') as json_data:
-    intents = json.load(json_data)
+with open('intents.json', 'r', encoding='utf-8') as f:
+    intents = json.load(f)
 
 FILE = "data.pth"
 data = torch.load(FILE)
@@ -26,14 +27,19 @@ model.load_state_dict(model_state)
 model.eval()
 
 bot_name = "Sahbek"
-print("Salamoalaikom! (kteb 'Salina' bach tkhroj )")
-while True:
-    # sentence = "do you use credit cards?"
-    sentence = input("user: ")
-    if sentence == "salina":
-        break
 
-    sentence = tokenize(sentence)
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/get_response', methods=['POST'])
+def get_bot_response():
+    user_input = request.form['user_input']
+
+    if user_input.lower() == "salina":
+        return jsonify({'response': 'Goodbye!'})
+
+    sentence = tokenize(user_input)
     X = bag_of_words(sentence, all_words)
     X = X.reshape(1, X.shape[0])
     X = torch.from_numpy(X).to(device)
@@ -48,6 +54,10 @@ while True:
     if prob.item() > 0.75:
         for intent in intents['intents']:
             if tag == intent["tag"]:
-                print(f"{bot_name}: {random.choice(intent['responses'])}")
+                response = random.choice(intent['responses'])
+                return jsonify({'response': response})
     else:
-        print(f"{bot_name}: I do not understand...")
+        return jsonify({'response': 'Mafhamtch'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
