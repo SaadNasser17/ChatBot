@@ -1,0 +1,114 @@
+{
+  "intents": [
+    {
+      "tag": "greeting1",
+      "patterns": [
+        "Salam"
+      ],
+      "responses": [
+        "Salam, marhba bik ana NabadyBot lmosa3id l iftiradi li kiyakhod les rendez vous ",
+        "wa alaikom salam, marhba bik ana NabadyBot chatbot li kiyakhod  les rendez vous"
+      ]
+    },
+    {
+      "tag": "greeting2",
+      "patterns": [
+        "Sbah lkhir",
+        "Sbah lkhire",
+        "Sbah lkher"
+      ],
+      "responses": [
+        "Sbah nor, marhba bik ana NabadyBot lmosa3id l iftiradi li kiyakhod les rendez vous  "
+      ]
+    },
+    {
+      "tag": "greeting3",
+      "patterns": [
+        "سلام"
+      ],
+      "responses": [
+        "سلام ",
+        "وعليكم السلام "
+      ]
+    },
+    {
+      "tag": "greeting4",
+      "patterns": [
+        "صباح الخير"
+      ],
+      "responses": [
+        "صباح النور"
+      ]
+    },
+    {
+      "tag": "greeting5",
+      "patterns": [
+        "صباح النور"
+      ],
+      "responses": [
+        "صباح الخير"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Bslama",
+        "Bslema"
+      ],
+      "responses": [
+        "Bslama, shukran 3la zyaratk",
+        "Bslama, shukran 7it ta9ti fina"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "Shukran",
+        "Choukran",
+        "Choukran bzzaf!"
+      ],
+      "responses": [
+        "Machi mouchkil, marhba"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "layr7am biha lwalidin"
+      ],
+      "responses": [
+        "Walidina o walidik"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "بسلامة"
+      ],
+      "responses": [
+        "بسلامة، شكرا على زيارتك",
+        "بسلامة، شكرا حتى تقتي فينا"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "شكرا",
+        "شكرا جزيلاً",
+        "شكرا بزاف"
+      ],
+      "responses": [
+        "ماشي مشكل، مرحبا"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "الله يرحم بيها الوليدين"
+      ],
+      "responses": [
+        "والدينا ووالديك"
+      ]
+    }
+  ]
+}
