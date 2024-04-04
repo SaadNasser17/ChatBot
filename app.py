@@ -5,7 +5,9 @@ import random
 
 app = Flask(__name__)
 
-# Chargez les intentions depuis le fichier JSON
+intents_data = {}
+
+
 with open('intents.json', 'r', encoding='utf-8') as file:
     intents_data = json.load(file)
 
@@ -20,11 +22,30 @@ def get_response(message):
 def index_get():
     return render_template("base.html")
 
-@app.post("/predict")
+@app.route("/predict", methods=["POST"])
 def predict():
-    text = request.get_json().get("message")
-    response = get_response(text)
-    return jsonify({"answer": response})
+    data = request.get_json()
+    message = data["message"]
+    intent_tag = get_intent(message)  # Use get_intent function to find intent tag
+    response, tag = get_response_and_tag(intent_tag)  # Get response based on intent tag
+    return jsonify({"answer": response, "tag": tag})
+
+def get_intent(message):
+    message = message.lower()
+    for intent in intents_data["intents"]:
+        for pattern in intent["patterns"]:
+            # Simple pattern matching
+            if pattern.lower() in message:
+                return intent["tag"]
+    return "default"
+
+def get_response_and_tag(intent_tag):
+    for intent in intents_data["intents"]:
+        if intent["tag"] == intent_tag:
+            response = random.choice(intent["responses"])
+            return response, intent_tag
+    # Default response if no intent is found
+    return "Je ne comprends pas bien. Pouvez-vous préciser votre demande ?", "default"
 
 @app.route("/get_specialties")
 def get_specialties():
@@ -59,11 +80,6 @@ def get_doctors():
         return jsonify({"error": "Failed to fetch doctors"}), 500
 
 
-@app.route('/get_doctor_details', methods=['POST'])
-def get_doctor_details():
-    doctor_id = request.json.get('doctorId')
-    doctor_details = {'agendaConfig': 'Doctor agenda details here'}
-    return jsonify(doctor_details)
 
     
 
