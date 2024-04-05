@@ -81,7 +81,42 @@ def get_doctors():
 
 
 
+
+@app.route("/get_doctor_appointments_by_name", methods=["POST"])
+def get_doctor_appointments_by_name():
+    data = request.get_json()
+    doctor_name = data.get("doctor_name")
+
+    # Recherchez le médecin pour obtenir l'ID praticienCentreSoins
+    response = requests.post(
+        "https://apiuat.nabady.ma/api/users/medecin/search",
+        json={
+            "query": doctor_name,
+            # Ajoutez ici les autres paramètres nécessaires pour la requête API
+        }
+    )
     
+    if response.ok:
+        doctors_data = response.json()
+        
+        # Supposons que doctors_data['praticien']['data'] contient les infos des médecins
+        for doctor_info in doctors_data['praticien']['data']:
+            if doctor_name.lower() in (doctor_info['0']['lastname'].lower(), doctor_info['0']['firstname'].lower()):
+                praticien_centre_soin_id = doctor_info['0']['praticienCentreSoins'][0]['id']
+                
+                # Maintenant que nous avons l'ID, obtenons les rendez-vous du médecin
+                appointments_response = requests.get(f"https://apiuat.nabady.ma/api/holidays/praticienCs/{praticien_centre_soin_id}/day/0/limit/3")
+                if appointments_response.ok:
+                    return jsonify(appointments_response.json()), 200
+                else:
+                    return jsonify({"error": "Failed to fetch appointments"}), appointments_response.status_code
+                
+        return jsonify({"error": "Doctor not found"}), 404
+    else:
+        return jsonify({"error": "Failed to search doctors"}), response.status_code
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

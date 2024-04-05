@@ -8,13 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 textfield: document.querySelector('#userMessage'),
                 chatMessages: document.querySelector('.chatbox__messages')
             };
-            this.args.chatMessages.addEventListener('click', (event) => {
-                if (event.target.classList.contains('view-agenda')) {
-                    // Extract doctor ID from data attribute (you'll need to set this up in your message rendering)
-                    const doctorId = event.target.dataset.doctorId;
-                    this.fetchDoctorAgenda(doctorId);
-                }
-            });
+            
         
             this.state = false;
             this.messages = [];
@@ -207,30 +201,30 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           
                   
-        displayDoctorList(data) {
+          displayDoctorList(data) {
             let doctorsMessage = "<div class='doctor-list'>";
             if (data.praticien && Array.isArray(data.praticien.data)) {
                 data.praticien.data.forEach(item => {
                     const doctor = item["0"];
-                    if (doctor) {
-                        // Format agendaConfig into a data attribute string
-                        let agendaConfigData = '';
-                        if (doctor.praticienCentreSoins) {
-                            doctor.praticienCentreSoins.forEach(center => {
-                                if (center.agendaConfig) {
-                                    // Convert the agendaConfig object to a data attribute string
-                                    agendaConfigData = Object.entries(center.agendaConfig).map(([key, val]) => `data-${key}="${val}"`).join(' ');
-                                }
-                            });
-                        }
-        
+                    if (doctor && doctor.praticienCentreSoins) {
+                        // Récupérer l'agendaConfig pour ce médecin
+                        const agendaConfig = doctor.praticienCentreSoins[0].agendaConfig;
                         doctorsMessage += `
-                            <div class='doctor-info'>
+                            <div class='doctor-info' data-doctor-id='${doctor.praticienCentreSoins[0].id}'>
                                 <strong>Dr. ${doctor.lastname} ${doctor.firstname}</strong><br>
                                 Tel: ${doctor.tel}<br>
                                 Email: <a href='mailto:${doctor.email}'>${doctor.email}</a><br>
                                 Adresse: ${doctor.adresse}<br>
-                                <button class='view-agenda' ${agendaConfigData}>Voir l'agenda</button>
+                                <div class='agenda-details'>
+                                    <strong>Agenda:</strong><br>
+                                    Heure d'ouverture: ${agendaConfig.heureOuverture}<br>
+                                    Heure de fermeture: ${agendaConfig.heureFermeture}<br>
+                                    Granularité: ${agendaConfig.granularite}<br>
+                                </div>
+                             
+                                <button class='book-appointment' data-doctor-id='${doctor.praticienCentreSoins[0].id}'>Rendez-vous</button>
+                                <!-- Un nouvel emplacement pour les détails des rendez-vous ici -->
+                                <div class='appointments-container'></div>
                             </div>`;
                     }
                 });
@@ -238,79 +232,65 @@ document.addEventListener('DOMContentLoaded', () => {
                 doctorsMessage += "<div>Aucun médecin trouvé.</div>";
             }
             doctorsMessage += "</div>";
-        
             this.displayBotMessage(doctorsMessage);
             this.addAgendaButtonListeners();
-        }
+          }
+          
 
-        addAgendaButtonListeners() {
-            const buttons = document.querySelectorAll('.view-agenda');
-            buttons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const doctorInfoDiv = e.target.closest('.doctor-info');
-                    const agendaConfig = Array.from(e.target.attributes)
-                                              .filter(attr => attr.name.startsWith('data-'))
-                                              .reduce((config, attr) => {
-                                                  const attrName = attr.name.replace('data-', '');
-                                                  config[attrName] = attr.value;
-                                                  return config;
-                                              }, {});
-                    this.appendAgendaDetails(doctorInfoDiv, agendaConfig);
+        
+addAgendaButtonListeners() {
+
+    document.querySelectorAll('.book-appointment').forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Log pour débogage
+            console.log('Bouton "Rendez-vous occupés" cliqué avec ID:', e.target.dataset.doctorId);
+            this.fetchAppointments(e.target.dataset.doctorId);
+        });
+    });
+}
+
+        
+        fetchAppointments(doctorId) {
+            fetch(`https://apiuat.nabady.ma/api/holidays/praticienCs/${doctorId}/day/0/limit/3`)
+                .then(response => response.json())
+                .then(appointmentsData => {
+                    this.displayAppointments(doctorId, appointmentsData);
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des rendez-vous:', error);
                 });
-            });
         }
-        
-        appendAgendaDetails(doctorInfoDiv, agendaConfig) {
-            // Create a container for the agenda details if not already present
-            let agendaDetailsContainer = doctorInfoDiv.querySelector('.agenda-details');
-            if (!agendaDetailsContainer) {
-                agendaDetailsContainer = document.createElement('div');
-                agendaDetailsContainer.classList.add('agenda-details');
-                doctorInfoDiv.appendChild(agendaDetailsContainer);
-            }
-        
-            // Populate the agenda details container with the agendaConfig info
-            agendaDetailsContainer.innerHTML = `
-                <div>Heure d'ouverture: ${agendaConfig.heureouverture}</div>
-                <div>Heure de fermeture: ${agendaConfig.heurefermeture}</div>
-                <div>Granularité: ${agendaConfig.granularite}</div>
-                <!-- Include additional agendaConfig details as needed -->
-            `;
-            // Optionally, hide the "Voir l'agenda" button after displaying the details
-            const agendaButton = doctorInfoDiv.querySelector('.view-agenda');
-            if (agendaButton) {
-                agendaButton.style.display = 'none';
+
+        displayAppointments(doctorId, appointmentsData) {
+            let appointmentsHtml = '<div class="appointments-container">';
+            appointmentsData.rdv.forEach(appointment => {
+                const startTime = new Date(appointment['0'].start);
+                const endTime = new Date(appointment['0'].end);
+                appointmentsHtml += `
+                    <div class="appointment-item">
+                        <div>Debut: ${startTime.toLocaleString()}</div>
+                        <div>Fin: ${endTime.toLocaleString()}</div>
+                    </div>`;
+            });
+            appointmentsHtml += '</div>';
+          
+            // Trouver le conteneur du médecin spécifique grâce à l'ID et y ajouter les détails des rendez-vous
+            const doctorInfoDiv = document.querySelector(`.doctor-info[data-doctor-id="${doctorId}"]`);
+            if (doctorInfoDiv) {
+                const appointmentsContainer = doctorInfoDiv.querySelector('.appointments-container');
+                if (appointmentsContainer) {
+                    appointmentsContainer.innerHTML = appointmentsHtml;
+                } else {
+                    const newAppointmentsContainer = document.createElement('div');
+                    newAppointmentsContainer.classList.add('appointments-container');
+                    newAppointmentsContainer.innerHTML = appointmentsHtml;
+                    doctorInfoDiv.appendChild(newAppointmentsContainer);
+                }
             }
         }
 
-        fetchDoctorAgenda(doctorId) {
-            // Make an API call to fetch the agendaConfig using the doctorId
-            // For example, if your API endpoint is "/get_doctor_agenda":
-            fetch(`/get_doctor_agenda`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ doctorId: doctorId })
-            })
-            .then(response => response.json())
-            .then(agendaConfig => {
-                // Now format the agendaConfig and display it in the chat
-                this.displayAgendaConfig(agendaConfig);
-            })
-            .catch(error => {
-                console.error('Error fetching doctor agenda:', error);
-            });
-        }
-        
-        displayAgendaConfig(agendaConfig) {
-            // Format and display the agendaConfig details
-            let agendaDetails = `<div class='agenda-details'>`;
-            for (const [key, value] of Object.entries(agendaConfig)) {
-                agendaDetails += `<div>${key}: ${value}</div>`;
-            }
-            agendaDetails += `</div>`;
-            
-            this.displayBotMessage(agendaDetails);
-        }
+       
+
 
 
 

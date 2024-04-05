@@ -7,7 +7,7 @@
 body {
     font-family: 'Nunito', sans-serif;
     font-weight: 400;
-    font-size: 100%;
+    font-size: 85%;
     background: #F1F1F1;
 }
 
@@ -315,3 +315,62 @@ body {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+
+
+
+
+
+
+
+
+.doctor-info {
+    border: 1px solid #e1e1e1;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.doctor-info strong {
+    color: #333;
+    font-size: 1.2em;
+}
+
+.appointments-container {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border-top: 1px solid #e1e1e1;
+}
+
+.appointment-item {
+    background-color: #e7f4ff;
+    border: 1px solid #d1eaff;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.appointment-item div {
+    font-size: 0.9em;
+    color: #333;
+}
+
+/* Boutons pour voir l'agenda et prendre rendez-vous */
+.view-agenda,
+.book-appointment {
+    padding: 5px 15px;
+    margin-right: 5px;
+    background-color: #5c9ccc;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.view-agenda:hover,
+.book-appointment:hover {
+    background-color: #4a8bb1;
+}
+
+/* Ajouter d'autres styles ici selon vos préférences */
