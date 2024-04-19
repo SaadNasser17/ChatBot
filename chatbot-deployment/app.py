@@ -16,7 +16,7 @@ def get_response(message):
         # Convertissez tous les modèles en minuscules pour une comparaison insensible à la casse
         if message.lower() in (pattern.lower() for pattern in intent["patterns"]):
             return random.choice(intent["responses"])
-    return "Je ne comprends pas bien. Pouvez-vous préciser votre demande ?"
+    return "Mafhamtch t9der t3awd"
 
 @app.get("/")
 def index_get():
@@ -45,7 +45,7 @@ def get_response_and_tag(intent_tag):
             response = random.choice(intent["responses"])
             return response, intent_tag
     # Default response if no intent is found
-    return "Je ne comprends pas bien. Pouvez-vous préciser votre demande ?", "default"
+    return "Mafhemtch t9dr t3wad ?", "default"
 
 @app.route("/get_specialties")
 def get_specialties():
@@ -78,9 +78,6 @@ def get_doctors():
         return jsonify(doctors_data)
     else:
         return jsonify({"error": "Failed to fetch doctors"}), 500
-
-
-
 
 @app.route("/get_doctor_appointments_by_name", methods=["POST"])
 def get_doctor_appointments_by_name():

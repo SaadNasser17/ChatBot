@@ -373,4 +373,19 @@ body {
     background-color: #4a8bb1;
 }
 
+.available-appointment {
+    display: block;
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.available-appointment:hover {
+    background-color: #45a049;
+}
+
 /* Ajouter d'autres styles ici selon vos préférences */
