@@ -61,3 +61,12 @@ body {
 	/* background-color: black; */
 }
 
+input:focus, textarea:focus, select:focus{
+	outline: none;
+}
+
+#scroll{
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}

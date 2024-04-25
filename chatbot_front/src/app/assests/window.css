@@ -57,16 +57,30 @@
 	display: flex;
 	flex-direction: column;
 	height: 300px;
-	padding:5px 8px;
+	padding:10px 18px;
 	overflow-y: auto;
 	font-size: 14px;
 }
 
 .msg{
-	background-color: #eee;
-	padding:5px 8px;
+	/* background-color: #eee; */
+	padding:7px 15px;
 	width: fit-content;
 	border-radius: 10px;
+	margin: 5px 0px;
+	font-weight: 500;
+}
+
+.bot{
+	background-color: #fff;
+	color: #000;
+	align-self: flex-start;
+}
+
+.usr{
+	background-color: #008ffc;
+	color: #fff;
+	align-self: flex-end;
 }
 
 .send{
@@ -79,4 +93,49 @@
 	background: linear-gradient(268.91deg, #26a5bf -2.14%, #00b3fa77 99.69%);
 	border-bottom-left-radius: 20px;
 	border-bottom-right-radius: 20px;
+}
+
+.input{
+	background: #fff;
+	border-radius: 20px;
+	padding: 10px 20px;
+	font-size: 0.9rem;
+	text-decoration: none;
+	border-color: #fff;
+	&:focus{
+		outline: none;
+	}
+	/* width: 100%; */
+}
+
+.send button{
+	color : white;
+	font-weight: 600;
+	font-size: 14px;
+	/* letter-spacing: 0.5px; */
+	padding: 10px 20px;
+	background-color: #008ffc;
+	border-radius: 30px;
+	border: bold 1px #fff;
+	cursor: pointer;
+	&:hover{
+		background-color: #2e00fa;
+	}
+	&:active{
+		scale: 1.07;
+	}
+}
+
+.selectBox{
+	padding: 5px 15px;
+	border-radius: 15px;
+	font-size: 14px;
+	width: fit-content;
+	/* max-width: 250px; */
+
+	background-color: #EFEFEF;
+	& select{
+		width: 200px;
+	}
+	/* width: 100%; */
 }
