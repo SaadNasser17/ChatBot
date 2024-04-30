@@ -6,11 +6,13 @@ stemmer = PorterStemmer()
 
 
 def tokenize(sentence):
-    """
-    split sentence into array of words/tokens
-    a token can be a word or punctuation character, or number
-    """
-    return nltk.word_tokenize(sentence)
+    # Ici, ajoutez une logique pour nettoyer la phrase, par exemple en éliminant les espaces superflus
+    sentence = sentence.strip()
+    if not sentence:
+        return []  # Retourner une liste vide si la phrase est vide
+    # Continuez le traitement normal ici
+    return [word for word in nltk.word_tokenize(sentence) if word.isalpha()]  # Filtrer pour inclure seulement les mots alphabétiques
+
 
 
 def stem(word):

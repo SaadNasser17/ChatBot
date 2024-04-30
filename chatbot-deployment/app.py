@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import requests
 import json
 import random
-
+import os
 app = Flask(__name__)
 
 intents_data = {}
@@ -111,9 +111,74 @@ def get_doctor_appointments_by_name():
         return jsonify({"error": "Doctor not found"}), 404
     else:
         return jsonify({"error": "Failed to search doctors"}), response.status_code
+    
+@app.route('/get_doctors_agenda', methods=['GET'])
+def get_doctors_agenda():
+    url = 'https://apiuat.nabady.ma/api/users/medecin/search'
+    data = {
+        "query": "",  # Modify this query as needed to fetch specific doctors or all doctors
+        "consultation": "undefined",
+        "page": 1,
+        "result": 5,  # You can adjust this number based on how many results you want
+        "isIframe": False,
+        "referrer": ""
+    }
+    headers = {'Content-Type': 'application/json'}
 
+    response = requests.post(url, json=data, headers=headers)
+    if response.status_code == 200:
+        doctors = response.json()['praticien']['data']
+        results = []
+        for doctor in doctors:
+            if 'agendaConfig' in doctor:
+                agenda_config = doctor['agendaConfig']
+                results.append({
+                    'name': f"{doctor.get('firstname', '').strip()} {doctor.get('lastname', '').strip()}",
+                    'praticien_centre_soin_id': doctor['id'],
+                    'agenda_config': agenda_config
+                })
+        return jsonify(results)
+    else:
+        return jsonify({'error': 'Failed to fetch doctors'}), response.status_code
 
+@app.route('/save_appointment', methods=['POST'])
+def save_appointment():
+    data = request.get_json()  # Get data sent from the frontend
+    directory = '/path/to/your/directory'  # Set this to your desired folder
+    filename = 'appointments.json'
+    
+    # Combine path and filename
+    filepath = os.path.join(directory, filename)
+    
+    # Check if file exists, append to it if it does
+    if os.path.isfile(filepath):
+        with open(filepath, 'r+') as file:
+            file_data = json.load(file)
+            file_data['praticien']['data'].append(data)  # Append new data
+            file.seek(0)
+            json.dump(file_data, file, indent=4)
+    else:
+        # If the file doesn't exist, create it and write the data
+        with open(filepath, 'w') as file:
+            json.dump({"praticien": {"data": [data]}}, file, indent=4)
 
+    return jsonify({"message": "Data saved successfully!"})
 
+@app.route('/submit_details', methods=['POST'])
+def submit_details():
+    data = request.json
+    userName = data['userName']
+    userPhone = data['userPhone']
+    doctorName = data['doctorName']
+    timeSlot = data['timeSlot']
+    
+    # Store the details in JSON or CSV as needed
+    # ... Your logic for storage ...
+
+    # Create a recap message
+    recap_message = f"hahoma lma3lomat dyalk\n{userName}\n{userPhone}\n{doctorName}\n{timeSlot}"
+    
+    # Send recap message back to frontend
+    return jsonify({'recapMessage': recap_message})
 if __name__ == "__main__":
     app.run(debug=True)

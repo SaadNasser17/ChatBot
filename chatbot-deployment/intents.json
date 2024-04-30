@@ -3,62 +3,158 @@
     {
       "tag": "greeting1",
       "patterns": [
-        "Salam"
+        "Salam","Selam","cc","ach ka t3awd", "fin", "nharek mbrok", "kif lhal","fin chadha?",
+        "Ahlan",
+        "Marhaban"
       ],
       "responses": [
-        "Salam, marhba bik ana NabadyBot lmosa3id l iftiradi li kiyakhod les rendez vous ",
-        "wa alaikom salam, marhba bik ana NabadyBot chatbot li kiyakhod  les rendez vous"
-      ]
+        "Salam, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?" ]
+      
     },
-    {
-      "tag": "rendez-vous",
-      "patterns": ["Salam, bghyt nakhod un rendez-vous."],
-      "responses": ["Salam! Je peux vous aider avec ça. Pour quelle spécialité cherchez-vous un médecin?"]
-    },
+    
     {
       "tag": "greeting2",
       "patterns": [
         "Sbah lkhir",
+        "Sb7 el kheir",
         "Sbah lkhire",
-        "Sbah lkher"
+        "Sbah lkher",
+        "Sbah el full, kayn chi jdid?",
+        "sabaho"
       ],
       "responses": [
-        "Sbah nor, marhba bik ana NabadyBot lmosa3id l iftiradi li kiyakhod les rendez vous  "
-      ]
+        "Sbah nor, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?" ]
+      
     },
     {
       "tag": "greeting3",
       "patterns": [
-        "سلام"
+        "سلام",
+        "السلام عليكم",
+        "كيف الحال؟","مرحبا","اش كتعاود؟","فين",
+        "كيف لحال؟","نهارك مبروك","فين شادها"
+
       ],
       "responses": [
-        "سلام ",
-        "وعليكم السلام "
-      ]
+        "Salam, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?" ]
+        
     },
     {
       "tag": "greeting4",
       "patterns": [
-        "صباح الخير"
+        "صباح الخير", "صباح النور", "صباح الفل","صباح الخيرات","صباحكم زين"
       ],
       "responses": [
-        "صباح النور"
+        "Salam, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?"      ]
+    },
+    
+    
+    {
+      "tag": "thanks1",
+      "patterns": [
+        "Shukran","chokran lik","ka nchokrek","merci","barakallah fik","choukrane","shukran bzaf","merci beaucoup","tbarkallah 3lik",
+        "Choukran","mcharfin","tcharaft bik","tchareft bma3riftek",
+        "Choukran bzzaf!"
+      ],
+      "responses": [
+        "bkol fara7, marhba"
       ]
     },
     {
-      "tag": "greeting5",
+      "tag": "thanks2",
       "patterns": [
-        "صباح النور"
+        "شكرا","شكرا ليك","كنشكرك","تبارك الله","مشرفين","تشرفت بيك","تشرفت بمعرفتك",
+        "شكرا جزيلاً",
+        "شكرا بزاف","مشكور"
       ],
       "responses": [
-        "صباح الخير"
+        "ماشي مشكل، مرحبا", "العفو، هذا واجبي"
+      ]
+    },
+    {
+      "tag": "iam",
+      "patterns": [
+        "chkoun nta?","chkon nta","chkoun m3aya","ach smitek","3arefni b rasek","achno smitek","achno smiytek","achno ismek","chno ismek","chno hiya smitek","ach semak lah","chkon m3aya"
+      ],
+      "responses": [
+        "ana smiyti NabadyBot, bot maghribi "
+      ]
+    },
+    {
+      "tag": "iam1",
+      "patterns": [
+        "شكون نتا؟","شكون معايا","اش سميتك","عرفني براسك","اشنو سميتك","اشنو اسمك","شنو اسمك","شنو هي سميتك","اش سماك الله","شكون معايا"
+      ],
+      "responses": [
+        "انا سميتي نابادي بوت، بوت مغربي"
+      ]
+    },
+    {
+      "tag": "help0",
+      "patterns": [
+        "momkin nssewlek","bghit nsewlek ","nsewlek","nssawlek","3andi so2al ","momkin tjawbni","jawbni"
+      ],
+      "responses": [
+        "Merhba, ila 9dert n3awnek"
+      ]
+    },
+    {
+      "tag": "help01",
+      "patterns": [
+        "ممكن نسولك","بغيت نسولك","نسولك","عندي سؤال","ممكن تجاوب","جوبني"
+      ],
+      "responses": [
+        "مرحبا، الا قدرت نعاوك"
+      ]
+    },
+    {
+      "tag": "thanks4",
+      "patterns": [
+        "layr7am biha lwalidin", "baraka allah fik",
+        "allah yjazik bil khir"
+      ],
+      "responses": [
+        "Merhba, Walidina o walidik"
+      ]
+    },
+    
+    {
+      "tag": "thanks0",
+      "patterns": [
+        "الله ارحم لواليدين","الله ارحم بها لواليدين",
+        "بارك الله فيك","الله اجازيك بالخير","الله اجازيك بلخير"
+      ],
+      "responses": [
+        "مرحبا، واليدينا و واليديك "
+      ]
+    },
+
+    {
+      "tag": "rdv",
+      "patterns": [
+        "bghyt nakhod maw3id","bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib", 
+          "kanqalbek 3la rdv", "wach mumkin ndowz", "bghyt nqabbel doktor", 
+          "bghyt n7jz", "kanqalbek 3la wqt","bghit ndir rendez-vous","bghit ndir rdv","bghit nakhod rendez vous","bghit nakhod rendez-vous","bghit nakhod rdv","bghit nakhod maw3id","bghyt nakhod maou3id","bghyt na7jez maw3id","bghyt ne7jez maou3id",
+          "momkin nji l clinic?",
+          "bghit n3ayet l doctor","bghit n3ayet l docteur","bghit n3ayet l tbib",
+          "kayn chi rdv disponible?",
+          "bghit nchouf docteur", "bghit nchouf tbib",
+          "fin momkin nl9a rdv?","fin momkin nakhod rdv?",
+          "wach momkin nl9a rendez-vous lyoma?",
+          "bghit nreserve wa9t m3a tbib",
+          "mnin ymkni ndir rendez-vous?",
+          "kifach nqder ndir rendez-vous?",
+          " momkin te3tini liste dyal tbibes disponibles.","Kifach nakhod rendez-vous avec le médecin?","consultation",    "بغيت ناخد موعد",  "بغيت ندوز", "بغيت نقابل طبيب",   " كنقلبك على rendez vous","كنقلبك على موعد", "بغيت نقابل طبيب", "واش ممكن ندوز", "بغيت نقابل دكتور", "بغيت نحجز", "بغيت نحجز موعد",
+           "كنقلبك على وقت","بغيت ندير rendez-vous","بغيت ندير rdv","بغيت ناخد rendez vous", "بغيت ناخد rendez-vous", "بغيت ناخد rdv",   "بغيت ناخد موعد",  "بغيت نحجز موعد","بغيت نشوف دكتور", "بغيت نشوف طبيب", "فين ممكن نلقى rendez vous?","فين ممكن نلقى rendez vous?",
+           "فين ممكن نلقى موعد؟","فين ممكن نلقى rendez vous؟","واش ممكن نلقى موعد ليوما؟", "بغيت نريزرفي وقت مع طبيب","ممكن تعطيني ليست ديال طبيب متاحين؟","موعد"
+
       ]
     },
     {
       "tag": "goodbye",
       "patterns": [
-        "Bslama",
-        "Bslema"
+        "Bslama","thala","ana ghadi", "ana mchit fhali","bye","by by","nhadro mn ba3d",
+        "Bslema", "ma3a salama"
       ],
       "responses": [
         "Bslama, shukran 3la zyaratk",
@@ -66,54 +162,169 @@
       ]
     },
     {
-      "tag": "thanks",
+      "tag": "goodbye1",
       "patterns": [
-        "Shukran",
-        "Choukran",
-        "Choukran bzzaf!"
-      ],
-      "responses": [
-        "Machi mouchkil, marhba"
-      ]
-    },
-    {
-      "tag": "thanks",
-      "patterns": [
-        "layr7am biha lwalidin"
-      ],
-      "responses": [
-        "Walidina o walidik"
-      ]
-    },
-    {
-      "tag": "goodbye",
-      "patterns": [
-        "بسلامة"
+        "بسلامة","فمان الله","تهلا","انا غادي","انا مشيت فحالي","باي","باي باي","نهدرو من بعد",
+        "إلى اللقاء","الله معاك"
       ],
       "responses": [
         "بسلامة، شكرا على زيارتك",
         "بسلامة، شكرا حتى تقتي فينا"
       ]
     },
+    
     {
-      "tag": "thanks",
+      "tag": "help",
       "patterns": [
-        "شكرا",
-        "شكرا جزيلاً",
-        "شكرا بزاف"
+        "ch7al dyal wa9t khassni ntsnna?"
       ],
       "responses": [
-        "ماشي مشكل، مرحبا"
+        "Maymkench ne3ref, ela hasab koula tbib"
       ]
     },
     {
-      "tag": "thanks",
+      "tag": "help1",
       "patterns": [
-        "الله يرحم بيها الوليدين"
+        "شحال ديال الوقت خاصني نتسنا"
       ],
       "responses": [
-        "والدينا ووالديك"
+        "ميمكنش نعرف، على حساب كل طبيب"
       ]
-    }
+    },
+    {
+      "tag": "specialité",
+      "patterns": [
+        "Wach kayn chi médecin spécialiste fi chi maladie?","Chno les spécialités li kaynin?","chhal kayna men specialités?","Spécialité","Takhasos"
+      ],
+      "responses": [
+        "Kola spécialité 3endha une liste des médecins, hhahoma les spécialités li moujoudin 3endna : Anestésie, diabétologie nutritionnelle, endocrinologie, pédiatrie, allergologie, nutrition, médecine générale, médecine du sport, urologie, chirurgie cardio, chirurgie vasculaire, chirurgie général, chirurgie orthopédiste, traumatologie, orthopédie, médecine du travail,gynécologie, dermatologie, ophtalmologie, pneumologie,cardiologie, chirurgie cancérologique, néphrologie, médecine interne, neuropsychiatrie, psychiatrie, oto-rhino-laryngologie(ORL), chirurgien esthétique, gastroentérologie, médecin physique et de réadaptation "
+      ]
+    },
+    {
+      "tag": "specialité1",
+      "patterns": [
+        "واش كاين شي طبيب مختص  فشي مرض؟","شنو الاختصاصات لي كاينين عندكم؟","شحال كاين من اختصاصات ؟","اختصاصات","تخصص"
+      ],
+      "responses": [
+        "كل تخصص عندو قائمة أطباء معينين، وهذه هي التخصصات المتاحة لدينا: تخدير، تغذية وأمراض السكري، غدد صماء، طب الأطفال، حساسية، تغذية، طب عام، طب الرياضة، مسالك بولية، جراحة القلب، جراحة الأوعية الدموية، جراحة عامة، جراحة العظام، جراحة الكسور، عظام، طب العمل، نساء وتوليد، جلدية، عيون، أمراض الرئة، قلب، جراحة الأورام، كلي، طب داخلي، عصب ونفساني، طب نفسي، أنف وحنجرة وأذن، جراحة تجميلية، جهاز هضمي، طب فيزيائي وتأهيل."      ]
+    },
+    {
+      "tag": "help2",
+      "patterns": [
+        "Wach kayn taw9it bach nakhod maw3id simana jaya?","wach kayn chi weqt mounassib bach nakhod rendez-vous had simana?"
+      ],
+      "responses": [
+        "Kaynin darouri walakin kan9der nakhod maw3id dial nefs nhar."
+      ]
+    },
+    {
+      "tag": "help3",
+      "patterns": [
+        "واش كاين توقيت باش ناخد موعد سيمانا جايا؟","واش كاين شي وقت مناسب باش ناخد موعد هاد سيمانا؟"
+      ],
+      "responses": [
+        "كاينين ضروري والكين كنقدر ناخد موعد ديال نفس نهار"
+      ]
+    },
+    {
+      "tag": "help4",
+      "patterns": [
+        "Kifach ne3ref rah 3endi sekar?","kifaxh ne3ref rah fiya sekar?","kifach ne3ref ra 3endi marad soukari?","kifach ne3ref rah fiya marad soukari?","kifach ne3ref rah kan3ani men marad soukari?","soukar","soukari","marad soukari"
+      ],
+      "responses": [
+   "Soukari yemken itchekhes men taraf tbib b ta7alil dem, ghir houwa kayn chi 2a3rad o 3alamat yemken tbeyen lik kayn khatar l 2isaba b soukari, matalan mnin kayjik le3tach bzef, katmchi bzef l mir7ad o kat7es bl 3ya lweqt kamel. Ila kenti kat3ani men had l2a3rad awla 3endek choukouk, kanes7ek temchi tzor tbib bach dir ta7alil o lfo7osat lmonasiba. "      ]
+    },
+    {
+      "tag": "help5",
+      "patterns": [
+        "كيفاش نعرف راه عندي سكر؟", "كيفاش نعرف راه فيا سكر؟","كيفاش نعرف راه عندي مرض السكري؟","كيفاش نعرف راه فيا مرض السكري؟","كيفاش نعرف راه كنعاني من المرض السكري؟","سكر"," السكري","سكري"," المرض السكري"
+      ],
+      "responses": [
+        "السكري ممكن يتشخص بواسطة طبيب من خلال التحاليل ديال الدم. ولكن، فمعاودات وأعراض كيمكن تبان تشير لخطر الاصابة بالسكري، مثلا العطش الزايد، والحاجة متكررة للبول، والتعب ديال طول الوقت، وتجاوب بطيء ديال الجروح. لو كنت كتعاني من شي قلق بخصوص السكري، ننصحوك تزور طبيب باش يدير لك فحص مناسب."
+   ] },
+   {
+    "tag": "tension",
+    "patterns": [
+      "kifach ne3ref fiya tension?","chno houma l2arad dial tension?","tension"
+    ],
+    "responses": [
+      "daght dem awla la tension yemken itchekhes men taraf tbib, ghir houwa kayn chi 2a3rad o 3alamat yemken tbeyen lik bli 3endek daght dem tale3 men binhom: seda3 dial rass lktir, mouchkil f chouf awla ro2ya.Ila kenti kat3ani men had l2a3rad awla 3endek choukouk, kanes7ek temchi tzor tbib bach dir ta7alil o lfo7osat lmonasiba. " 
+    ]
+  },
+  {
+    "tag": "tension1",
+    "patterns": [
+      "كيفاش نعرف واش عندي الضغط ديال الدم؟","واش غاينعاني من الضغط ديال الدم؟","شنو هي علامات الضغط ديال الدم؟","الضغط ديال الدم"
+    ],
+    "responses": [
+      "الضغط ديال الدم ممكن يتم تشخيصو من طرف الطبيب خلال زيارة طبية. فبعض العلامات لي ممكن تدل على وجود ضغط دم كيكونو ليكلفات زائدة ديال الراس، دوار، مشاكل في الرؤية، بغاو يكون غير واضح ديال الأعراض. منين تبان عليك علامات هاكا، غادي يكون عندك ضرورة تدير تحليل للضغط ديال دم عند الدكتور."
+    ]
+  },
+  {
+    "tag": "help6",
+    "patterns": [
+     "bghit n3ayet l doctor","bghit n3ayet l docteur","bghit n3ayet l tbib"
+    ],
+    "responses": [
+      "Merhba moumkin, walakin kassek takhod maw3id awla rendez vous houwa lewel f NabadyBot li kaysere3 3amaliat alhajz. Chokran"
+    ]
+  },
+  {
+    "tag": "help7",
+    "patterns": [
+      "ممكن نجي لل clinic؟",
+      "بغيت نعيط لدكتور",
+      "بغيت نعيط لطبيب",
+      "بغيت نعيط لطبي"],
+    "responses": [
+      "مرحبا ممكن، ولاكن خاسك تاخد موعد اولا ف نابادي بوت لكيسرع عملية الحجز. شكرا "
+    ]
+  },
+  {
+    "tag": "help8",
+    "patterns": [
+     "Wach neqder nji nchan la clinique",
+     "wach ne9der nji nichan la clinique", "wach ne9der nchouf bib bla maw3id","wach ne9der nchouf tbib bla rendez vous", 
+     "wach ne9der nchouf tbib bla rendez-vous","wach ne9der nchouf tbib bla rdv","bghyt nji la clinique" ],
+    "responses": [
+     "Te9der tji la clinique awla lmasa7a, walakin men l2a7san takhod maw3id awla rendez vous 9bel bach tfada tsena we9t twil. Chokran"    ]
+  },
+  {
+    "tag": "help9",
+    "patterns": [
+     "واش نقدر نجي نشوف الطبيب من غير موعد",
+     "واش نقدر نجي للعيادة", "واش نقدر نجي للعيادة من غير موعد","واش نقدر نشوف الدكتور من غير موعد", 
+     "واش نقدر نشوف الدكتور من غير موعد","بغيت نجي للعيادة","واش نقدر نجي للعيادة بلا موعد","واش نقدر نشوف الدكتور بلا موعد" ],
+    "responses": [
+     " تقدري تجي للعيادة أو المصحة، لكن من الأحسن تاخدي موعد قبل، لاش متسنايش  وقت طويل. شكراً "] 
+    } ,
+
+
+    {
+      "tag": "help9",
+      "patterns": [
+       "واش نقدر نجي نشوف الطبيب من غير موعد",
+       "واش نقدر نجي للعيادة", "واش نقدر نجي للعيادة من غير موعد","واش نقدر نشوف الدكتور من غير موعد", 
+       "واش نقدر نشوف الدكتور من غير موعد","بغيت نجي للعيادة","واش نقدر نجي للعيادة بلا موعد","واش نقدر نشوف الدكتور بلا موعد" ],
+      "responses": [
+       " تقدري تجي للعيادة أو المصحة، لكن من الأحسن تاخدي موعد قبل، لاش متسنايش  وقت طويل. شكراً "] 
+      },
+      {
+        "tag": "info",
+        "patterns": [
+         "Wach neqder nji nchan la clinique",
+         "wach ne9der nji nichan la clinique", "wach ne9der nchouf bib bla maw3id","wach ne9der nchouf tbib bla rendez vous", 
+         "wach ne9der nchouf tbib bla rendez-vous","wach ne9der nchouf tbib bla rdv","bghyt nji la clinique" ],
+        "responses": [
+         "Te9der tji la clinique awla lmasa7a, walakin men l2a7san takhod maw3id awla rendez vous 9bel bach tfada tsena we9t twil. Chokran"    ]
+      },
+      {
+        "tag": "rhume",
+        "patterns": [
+        "ما هو العلاج المناسب للزكام؟","كفاش نعالج العطيس ؟","العطسة","العطسة" ],
+        "responses": [
+         "يُمكن تخفيف أعراض الزكام بشرب السوائل الدافئة، الراحة، واستخدام مسكنات الألم ومزيلات الاحتقان. إذا استمرت الأعراض أو تفاقمت، يُنصح بزيارة الطبيب."    ]
+      }
+
   ]
 }

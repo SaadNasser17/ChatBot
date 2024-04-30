@@ -388,4 +388,10 @@ body {
     background-color: #45a049;
 }
 
+.disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+  }
+  
 /* Ajouter d'autres styles ici selon vos préférences */
