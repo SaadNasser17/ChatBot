@@ -98,20 +98,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     displaySpecialtiesDropdown() {
-      const selectList = document.createElement('select');
-      selectList.id = 'specialtySelect';
-      selectList.innerHTML = `<option value="">Khtar ina tib bghiti </option>` +
-        this.specialties.map(spec => `<option value="${spec.name}">${spec.name}</option>`).join('');
-      selectList.addEventListener('change', (event) => {
-        const specialtyName = event.target.value;
-        this.fetchDoctorsForSpecialty(specialtyName);
-      });
-      const selectContainer = document.createElement('div');
-      selectContainer.classList.add('select-container');
-      selectContainer.appendChild(selectList);
-      this.args.chatMessages.appendChild(selectContainer);
-      this.args.chatMessages.scrollTop = this.args.chatMessages.scrollHeight;
+      let selectContainer = document.querySelector('.select-container');
+      if (!selectContainer) {
+        selectContainer = document.createElement('div');
+        selectContainer.classList.add('select-container');
+        this.args.chatMessages.appendChild(selectContainer);
+      }
+    
+      let lastDisplayedIndex = 2; // Start with the first three specialties displayed
+      const displaySpecialties = (startIndex, endIndex) => {
+        // Clear existing specialty buttons before displaying new ones
+        selectContainer.innerHTML = '';
+        for (let i = startIndex; i <= endIndex && i < this.specialties.length; i++) {
+          const button = document.createElement('button');
+          button.textContent = this.specialties[i].name;
+          button.addEventListener('click', () => {
+            this.fetchDoctorsForSpecialty(this.specialties[i].name);
+          });
+          selectContainer.appendChild(button);
+        }
+    
+        // Append or re-enable "Show More" button if there are more specialties to show
+        if (endIndex < this.specialties.length - 1) {
+          const showMoreButton = document.createElement('button');
+          showMoreButton.textContent = 'Show More Specialties';
+          showMoreButton.addEventListener('click', () => {
+            displaySpecialties(endIndex + 1, endIndex + 3);
+          });
+          selectContainer.appendChild(showMoreButton);
+        }
+      };
+    
+      // Initial display of specialties and the "Show More" button
+      displaySpecialties(0, lastDisplayedIndex);
     }
+    
 
     fetchDoctorsForSpecialty(specialtyName) {
       fetch('https://apiuat.nabady.ma/api/users/medecin/search', {
@@ -130,57 +151,126 @@ document.addEventListener('DOMContentLoaded', () => {
 
     displayDoctors(doctorData) {
       const container = this.args.chatMessages;
-      container.innerHTML = '';
+      container.innerHTML = '';  // Clear existing doctor details
+  
       doctorData.forEach(item => {
-        const doctor = item["0"];
-        const doctorName = `Dr. ${doctor.lastname} ${doctor.firstname}`; // Ensure doctorName is defined here
-        let doctorInfo = `
-          <div class='doctor-info'>
-            <strong>${doctorName}</strong><br>
-            Tel: ${doctor.tel}<br>
-            Email: <a href='mailto:${doctor.email}'>${doctor.email}</a><br>
-            Address: ${doctor.adresse}<br>
-          </div>`;
-        const agendaConfig = doctor.praticienCentreSoins[0].agendaConfig;
-        doctorInfo += this.createAgendaGrid(agendaConfig, doctorName); // Pass doctorName here
-        container.innerHTML += doctorInfo;
+          const doctor = item["0"];
+          const doctorName = `Dr. ${doctor.lastname} ${doctor.firstname}`;
+          const agendaConfig = doctor.praticienCentreSoins[0].agendaConfig;
+  
+          // Generate available time slots for the doctor
+          const availableSlots = this.createAgendaGrid(agendaConfig, doctorName, true);
+  
+          // Only display doctors with available future time slots
+          if (availableSlots.length > 0) {
+              let doctorInfo = `
+                  <div class='doctor-info'>
+                    <strong>${doctorName}</strong><br>
+                    Tel: ${doctor.tel}<br>
+                    Email: <a href='mailto:${doctor.email}'>${doctor.email}</a><br>
+                    Address: ${doctor.adresse}<br>
+                  </div>`;
+              doctorInfo += this.createAgendaGrid(agendaConfig, doctorName); // Display the time slots
+              container.innerHTML += doctorInfo;
+          }
       });
-    }
-    
-    createAgendaGrid(agendaConfig, doctorName) {
-      let gridHtml = `<div class='agenda-grid'>`;
-      const openingHour = parseInt(agendaConfig.heureOuverture.split(':')[0], 10);
-      const openingMinute = parseInt(agendaConfig.heureOuverture.split(':')[1], 10);
+  }
+  
+  hasAvailableSlots(agendaConfig) {
       const closingHour = parseInt(agendaConfig.heureFermeture.split(':')[0], 10);
       const closingMinute = parseInt(agendaConfig.heureFermeture.split(':')[1], 10);
-      const granularityMinutes = parseInt(agendaConfig.granularite.split(':')[1], 10);
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+  
+      // Check if the current time is before the doctor's closing time
+      return (currentHour < closingHour || (currentHour === closingHour && currentMinute < closingMinute));
+  }
+  
     
-      let slotHour = openingHour;
-      let slotMinute = openingMinute;
-    
-      while (slotHour < closingHour || (slotHour === closingHour && slotMinute < closingMinute)) {
+   createAgendaGrid(agendaConfig, doctorName, checkOnly = false) {
+    const openingHour = parseInt(agendaConfig.heureOuverture.split(':')[0], 10);
+    const openingMinute = parseInt(agendaConfig.heureOuverture.split(':')[1], 10);
+    const closingHour = parseInt(agendaConfig.heureFermeture.split(':')[0], 10);
+    const closingMinute = parseInt(agendaConfig.heureFermeture.split(':')[1], 10);
+    const granularityMinutes = parseInt(agendaConfig.granularite.split(':')[1], 10);
+
+    let slotHour = openingHour;
+    let slotMinute = openingMinute;
+    let futureSlots = [];
+
+    while (slotHour < closingHour || (slotHour === closingHour && slotMinute < closingMinute)) {
         const timeSlot = `${String(slotHour).padStart(2, '0')}:${String(slotMinute).padStart(2, '0')}`;
         const slotDate = new Date();
         slotDate.setHours(slotHour, slotMinute, 0, 0);
-    
+
         if (slotDate > new Date()) { // Only show future time slots
-          gridHtml += `<button class='time-slot' onclick='selectTimeSlot("${timeSlot}", "${doctorName}")'>${timeSlot}</button>`;
+            futureSlots.push(timeSlot);
         }
-    
+
         slotMinute += granularityMinutes;
         if (slotMinute >= 60) {
-          slotHour++;
-          slotMinute %= 60;
+            slotHour++;
+            slotMinute %= 60;
         }
-      }
-    
-      gridHtml += `</div>`;
-      return gridHtml;
     }
-    
+
+    if (checkOnly) {
+        return futureSlots; // Return slots for checking availability
+    }
+
+    let gridHtml = `<div class='agenda-grid'>`;
+    futureSlots.slice(0, 5).forEach(timeSlot => {
+        gridHtml += `<button class='time-slot' onclick='selectTimeSlot("${timeSlot}", "${doctorName}")'>${timeSlot}</button>`;
+    });
+    gridHtml += `</div>`;
+    return gridHtml;
+}
+
+    // After the user selects a time slot, clear the chat and display the confirmation form
+clearChatAndDisplayForm(timeSlot, doctorName) {
+  const chatMessages = document.querySelector('.chatbox__messages');
+  chatMessages.innerHTML = ''; // Clear the chat messages
+  
+  const confirmationMessage = document.createElement('div');
+  confirmationMessage.classList.add('messages__item', 'messages__item--visitor');
+  confirmationMessage.innerHTML = `Chokran 7it khtariti ${timeSlot} m3a ${doctorName}. 3afak dakhal smitek.`;
+  chatMessages.appendChild(confirmationMessage);
+  
+  const form = document.createElement('form');
+  form.innerHTML = `
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName" required><br><br>
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" required><br><br>
+      <label for="phoneNumber">Phone Number:</label>
+      <input type="tel" id="phoneNumber" name="phoneNumber" required><br><br>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required><br><br>
+      <button type="submit">Confirm Appointment</button>
+  `;
+  
+  form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const userData = {
+          firstName: formData.get('firstName'),
+          lastName: formData.get('lastName'),
+          phoneNumber: formData.get('phoneNumber'),
+          email: formData.get('email'),
+          doctorName: doctorName,
+          timeSlot: timeSlot
+      };
+      this.saveUserData(userData);
+  });
+  
+  chatMessages.appendChild(form);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
   }
-   const chatbox = new Chatbox();
-  chatbox.display();
+
+  const chatbox = new Chatbox();
 });
 
 // Global functions to handle user interaction outside the Chatbox class
@@ -192,4 +282,3 @@ function selectTimeSlot(timeSlot, doctorName) {
   chatMessages.appendChild(messageDiv);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-

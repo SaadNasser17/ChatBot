@@ -53,93 +53,82 @@ def get_specialties():
     specialties = response.json()
     return jsonify(specialties)
 
+def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, isIframe=False, referrer=""):
+    response = requests.post(
+        "https://apiuat.nabady.ma/api/users/medecin/search",
+        json={
+            "query": query,
+            "consultation": consultation,
+            "page": page,
+            "result": result,
+            "isIframe": isIframe,
+            "referrer": referrer
+        }
+    )
+    if response.status_code == 200:
+        doctors = response.json()['praticien']['data']
+        for doctor in doctors:
+            pcs_id = doctor['0']['praticienCentreSoins'][0]['id']
+            appointments_response = requests.get(f"https://apiuat.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
+            if appointments_response.ok:
+                unavailable_times = appointments_response.json()
+                doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)
+            else:
+                doctor['available_slots'] = []
+        return doctors
+    else:
+        return None
+
 
 @app.route("/get_doctors", methods=["POST"])
 def get_doctors():
     data = request.get_json()
     specialty_name = data.get("specialty_name")
-    
-    # Corrected the request to match the API specifications you've provided.
-    response = requests.post(
-        "https://apiuat.nabady.ma/api/users/medecin/search",
-        json={
-            "query": specialty_name,
-            "consultation": "undefined",
-            "page": 1,
-            "result": 5,
-            "isIframe": False,
-            "referrer": ""
-        }
-    )
-    
-    # Check the status code of the response to ensure it's successful
-    if response.status_code == 200:
-        doctors_data = response.json()
+    doctors_data = fetch_doctors_from_api(query=specialty_name)
+    if doctors_data:
         return jsonify(doctors_data)
     else:
         return jsonify({"error": "Failed to fetch doctors"}), 500
 
-@app.route("/get_doctor_appointments_by_name", methods=["POST"])
-def get_doctor_appointments_by_name():
-    data = request.get_json()
-    doctor_name = data.get("doctor_name")
 
-    # Recherchez le médecin pour obtenir l'ID praticienCentreSoins
-    response = requests.post(
-        "https://apiuat.nabady.ma/api/users/medecin/search",
-        json={
-            "query": doctor_name,
-            # Ajoutez ici les autres paramètres nécessaires pour la requête API
-        }
-    )
-    
-    if response.ok:
-        doctors_data = response.json()
-        
-        # Supposons que doctors_data['praticien']['data'] contient les infos des médecins
-        for doctor_info in doctors_data['praticien']['data']:
-            if doctor_name.lower() in (doctor_info['0']['lastname'].lower(), doctor_info['0']['firstname'].lower()):
-                praticien_centre_soin_id = doctor_info['0']['praticienCentreSoins'][0]['id']
-                
-                # Maintenant que nous avons l'ID, obtenons les rendez-vous du médecin
-                appointments_response = requests.get(f"https://apiuat.nabady.ma/api/holidays/praticienCs/{praticien_centre_soin_id}/day/0/limit/3")
-                if appointments_response.ok:
-                    return jsonify(appointments_response.json()), 200
-                else:
-                    return jsonify({"error": "Failed to fetch appointments"}), appointments_response.status_code
-                
-        return jsonify({"error": "Doctor not found"}), 404
-    else:
-        return jsonify({"error": "Failed to search doctors"}), response.status_code
-    
 @app.route('/get_doctors_agenda', methods=['GET'])
 def get_doctors_agenda():
-    url = 'https://apiuat.nabady.ma/api/users/medecin/search'
-    data = {
-        "query": "",  # Modify this query as needed to fetch specific doctors or all doctors
-        "consultation": "undefined",
-        "page": 1,
-        "result": 5,  # You can adjust this number based on how many results you want
-        "isIframe": False,
-        "referrer": ""
-    }
-    headers = {'Content-Type': 'application/json'}
-
-    response = requests.post(url, json=data, headers=headers)
+    # Assuming you want to fetch all doctors for the agenda view
+    response = fetch_doctors_from_api(query="")
     if response.status_code == 200:
         doctors = response.json()['praticien']['data']
         results = []
         for doctor in doctors:
-            if 'agendaConfig' in doctor:
-                agenda_config = doctor['agendaConfig']
-                results.append({
-                    'name': f"{doctor.get('firstname', '').strip()} {doctor.get('lastname', '').strip()}",
-                    'praticien_centre_soin_id': doctor['id'],
-                    'agenda_config': agenda_config
-                })
+            agenda_config = doctor['praticienCentreSoins'][0]['agendaConfig']
+            results.append({
+                'name': f"{doctor['0']['firstname']} {doctor['0']['lastname']}",
+                'praticien_centre_soin_id': doctor['praticienCentreSoins'][0]['id'],
+                'agenda_config': agenda_config
+            })
         return jsonify(results)
     else:
         return jsonify({'error': 'Failed to fetch doctors'}), response.status_code
+
+
+def get_doctor_appointments_by_name():
+    data = request.get_json()
+    doctor_name = data.get("doctor_name")
+    doctors_data = fetch_doctors_from_api(query=doctor_name)
+    if doctors_data:
+        for doctor in doctors_data:
+            doc_full_name = f"{doctor['0']['firstname']} {doctor['0']['lastname']}"
+            if doctor_name.lower() in doc_full_name.lower():
+                return jsonify(doctor['unavailable_times']), 200
+        return jsonify({"error": "Doctor not found"}), 404
+    else:
+        return jsonify({"error": "Failed to search doctors"}), 500
+
+def filter_available_slots(agenda_config, unavailable_times):
+    # Assuming agenda_config and unavailable_times are properly structured,
+    # implement logic here to filter out unavailable times.
+    # This function should return a list of filtered available slots.
+    pass
+
 
 @app.route('/save_appointment', methods=['POST'])
 def save_appointment():
@@ -180,5 +169,22 @@ def submit_details():
     
     # Send recap message back to frontend
     return jsonify({'recapMessage': recap_message})
+
+def load_data(filepath):
+    with open(filepath, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    return {item["Medication"]: item["Price Information"] for item in data}
+
+# Preload medication data
+medication_dict = load_data('datasets/csvjson.json')
+
+@app.route('/get_medication_price', methods=['POST'])
+def get_medication_price():
+    data = request.json
+    medication_name = data.get('medication_name', '')
+    price_info = medication_dict.get(medication_name, "Medication not found.")
+    return jsonify({'medication_name': medication_name, 'price_information': price_info})
+
+
 if __name__ == "__main__":
     app.run(debug=True)
