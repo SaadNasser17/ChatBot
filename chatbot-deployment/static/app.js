@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Append or re-enable "Show More" button if there are more specialties to show
         if (endIndex < this.specialties.length - 1) {
           const showMoreButton = document.createElement('button');
-          showMoreButton.textContent = 'Show More Specialties';
+          showMoreButton.textContent = 'Chno mazal kayn?';
           showMoreButton.addEventListener('click', () => {
             displaySpecialties(endIndex + 1, endIndex + 3);
           });
