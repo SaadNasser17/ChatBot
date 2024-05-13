@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
       displaySpecialties(0, lastDisplayedIndex);
     }
     
-
+//specialty
     fetchDoctorsForSpecialty(specialtyName) {
       fetch('https://apiuat.nabady.ma/api/users/medecin/search', {
         method: 'POST',
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error fetching doctors:', error);
       });
     }
-
+//doctor 
     displayDoctors(doctorData) {
       const container = this.args.chatMessages;
       container.innerHTML = '';  // Clear existing doctor details
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
       });
   }
-  
+  // heure
   hasAvailableSlots(agendaConfig) {
       const closingHour = parseInt(agendaConfig.heureFermeture.split(':')[0], 10);
       const closingMinute = parseInt(agendaConfig.heureFermeture.split(':')[1], 10);
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return (currentHour < closingHour || (currentHour === closingHour && currentMinute < closingMinute));
   }
   
-    
+    // agenda
    createAgendaGrid(agendaConfig, doctorName, checkOnly = false) {
     const openingHour = parseInt(agendaConfig.heureOuverture.split(':')[0], 10);
     const openingMinute = parseInt(agendaConfig.heureOuverture.split(':')[1], 10);

@@ -3,7 +3,10 @@ import requests
 import json
 import random
 import os
+from flask_cors import CORS
 app = Flask(__name__)
+cors = CORS(app, origins="*")
+
 
 intents_data = {}
 
@@ -18,9 +21,9 @@ def get_response(message):
             return random.choice(intent["responses"])
     return "Mafhamtch t9der t3awd"
 
-@app.get("/")
-def index_get():
-    return render_template("base.html")
+# @app.get("/")
+# def index_get():
+#     return render_template("base.html")
 
 @app.route("/predict", methods=["POST"])
 def predict():

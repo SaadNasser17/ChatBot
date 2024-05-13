@@ -7,3 +7,43 @@ Shows original agenda ✅
 Filters the agenda ⏳
 Takes user info ⏳
 Takes the reservations ⏳
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+
+function Doctor({ specialty }) {
+    const [doctors, setDoctors] = useState([]);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        fetchDoctorsForSpecialty(specialty);
+    }, [specialty]);
+
+    const fetchDoctorsForSpecialty = (specialtyName) => {
+        // Fetching logic...
+    };
+
+    return (
+        <div>
+            {error && <p>{error}</p>}
+            {doctors.map((doctor, index) => (
+                <div key={index} className='doctor-info'>
+                    <strong>{doctor.name}</strong><br />
+                    {/* Additional doctor info... */}
+                </div>
+            ))}
+        </div>
+    );
+}
+
+export default Doctor;
