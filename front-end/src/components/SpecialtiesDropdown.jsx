@@ -86,13 +86,16 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
   const displaySpecialties = (startIndex, endIndex) => {
     const visibleSpecialties = specialties.slice(startIndex, endIndex + 1);
     return visibleSpecialties.map((specialty) => (
+      <>
+      
       <button
-        key={specialty.id} // Assuming each specialty has a unique 'id'
+        key={specialty.id} 
         onClick={() => fetchDoctorsForSpecialty(specialty.name)}
-        className="bg-white text-black p-2 m-1 rounded hover:bg-gray-200"
+        className="bg-picton-blue-500 opacity-40 text-white p-1 m-1 rounded-lg hover:bg-persian-green-500"
       >
         {specialty.name}
       </button>
+      </>
     ));
   };
 
@@ -101,14 +104,14 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
   };
 
   return (
-    <div className="select-container p-3 bg-blue-500 rounded-b-xl overflow-hidden shadow-lg">
+    <div className=" p-3 bg-black-squeeze rounded-b-xl overflow-hidden shadow-lg"> 
       {displaySpecialties(0, lastDisplayedIndex)}
       {lastDisplayedIndex < specialties.length && (
         <button
           onClick={handleShowMore}
-          className="bg-picton-blue-500 hover:bg-persian-green-600 text-white p-2 rounded mt-2"
+          className="bg-picton-blue-500 hover:bg-persian-green-600 text-white p-1 rounded mt-2 text-sm"
         >
-          Show More
+          bghiti ktr?
         </button>
       )}
     </div>
