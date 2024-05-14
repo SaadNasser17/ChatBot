@@ -87,7 +87,7 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
     const visibleSpecialties = specialties.slice(startIndex, endIndex + 1);
     return visibleSpecialties.map((specialty) => (
       <>
-      
+      <p>n3awnek</p>
       <button
         key={specialty.id} 
         onClick={() => fetchDoctorsForSpecialty(specialty.name)}
