@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 function Doctor({ specialty }) {
   const [doctors, setDoctors] = useState([]);
-  // const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -67,6 +66,8 @@ function Doctor({ specialty }) {
   };
 
   const createAgendaGrid = (agendaConfig) => {
+    const now = new Date();
+    const currentTime = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
     const { heureOuverture, heureFermeture } = agendaConfig;
     const openingHour = parseInt(heureOuverture.split(":")[0], 10);
     const closingHour = parseInt(heureFermeture.split(":")[0], 10);
@@ -75,21 +76,31 @@ function Doctor({ specialty }) {
       slots.push(`${hour}:00`);
       slots.push(`${hour}:30`);
     }
+    const filteredSlots = slots.filter(slot => slot >= currentTime).slice(0, 5);
+  
     return (
       <div>
-        <span className="text-lg boold">Available Slots:</span>
-        <ul className="list-disc pl-5 ">
-          {slots.map((slot, index) => (
-            <li key={index}>{slot}</li>
+        <span className="text-lg boold">Sway3 li mojodin:</span>
+        <ul className="list-disc pl-5">
+          {filteredSlots.map((slot, index) => (
+            <button key={index} onClick={() => handleSlotClick(slot)} className="time-slot-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              {slot}
+            </button>
           ))}
         </ul>
       </div>
     );
   };
+  
+
+  const handleSlotClick = (slot) => {
+    console.log('Slot selected:', slot);
+    // Here you can add the functionality for when a slot is clicked
+  };
 
   return (
     <div className="rounded-lg p-4">
-      {loading && <p className="text-blue-500">Loading...</p>}
+      {loading && <p className="text-blue-500">hana kn9alab...</p>}
       {doctors.map((doctor, index) => (
         <div
           key={index}
