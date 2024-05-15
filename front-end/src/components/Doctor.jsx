@@ -95,7 +95,6 @@ function Doctor({ specialty }) {
 
   const handleSlotClick = (slot) => {
     console.log('Slot selected:', slot);
-    // Here you can add the functionality for when a slot is clicked
   };
 
   return (

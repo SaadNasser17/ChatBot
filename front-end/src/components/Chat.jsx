@@ -22,31 +22,31 @@ export default function Chat() {
   }, [setInitialMessageSet]);
 
   //typing effect
-  useEffect(() => {
-    // Apply typing effect to each message
-    messages.forEach((msg, index) => {
-      if (messageRefs.current[index] && !messageRefs.current[index].typed) {
-        const options = {
-          strings: [messages[index].text],
-          typeSpeed: 40,
-          showCursor: false,
-        };
-        messageRefs.current[index].typed = new Typed(
-          messageRefs.current[index],
-          options
-        );
-      }
-    });
+  // useEffect(() => {
+  //   // Apply typing effect to each message
+  //   messages.forEach((msg, index) => {
+  //     if (messageRefs.current[index] && !messageRefs.current[index].typed) {
+  //       const options = {
+  //         strings: [messages[index].text],
+  //         typeSpeed: 40,
+  //         showCursor: false,
+  //       };
+  //       messageRefs.current[index].typed = new Typed(
+  //         messageRefs.current[index],
+  //         options
+  //       );
+  //     }
+  //   });
 
-    return () => {
-      messageRefs.current.forEach((ref) => {
-        if (ref.typed) {
-          ref.typed.destroy();
-          ref.typed = null;
-        }
-      });
-    };
-  }, [messages]);
+  //   return () => {
+  //     messageRefs.current.forEach((ref) => {
+  //       if (ref.typed) {
+  //         ref.typed.destroy();
+  //         ref.typed = null;
+  //       }
+  //     });
+  //   };
+  // }, [messages]);
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
