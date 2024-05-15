@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 
 function Doctor({ specialty }) {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentSpecialty, setCurrentSpecialty] = useState("");
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
 
   useEffect(() => {
     if (specialty) {
@@ -10,7 +13,15 @@ function Doctor({ specialty }) {
     }
   }, [specialty]);
 
+  useEffect(() => {
+    if (emblaApi) {
+      emblaApi.reInit();
+    }
+  }, [doctors, emblaApi]);
+
   const fetchDoctorsForSpecialty = async (specialtyName) => {
+    setCurrentSpecialty(specialtyName);
+
     setLoading(true);
     try {
       const response = await fetch(
@@ -67,49 +78,56 @@ function Doctor({ specialty }) {
 
   const createAgendaGrid = (agendaConfig) => {
     const now = new Date();
-    const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
-  
+    const currentTime = `${now.getHours()}:${now
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
+
     const { heureOuverture, heureFermeture } = agendaConfig;
     const openingHour = parseInt(heureOuverture.split(":")[0], 10);
     const closingHour = parseInt(heureFermeture.split(":")[0], 10);
     const slots = [];
-  
-    // Generate slots from the opening hour to the closing hour
+
     for (let hour = openingHour; hour < closingHour; hour++) {
       slots.push(`${hour}:00`);
       slots.push(`${hour}:30`);
     }
-  
-    // Filter slots to start from the current time or the opening hour, whichever is later
-    const filteredSlots = slots.filter(slot => {
-      const slotDate = new Date(now.toDateString() + ' ' + slot);
-      return slotDate >= now;
-    }).slice(0, 5); // Limit to the next 5 available slots
-  
+
+    const filteredSlots = slots
+      .filter((slot) => {
+        const slotDate = new Date(now.toDateString() + " " + slot);
+        return slotDate >= now;
+      })
+      .slice(0, 5);
+
     return (
-      <div>
+      <div className="embla" ref={emblaRef}>
         <span className="text-lg boold">Sway3 li mojodin:</span>
-        <ul className="list-disc pl-5">
+        <div className="embla__container">
           {filteredSlots.map((slot, index) => (
-            <button key={index} onClick={() => handleSlotClick(slot)} className="btn btn-primary my-2">
-              {slot}
-            </button>
+            <div className="embla__slide" key={index}>
+              <button
+                onClick={() => handleSlotClick(slot)}
+                className="btn btn-primary my-2"
+              >
+                {slot}
+              </button>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     );
   };
-  
-  
 
   const handleSlotClick = (slot) => {
-    console.log('Slot selected:', slot);
-    // Here you can add the functionality for when a slot is clicked
+    console.log("Slot selected:", slot);
   };
 
   return (
     <div className="rounded-lg p-4">
-      {loading && <p className="text-blue-500">hana kn9alab...</p>}
+      {loading && (
+        <p className="text-blue-500">hana kn9alab f {currentSpecialty}</p>
+      )}
       {doctors.map((doctor, index) => (
         <div
           key={index}
@@ -120,7 +138,7 @@ function Doctor({ specialty }) {
           <span className="text-sm text-gray-700">Tel: {doctor.tel}</span>
           <br />
           <span className="text-sm text-gray-700">
-            Email:{" "}
+            Email:
             <a
               href={`mailto:${doctor.email}`}
               className="text-blue-500 hover:text-blue-700 underline"

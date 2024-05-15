@@ -4,6 +4,7 @@ import "../index.css";
 import SpecialtiesDropdown from "./SpecialtiesDropdown";
 import Doctor from "./Doctor";
 import Typed from "typed.js";
+import { motion } from "framer-motion";
 export default function Chat() {
   const [isOpen, setIsOpen] = useState(false);
   const [userMessage, setUserMessage] = useState("");
@@ -13,17 +14,49 @@ export default function Chat() {
   const [showSpecialtiesDropdown, setShowSpecialtiesDropdown] = useState(false);
   const [selectedSpecialty, setSelectedSpecialty] = useState(null);
   const [showDoctors, setShowDoctors] = useState(false);
+  const messageRefs = useRef([]);
+  const messagesEndRef = useRef(null); // Create a ref
 
   useEffect(() => {
     if (!initialMessageSet) {
       displayBotMessage("Ana NabadyBot, Bach ne9der n3awnek");
       setInitialMessageSet(true);
     }
-  }, [setInitialMessageSet]);
-  // const fetchDoctorsForSpecialty = (specialty) => {
-  //   setSelectedSpecialty(specialty);
-  //   setShowDoctors(true);
-  // };
+  }, [initialMessageSet]);
+
+  // Typing effect for bot messages
+  useEffect(() => {
+    messages.forEach((msg, index) => {
+      if (msg.type !== "user" && !messageRefs.current[index]?.typed) {
+        const options = {
+          strings: [msg.text],
+          typeSpeed: 40,
+          showCursor: false,
+        };
+        messageRefs.current[index] = {
+          ...messageRefs.current[index],
+          typed: new Typed(
+            messageRefs.current[index]?.el || document.createElement("span"),
+            options
+          ),
+        };
+      }
+    });
+
+    return () => {
+      messageRefs.current.forEach((ref) => {
+        ref?.typed?.destroy();
+      });
+    };
+  }, [messages]);
+
+  // scroll automatic
+  useEffect(() => {
+    // Scroll to the bottom of the chat whenever messages change
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
@@ -111,7 +144,7 @@ export default function Chat() {
       });
   };
   return (
-    <div className="fixed bottom-5 right-5  flex flex-col items-end ">
+    <div className="fixed bottom-5 right-5 flex flex-col items-end ">
       <button
         onClick={toggleChatBox}
         className="bg-picton-blue-500 hover:bg-persian-green-600  text-white font-bold py-2 px-4 rounded-full"
@@ -127,7 +160,7 @@ export default function Chat() {
               backgroundImage:
                 "linear-gradient(to right, #00AEEF, #00ABC6, #00AAB1, #00A99D)",
             }}
-            className="min-h-12 w-full rounded-t-xl flex justify-between items-center py-8 px-4 "
+            className="min-h-12 w-full rounded-t-xl flex justify-between items-center py-4 px-4 "
           >
             <button className="h-6 w-24">
               <img src="logo.png" alt="logo" />
@@ -138,7 +171,10 @@ export default function Chat() {
           </div>
 
           {/* messaeges */}
-          <div className="p-3 overflow-y-auto max-h-80 hide-scrollbar">
+          <div
+            className="p-3 overflow-y-auto max-h-80 hide-scrollbar"
+            style={{ minHeight: "300px" }}
+          >
             {messages.map((msg, index) => (
               <div
                 key={index}
@@ -153,6 +189,12 @@ export default function Chat() {
                 </div>
                 <div className="chat-header">{msg.name}</div>
                 <div
+                  // ref={(el) =>
+                  //   (messageRefs.current[index] = {
+                  //     ...messageRefs.current[index],
+                  //     el,
+                  //   })
+                  // }
                   className="chat-bubble text-sm p-2 text-black"
                   style={{
                     backgroundColor:
@@ -170,10 +212,6 @@ export default function Chat() {
               </div>
             ))}
 
-            {/* <p className="bg-black-squeeze text-black p-1 m-1 rounded-lg">
-              Ina specialties bghiti?
-            </p> */}
-
             {showSpecialtiesDropdown && (
               <SpecialtiesDropdown
                 specialties={specialties}
@@ -183,6 +221,7 @@ export default function Chat() {
             {showDoctors && selectedSpecialty && (
               <Doctor specialty={selectedSpecialty.name} />
             )}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* input */}
@@ -190,19 +229,22 @@ export default function Chat() {
             <input
               type="text"
               placeholder="Type a message..."
-              className="pl-4 pr-10 py-2 w-full rounded-full bg-white focus:border-none focus:outline-none"
+              className="pl-4 pr-10 py-2 w-full rounded bg-white focus:border-none focus:outline-none"
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
               onKeyUp={(e) => e.key === "Enter" && handleUserInput()}
             />
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={handleUserInput}
-              className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 mr-2 flex items-center justify-center gap-1"
+               className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 mr-2 flex items-center justify-center gap-1 focus:outline-none focus:border-picton-blue-500 focus:border-2"
             >
               Send
-              <IoSend className=" text-xs " />
-            </button>
+              <IoSend className="text-xs" />
+            </motion.button>
           </div>
+      
         </div>
       )}
     </div>
