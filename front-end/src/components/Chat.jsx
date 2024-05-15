@@ -20,10 +20,33 @@ export default function Chat() {
       setInitialMessageSet(true);
     }
   }, [setInitialMessageSet]);
-  // const fetchDoctorsForSpecialty = (specialty) => {
-  //   setSelectedSpecialty(specialty);
-  //   setShowDoctors(true);
-  // };
+
+  //typing effect
+  useEffect(() => {
+    // Apply typing effect to each message
+    messages.forEach((msg, index) => {
+      if (messageRefs.current[index] && !messageRefs.current[index].typed) {
+        const options = {
+          strings: [messages[index].text],
+          typeSpeed: 40,
+          showCursor: false,
+        };
+        messageRefs.current[index].typed = new Typed(
+          messageRefs.current[index],
+          options
+        );
+      }
+    });
+
+    return () => {
+      messageRefs.current.forEach((ref) => {
+        if (ref.typed) {
+          ref.typed.destroy();
+          ref.typed = null;
+        }
+      });
+    };
+  }, [messages]);
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
@@ -127,7 +150,7 @@ export default function Chat() {
               backgroundImage:
                 "linear-gradient(to right, #00AEEF, #00ABC6, #00AAB1, #00A99D)",
             }}
-            className="min-h-12 w-full rounded-t-xl flex justify-between items-center py-8 px-4 "
+            className="min-h-12 w-full rounded-t-xl flex justify-between items-center py-4 px-4 "
           >
             <button className="h-6 w-24">
               <img src="logo.png" alt="logo" />
@@ -186,7 +209,7 @@ export default function Chat() {
           </div>
 
           {/* input */}
-          <div className="flex items-center justify-end w-full p-2 rounded-full bg-white shadow-inner py- px-4">
+          <div className="flex items-center justify-end w-full p-2  -mt-8 rounded-full bg-white shadow-inner ">
             <input
               type="text"
               placeholder="Type a message..."
@@ -206,5 +229,10 @@ export default function Chat() {
         </div>
       )}
     </div>
+
   );
 }
+
+
+
+
