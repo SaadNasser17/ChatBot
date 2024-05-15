@@ -67,16 +67,24 @@ function Doctor({ specialty }) {
 
   const createAgendaGrid = (agendaConfig) => {
     const now = new Date();
-    const currentTime = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
+    const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+  
     const { heureOuverture, heureFermeture } = agendaConfig;
     const openingHour = parseInt(heureOuverture.split(":")[0], 10);
     const closingHour = parseInt(heureFermeture.split(":")[0], 10);
     const slots = [];
+  
+    // Generate slots from the opening hour to the closing hour
     for (let hour = openingHour; hour < closingHour; hour++) {
       slots.push(`${hour}:00`);
       slots.push(`${hour}:30`);
     }
-    const filteredSlots = slots.filter(slot => slot >= currentTime).slice(0, 5);
+  
+    // Filter slots to start from the current time or the opening hour, whichever is later
+    const filteredSlots = slots.filter(slot => {
+      const slotDate = new Date(now.toDateString() + ' ' + slot);
+      return slotDate >= now;
+    }).slice(0, 5); // Limit to the next 5 available slots
   
     return (
    <>
@@ -84,7 +92,7 @@ function Doctor({ specialty }) {
         <span className="text-lg boold">Sway3 li mojodin:</span>
         <ul className="list-disc pl-5">
           {filteredSlots.map((slot, index) => (
-            <button key={index} onClick={() => handleSlotClick(slot)} className="time-slot-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button key={index} onClick={() => handleSlotClick(slot)} className="btn btn-primary my-2">
               {slot}
             </button>
           ))}
@@ -95,10 +103,10 @@ function Doctor({ specialty }) {
     );
   };
   
+  
 
   const handleSlotClick = (slot) => {
     console.log('Slot selected:', slot);
-    // Here you can add the functionality for when a slot is clicked
   };
 
   return (

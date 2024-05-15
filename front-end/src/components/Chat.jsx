@@ -23,6 +23,7 @@ export default function Chat() {
     }
   }, [initialMessageSet]);
 
+<<<<<<< HEAD
   // Typing effect
   useEffect(() => {
     messages.forEach((msg, index) => {
@@ -48,6 +49,34 @@ export default function Chat() {
       });
     };
   }, [messages]);
+=======
+  //typing effect
+  // useEffect(() => {
+  //   // Apply typing effect to each message
+  //   messages.forEach((msg, index) => {
+  //     if (messageRefs.current[index] && !messageRefs.current[index].typed) {
+  //       const options = {
+  //         strings: [messages[index].text],
+  //         typeSpeed: 40,
+  //         showCursor: false,
+  //       };
+  //       messageRefs.current[index].typed = new Typed(
+  //         messageRefs.current[index],
+  //         options
+  //       );
+  //     }
+  //   });
+
+  //   return () => {
+  //     messageRefs.current.forEach((ref) => {
+  //       if (ref.typed) {
+  //         ref.typed.destroy();
+  //         ref.typed = null;
+  //       }
+  //     });
+  //   };
+  // }, [messages]);
+>>>>>>> master
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
