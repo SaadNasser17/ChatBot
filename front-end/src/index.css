@@ -11,8 +11,33 @@
     -ms-overflow-style: none;  /* for Internet Explorer, Edge */
     scrollbar-width: none;  /* for Firefox */
   }
+/*   
+  .embla {
+    overflow: hidden;
+  }
   
-  /* .border-none {
-    border: none; 
-  } */
+  .embla__container {
+    display: flex;
+    will-change: transform;
+  }
+  
+  .embla__slide {
+    position: relative;
+    flex: 0 0 auto;
+    width: 100%; /* Adjust width as needed */
+  
+  
+  .embla {
+    overflow: hidden;
+  }
+  
+  .embla__container {
+    display: flex;
+    will-change: transform;
+  }
+  
+  .embla__slide {
+    flex: 0 0 33.333%; /* Each slide takes up one-third of the carousel */
+    padding: 0 10px; /* Optional padding for spacing between items */
+  }
   

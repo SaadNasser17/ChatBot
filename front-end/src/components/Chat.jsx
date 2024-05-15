@@ -15,6 +15,7 @@ export default function Chat() {
   const [selectedSpecialty, setSelectedSpecialty] = useState(null);
   const [showDoctors, setShowDoctors] = useState(false);
   const messageRefs = useRef([]);
+  const messagesEndRef = useRef(null); // Create a ref
 
   useEffect(() => {
     if (!initialMessageSet) {
@@ -23,11 +24,10 @@ export default function Chat() {
     }
   }, [initialMessageSet]);
 
-<<<<<<< HEAD
-  // Typing effect
+  // Typing effect for bot messages
   useEffect(() => {
     messages.forEach((msg, index) => {
-      if (!messageRefs.current[index]?.typed) {
+      if (msg.type !== "user" && !messageRefs.current[index]?.typed) {
         const options = {
           strings: [msg.text],
           typeSpeed: 40,
@@ -49,34 +49,14 @@ export default function Chat() {
       });
     };
   }, [messages]);
-=======
-  //typing effect
-  // useEffect(() => {
-  //   // Apply typing effect to each message
-  //   messages.forEach((msg, index) => {
-  //     if (messageRefs.current[index] && !messageRefs.current[index].typed) {
-  //       const options = {
-  //         strings: [messages[index].text],
-  //         typeSpeed: 40,
-  //         showCursor: false,
-  //       };
-  //       messageRefs.current[index].typed = new Typed(
-  //         messageRefs.current[index],
-  //         options
-  //       );
-  //     }
-  //   });
 
-  //   return () => {
-  //     messageRefs.current.forEach((ref) => {
-  //       if (ref.typed) {
-  //         ref.typed.destroy();
-  //         ref.typed = null;
-  //       }
-  //     });
-  //   };
-  // }, [messages]);
->>>>>>> master
+  // scroll automatic
+  useEffect(() => {
+    // Scroll to the bottom of the chat whenever messages change
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
@@ -191,7 +171,10 @@ export default function Chat() {
           </div>
 
           {/* messaeges */}
-          <div className="p-3 overflow-y-auto max-h-80 hide-scrollbar">
+          <div
+            className="p-3 overflow-y-auto max-h-80 hide-scrollbar"
+            style={{ minHeight: "300px" }}
+          >
             {messages.map((msg, index) => (
               <div
                 key={index}
@@ -206,6 +189,12 @@ export default function Chat() {
                 </div>
                 <div className="chat-header">{msg.name}</div>
                 <div
+                  // ref={(el) =>
+                  //   (messageRefs.current[index] = {
+                  //     ...messageRefs.current[index],
+                  //     el,
+                  //   })
+                  // }
                   className="chat-bubble text-sm p-2 text-black"
                   style={{
                     backgroundColor:
@@ -232,10 +221,11 @@ export default function Chat() {
             {showDoctors && selectedSpecialty && (
               <Doctor specialty={selectedSpecialty.name} />
             )}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* input */}
-          <motion.div className="flex items-center justify-end w-full p-2 rounded shadow-inner">
+          <div className="flex items-center justify-end w-full p-2 rounded-full bg-white shadow-inner py- px-4">
             <input
               type="text"
               placeholder="Type a message..."
@@ -248,12 +238,13 @@ export default function Chat() {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={handleUserInput}
-              className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 mr-2 flex items-center justify-center gap-1"
+               className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 mr-2 flex items-center justify-center gap-1 focus:outline-none focus:border-picton-blue-500 focus:border-2"
             >
               Send
               <IoSend className="text-xs" />
             </motion.button>
-          </motion.div>
+          </div>
+      
         </div>
       )}
     </div>
