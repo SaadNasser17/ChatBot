@@ -79,6 +79,7 @@ function Doctor({ specialty }) {
     const filteredSlots = slots.filter(slot => slot >= currentTime).slice(0, 5);
   
     return (
+   <>
       <div>
         <span className="text-lg boold">Sway3 li mojodin:</span>
         <ul className="list-disc pl-5">
@@ -89,6 +90,8 @@ function Doctor({ specialty }) {
           ))}
         </ul>
       </div>
+      
+      </>
     );
   };
   

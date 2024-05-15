@@ -4,6 +4,7 @@ import "../index.css";
 import SpecialtiesDropdown from "./SpecialtiesDropdown";
 import Doctor from "./Doctor";
 import Typed from "typed.js";
+import { motion } from "framer-motion";
 export default function Chat() {
   const [isOpen, setIsOpen] = useState(false);
   const [userMessage, setUserMessage] = useState("");
@@ -13,37 +14,37 @@ export default function Chat() {
   const [showSpecialtiesDropdown, setShowSpecialtiesDropdown] = useState(false);
   const [selectedSpecialty, setSelectedSpecialty] = useState(null);
   const [showDoctors, setShowDoctors] = useState(false);
+  const messageRefs = useRef([]);
 
   useEffect(() => {
     if (!initialMessageSet) {
       displayBotMessage("Ana NabadyBot, Bach ne9der n3awnek");
       setInitialMessageSet(true);
     }
-  }, [setInitialMessageSet]);
+  }, [initialMessageSet]);
 
-  //typing effect
+  // Typing effect
   useEffect(() => {
-    // Apply typing effect to each message
     messages.forEach((msg, index) => {
-      if (messageRefs.current[index] && !messageRefs.current[index].typed) {
+      if (!messageRefs.current[index]?.typed) {
         const options = {
-          strings: [messages[index].text],
+          strings: [msg.text],
           typeSpeed: 40,
           showCursor: false,
         };
-        messageRefs.current[index].typed = new Typed(
-          messageRefs.current[index],
-          options
-        );
+        messageRefs.current[index] = {
+          ...messageRefs.current[index],
+          typed: new Typed(
+            messageRefs.current[index]?.el || document.createElement("span"),
+            options
+          ),
+        };
       }
     });
 
     return () => {
       messageRefs.current.forEach((ref) => {
-        if (ref.typed) {
-          ref.typed.destroy();
-          ref.typed = null;
-        }
+        ref?.typed?.destroy();
       });
     };
   }, [messages]);
@@ -134,7 +135,7 @@ export default function Chat() {
       });
   };
   return (
-    <div className="fixed bottom-5 right-5  flex flex-col items-end ">
+    <div className="fixed bottom-5 right-5 flex flex-col items-end ">
       <button
         onClick={toggleChatBox}
         className="bg-picton-blue-500 hover:bg-persian-green-600  text-white font-bold py-2 px-4 rounded-full"
@@ -193,10 +194,6 @@ export default function Chat() {
               </div>
             ))}
 
-            {/* <p className="bg-black-squeeze text-black p-1 m-1 rounded-lg">
-              Ina specialties bghiti?
-            </p> */}
-
             {showSpecialtiesDropdown && (
               <SpecialtiesDropdown
                 specialties={specialties}
@@ -209,30 +206,27 @@ export default function Chat() {
           </div>
 
           {/* input */}
-          <div className="flex items-center justify-end w-full p-2  -mt-8 rounded-full bg-white shadow-inner ">
+          <motion.div className="flex items-center justify-end w-full p-2 rounded shadow-inner">
             <input
               type="text"
               placeholder="Type a message..."
-              className="pl-4 pr-10 py-2 w-full rounded-full bg-white focus:border-none focus:outline-none"
+              className="pl-4 pr-10 py-2 w-full rounded bg-white focus:border-none focus:outline-none"
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
               onKeyUp={(e) => e.key === "Enter" && handleUserInput()}
             />
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={handleUserInput}
               className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 mr-2 flex items-center justify-center gap-1"
             >
               Send
-              <IoSend className=" text-xs " />
-            </button>
-          </div>
+              <IoSend className="text-xs" />
+            </motion.button>
+          </motion.div>
         </div>
       )}
     </div>
-
   );
 }
-
-
-
-
