@@ -81,13 +81,11 @@
 import React, { useState } from "react";
 
 function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
-  const [lastDisplayedIndex, setLastDisplayedIndex] = useState(2);
+  const [visibleStartIndex, setVisibleStartIndex] = useState(0);
 
   const displaySpecialties = (startIndex, endIndex) => {
-    const visibleSpecialties = specialties.slice(startIndex, endIndex + 1);
+    const visibleSpecialties = specialties.slice(startIndex, endIndex);
     return visibleSpecialties.map((specialty) => (
-      <>
-      
       <button
         key={specialty.id} 
         onClick={() => fetchDoctorsForSpecialty(specialty.name)}
@@ -95,18 +93,22 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
       >
         {specialty.name}
       </button>
-      </>
     ));
   };
 
   const handleShowMore = () => {
-    setLastDisplayedIndex(prevIndex => Math.min(prevIndex + 3, specialties.length));
+    // Calculate the new start index for the next set of specialties
+    const newStartIndex = visibleStartIndex + 3;
+    // Update the start index only if it does not exceed the list length
+    if (newStartIndex < specialties.length) {
+      setVisibleStartIndex(newStartIndex);
+    }
   };
 
   return (
-    <div className=" p-3 bg-black-squeeze rounded-b-xl overflow-hidden shadow-lg"> 
-      {displaySpecialties(0, lastDisplayedIndex)}
-      {lastDisplayedIndex < specialties.length && (
+    <div className="p-3 bg-black-squeeze rounded-b-xl overflow-hidden shadow-lg"> 
+      {displaySpecialties(visibleStartIndex, visibleStartIndex + 3)}
+      {visibleStartIndex + 3 < specialties.length && (
         <button
           onClick={handleShowMore}
           className="bg-picton-blue-500 hover:bg-persian-green-600 text-white p-1 rounded mt-2 text-sm"
@@ -119,3 +121,4 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
 }
 
 export default SpecialtiesDropdown;
+
