@@ -3,14 +3,11 @@ import requests
 import json
 import random
 import os
-<<<<<<< HEAD
 from flask_cors import CORS 
-=======
-from flask_cors import CORS
+
 app = Flask(__name__)
 cors = CORS(app, origins="*")
 
->>>>>>> 412b088186dff908299fb959f8bc38983859fc8b
 
 app = Flask(__name__)
 cors = CORS(app,origins="*")
@@ -27,13 +24,6 @@ def get_response(message):
         if message.lower() in (pattern.lower() for pattern in intent["patterns"]):
             return random.choice(intent["responses"])
     return "Mafhamtch t9der t3awd"
-
-<<<<<<< HEAD
-=======
-# @app.get("/")
-# def index_get():
-#     return render_template("base.html")
->>>>>>> 412b088186dff908299fb959f8bc38983859fc8b
 
 @app.route("/predict", methods=["POST"])
 def predict():
