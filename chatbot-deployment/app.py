@@ -1,11 +1,14 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
 import requests
 import json
 import random
 import os
-app = Flask(__name__)
+from flask_cors import CORS 
 
+app = Flask(__name__)
+cors = CORS(app,origins="*")
 intents_data = {}
+
 
 
 with open('intents.json', 'r', encoding='utf-8') as file:
@@ -18,9 +21,6 @@ def get_response(message):
             return random.choice(intent["responses"])
     return "Mafhamtch t9der t3awd"
 
-@app.get("/")
-def index_get():
-    return render_template("base.html")
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -49,13 +49,54 @@ def get_response_and_tag(intent_tag):
 
 @app.route("/get_specialties")
 def get_specialties():
-    response = requests.get("https://apiuat.nabady.ma/api/specialites")
+    response = requests.get("https://apipreprod.nabady.ma/api/specialites")
     specialties = response.json()
-    return jsonify(specialties)
+    
+    specialites = {
+        "anesthésie": "تخدير",
+        "diabétologie nutritionnelle": "التغذية وعلاج السكري",
+        "endocrinologie": "علم الغدد الصماء",
+        "pédiatrie": "طب الأطفال",
+        "allergologie": "طب الحساسية",
+        "nutrition": "تغذية",
+        "médecine générale": "الطب العام",
+        "médecine du sport": "طب الرياضة",
+        "urologie": "جراحة المسالك البولية",
+        "chirurgie cardio": "جراحة القلب",
+        "chirurgie vasculaire": "جراحة الأوعية الدموية",
+        "chirurgie générale": "الجراحة العامة",
+        "chirurgie orthopédiste": "جراحة العظام",
+        "traumatologie": "طب الإصابات",
+        "orthopédie": "جراحة العظام",
+        "médecine du travail": "طب العمل",
+        "gynécologie obstétrique": "أمراض النساء والتوليد",
+        "dermatologie": "طب الجلدية",
+        "ophtalmologie": "طب العيون",
+        "pneumologie": "طب الرئة",
+        "cardiologie": "طب القلب",
+        "chirurgie cancérologique": "جراحة الأورام",
+        "néphrologie": "طب الكلى",
+        "médecine interne": "الطب الباطني",
+        "neuropsychiatrie": "الطب النفسي العصبي",
+        "psychiatrie": "طب النفس",
+        "oto-rhino-laryngologie": "طب الأنف والأذن والحنجرة",
+        "chirurgie plastique": "جراحة التجميل",
+        "gastroentérologie": "طب الجهاز الهضمي",
+        "médecine physique et de réadaptation": "الطب الفيزيائي وإعادة التأهيل"
+    }
+    
+    # Traduire les spécialités
+    translated_specialties = [
+        {"name": specialites.get(specialty["name"], specialty["name"])}
+        for specialty in specialties['hydra:member']
+    ]
+    
+    return jsonify({"hydra:member": translated_specialties})
+
 
 def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, isIframe=False, referrer=""):
     response = requests.post(
-        "https://apiuat.nabady.ma/api/users/medecin/search",
+        "https://apipreprod.nabady.ma/api/users/medecin/search",
         json={
             "query": query,
             "consultation": consultation,
@@ -69,7 +110,7 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         doctors = response.json()['praticien']['data']
         for doctor in doctors:
             pcs_id = doctor['0']['praticienCentreSoins'][0]['id']
-            appointments_response = requests.get(f"https://apiuat.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
+            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
             if appointments_response.ok:
                 unavailable_times = appointments_response.json()
                 doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)

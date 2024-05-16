@@ -43,9 +43,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     isAppointmentRelated(message) {
       const appointmentKeywords = [
-        "bghyt nakhod", "rendez vous", "bghyt ndowz", "bghyt nqabbel tabib", 
-        "kanqalbek 3la rdv", "wach mumkin ndowz", "bghyt nqabbel doktor", 
-        "bghyt n7jz", "kanqalbek 3la wqt", "rdv"
+        "bghyt nakhod maw3id","bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib", 
+          "kanqalbek 3la rdv", "wach mumkin ndowz", "bghyt nqabbel doktor", 
+          "bghyt n7jz", "kanqalbek 3la wqt","bghit ndir rendez-vous","bghit ndir rdv","bghit nakhod rendez vous","bghit nakhod rendez-vous","bghit nakhod rdv","bghit nakhod maw3id","bghyt nakhod maou3id","bghyt na7jez maw3id","bghyt ne7jez maou3id",
+          "momkin nji l clinic?","rdv",
+          "bghit n3ayet l doctor","bghit n3ayet l docteur","bghit n3ayet l tbib",
+          "kayn chi rdv disponible?",
+          "bghit nchouf docteur", "bghit nchouf tbib",
+          "fin momkin nl9a rdv?","fin momkin nakhod rdv?",
+          "wach momkin nl9a rendez-vous lyoma?",
+          "bghit nreserve wa9t m3a tbib",
+          "mnin ymkni ndir rendez-vous?",
+          "kifach nqder ndir rendez-vous?",
+          " momkin te3tini liste dyal tbibes disponibles.","Kifach nakhod rendez-vous avec le médecin?","consultation",    "بغيت ناخد موعد",  "بغيت ندوز", "بغيت نقابل طبيب",   " كنقلبك على rendez vous","كنقلبك على موعد", "بغيت نقابل طبيب", "واش ممكن ندوز", "بغيت نقابل دكتور", "بغيت نحجز", "بغيت نحجز موعد",
+           "كنقلبك على وقت","بغيت ندير rendez-vous","بغيت ندير rdv","بغيت ناخد rendez vous", "بغيت ناخد rendez-vous", "بغيت ناخد rdv",   "بغيت ناخد موعد",  "بغيت نحجز موعد","بغيت نشوف دكتور", "بغيت نشوف طبيب", "فين ممكن نلقى rendez vous?","فين ممكن نلقى rendez vous?",
+           "فين ممكن نلقى موعد؟","فين ممكن نلقى rendez vous؟","واش ممكن نلقى موعد ليوما؟", "بغيت نريزرفي وقت مع طبيب","ممكن تعطيني ليست ديال طبيب متاحين؟","موعد"
+
       ];
       return appointmentKeywords.some(keyword => message.includes(keyword));
     }
@@ -84,19 +97,54 @@ document.addEventListener('DOMContentLoaded', () => {
       this.args.chatMessages.appendChild(messageDiv);
       this.args.chatMessages.scrollTop = this.args.chatMessages.scrollHeight;
     }
-
+      specialites = {
+      "anesthésie": "تخدير",
+      "diabétologie nutritionnelle": "التغذية وعلاج السكري",
+      "endocrinologie": "علم الغدد الصماء",
+      "pédiatrie": "طب الأطفال",
+      "allergologie": "طب الحساسية",
+      "nutrition": "تغذية",
+      "médecine générale": "الطب العام",
+      "médecine du sport": "طب الرياضة",
+      "urologie": "جراحة المسالك البولية",
+      "chirurgie cardio": "جراحة القلب",
+      "chirurgie vasculaire": "جراحة الأوعية الدموية",
+      "chirurgie générale": "الجراحة العامة",
+      "chirurgie orthopédiste": "جراحة العظام",
+      "traumatologie": "طب الإصابات",
+      "orthopédie": "جراحة العظام",
+      "médecine du travail": "طب العمل",
+      "gynécologie obstétrique": "أمراض النساء والتوليد",
+      "dermatologie": "طب الجلدية",
+      "ophtalmologie": "طب العيون",
+      "pneumologie": "طب الرئة",
+      "cardiologie": "طب القلب",
+      "chirurgie cancérologique": "جراحة الأورام",
+      "néphrologie": "طب الكلى",
+      "médecine interne": "الطب الباطني",
+      "neuropsychiatrie": "الطب النفسي العصبي",
+      "psychiatrie": "طب النفس",
+      "oto-rhino-laryngologie": "طب الأنف والأذن والحنجرة",
+      "chirurgie plastique": "جراحة التجميل",
+      "gastroentérologie": "طب الجهاز الهضمي",
+      "médecine physique et de réadaptation": "الطب الفيزيائي وإعادة التأهيل"
+    };
+    
     fetchSpecialties() {
       fetch('/get_specialties')
-      .then(response => response.json())
-      .then(data => {
-        this.specialties = data['hydra:member'];
-        this.displaySpecialtiesDropdown();
-      })
-      .catch(error => {
-        console.error('Error fetching specialties:', error);
-      });
+        .then(response => response.json())
+        .then(data => {
+          this.specialties = data['hydra:member'].map(specialty => ({
+            ...specialty,
+            name: specialites[specialty.name] || specialty.name // Traduire ou utiliser le nom original
+          }));
+          this.displaySpecialtiesDropdown();
+        })
+        .catch(error => {
+          console.error('Error fetching specialties:', error);
+        });
     }
-
+    
     displaySpecialtiesDropdown() {
       let selectContainer = document.querySelector('.select-container');
       if (!selectContainer) {
@@ -135,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     fetchDoctorsForSpecialty(specialtyName) {
-      fetch('https://apiuat.nabady.ma/api/users/medecin/search', {
+      fetch('https://apipreprod.nabady.ma/api/users/medecin/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ "query": specialtyName, "consultation": "undefined", "page": 1, "result": 5, "isIframe": false, "referrer": "" })

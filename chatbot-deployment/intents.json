@@ -4,7 +4,7 @@
       "tag": "greeting1",
       "patterns": [
         "Salam","Selam","cc","ach ka t3awd", "fin", "nharek mbrok", "kif lhal","fin chadha?",
-        "Ahlan",
+        "Ahlan","fen","slm",
         "Marhaban"
       ],
       "responses": [
@@ -29,7 +29,7 @@
     {
       "tag": "greeting3",
       "patterns": [
-        "سلام",
+        "سلام","كوكو",
         "السلام عليكم",
         "كيف الحال؟","مرحبا","اش كتعاود؟","فين",
         "كيف لحال؟","نهارك مبروك","فين شادها"
@@ -71,6 +71,7 @@
         "ماشي مشكل، مرحبا", "العفو، هذا واجبي"
       ]
     },
+
     {
       "tag": "iam",
       "patterns": [
@@ -89,6 +90,7 @@
         "انا سميتي نابادي بوت، بوت مغربي"
       ]
     },
+
     {
       "tag": "help0",
       "patterns": [
@@ -128,28 +130,7 @@
         "مرحبا، واليدينا و واليديك "
       ]
     },
-
-    {
-      "tag": "rdv",
-      "patterns": [
-        "bghyt nakhod maw3id","bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib", 
-          "kanqalbek 3la rdv", "wach mumkin ndowz", "bghyt nqabbel doktor", 
-          "bghyt n7jz", "kanqalbek 3la wqt","bghit ndir rendez-vous","bghit ndir rdv","bghit nakhod rendez vous","bghit nakhod rendez-vous","bghit nakhod rdv","bghit nakhod maw3id","bghyt nakhod maou3id","bghyt na7jez maw3id","bghyt ne7jez maou3id",
-          "momkin nji l clinic?",
-          "bghit n3ayet l doctor","bghit n3ayet l docteur","bghit n3ayet l tbib",
-          "kayn chi rdv disponible?",
-          "bghit nchouf docteur", "bghit nchouf tbib",
-          "fin momkin nl9a rdv?","fin momkin nakhod rdv?",
-          "wach momkin nl9a rendez-vous lyoma?",
-          "bghit nreserve wa9t m3a tbib",
-          "mnin ymkni ndir rendez-vous?",
-          "kifach nqder ndir rendez-vous?",
-          " momkin te3tini liste dyal tbibes disponibles.","Kifach nakhod rendez-vous avec le médecin?","consultation",    "بغيت ناخد موعد",  "بغيت ندوز", "بغيت نقابل طبيب",   " كنقلبك على rendez vous","كنقلبك على موعد", "بغيت نقابل طبيب", "واش ممكن ندوز", "بغيت نقابل دكتور", "بغيت نحجز", "بغيت نحجز موعد",
-           "كنقلبك على وقت","بغيت ندير rendez-vous","بغيت ندير rdv","بغيت ناخد rendez vous", "بغيت ناخد rendez-vous", "بغيت ناخد rdv",   "بغيت ناخد موعد",  "بغيت نحجز موعد","بغيت نشوف دكتور", "بغيت نشوف طبيب", "فين ممكن نلقى rendez vous?","فين ممكن نلقى rendez vous?",
-           "فين ممكن نلقى موعد؟","فين ممكن نلقى rendez vous؟","واش ممكن نلقى موعد ليوما؟", "بغيت نريزرفي وقت مع طبيب","ممكن تعطيني ليست ديال طبيب متاحين؟","موعد"
-
-      ]
-    },
+    
     {
       "tag": "goodbye",
       "patterns": [
@@ -176,7 +157,7 @@
     {
       "tag": "help",
       "patterns": [
-        "ch7al dyal wa9t khassni ntsnna?"
+        "ch7al dyal wa9t khassni ntsnna?","lweqt","lwa9t","taw9it","netsena","natsena","negles","ntader"
       ],
       "responses": [
         "Maymkench ne3ref, ela hasab koula tbib"
@@ -226,40 +207,6 @@
         "كاينين ضروري والكين كنقدر ناخد موعد ديال نفس نهار"
       ]
     },
-    {
-      "tag": "help4",
-      "patterns": [
-        "Kifach ne3ref rah 3endi sekar?","kifaxh ne3ref rah fiya sekar?","kifach ne3ref ra 3endi marad soukari?","kifach ne3ref rah fiya marad soukari?","kifach ne3ref rah kan3ani men marad soukari?","soukar","soukari","marad soukari"
-      ],
-      "responses": [
-   "Soukari yemken itchekhes men taraf tbib b ta7alil dem, ghir houwa kayn chi 2a3rad o 3alamat yemken tbeyen lik kayn khatar l 2isaba b soukari, matalan mnin kayjik le3tach bzef, katmchi bzef l mir7ad o kat7es bl 3ya lweqt kamel. Ila kenti kat3ani men had l2a3rad awla 3endek choukouk, kanes7ek temchi tzor tbib bach dir ta7alil o lfo7osat lmonasiba. "      ]
-    },
-    {
-      "tag": "help5",
-      "patterns": [
-        "كيفاش نعرف راه عندي سكر؟", "كيفاش نعرف راه فيا سكر؟","كيفاش نعرف راه عندي مرض السكري؟","كيفاش نعرف راه فيا مرض السكري؟","كيفاش نعرف راه كنعاني من المرض السكري؟","سكر"," السكري","سكري"," المرض السكري"
-      ],
-      "responses": [
-        "السكري ممكن يتشخص بواسطة طبيب من خلال التحاليل ديال الدم. ولكن، فمعاودات وأعراض كيمكن تبان تشير لخطر الاصابة بالسكري، مثلا العطش الزايد، والحاجة متكررة للبول، والتعب ديال طول الوقت، وتجاوب بطيء ديال الجروح. لو كنت كتعاني من شي قلق بخصوص السكري، ننصحوك تزور طبيب باش يدير لك فحص مناسب."
-   ] },
-   {
-    "tag": "tension",
-    "patterns": [
-      "kifach ne3ref fiya tension?","chno houma l2arad dial tension?","tension"
-    ],
-    "responses": [
-      "daght dem awla la tension yemken itchekhes men taraf tbib, ghir houwa kayn chi 2a3rad o 3alamat yemken tbeyen lik bli 3endek daght dem tale3 men binhom: seda3 dial rass lktir, mouchkil f chouf awla ro2ya.Ila kenti kat3ani men had l2a3rad awla 3endek choukouk, kanes7ek temchi tzor tbib bach dir ta7alil o lfo7osat lmonasiba. " 
-    ]
-  },
-  {
-    "tag": "tension1",
-    "patterns": [
-      "كيفاش نعرف واش عندي الضغط ديال الدم؟","واش غاينعاني من الضغط ديال الدم؟","شنو هي علامات الضغط ديال الدم؟","الضغط ديال الدم"
-    ],
-    "responses": [
-      "الضغط ديال الدم ممكن يتم تشخيصو من طرف الطبيب خلال زيارة طبية. فبعض العلامات لي ممكن تدل على وجود ضغط دم كيكونو ليكلفات زائدة ديال الراس، دوار، مشاكل في الرؤية، بغاو يكون غير واضح ديال الأعراض. منين تبان عليك علامات هاكا، غادي يكون عندك ضرورة تدير تحليل للضغط ديال دم عند الدكتور."
-    ]
-  },
   {
     "tag": "help6",
     "patterns": [
@@ -319,12 +266,267 @@
          "Te9der tji la clinique awla lmasa7a, walakin men l2a7san takhod maw3id awla rendez vous 9bel bach tfada tsena we9t twil. Chokran"    ]
       },
       {
+        "tag": "tension",
+        "patterns": [
+          "kifach ne3ref fiya tension?","chno houma l2arad dial tension?","tension"
+        ],
+        "responses": [
+          "daght dem awla la tension yemken itchekhes men taraf tbib, ghir houwa kayn chi 2a3rad o 3alamat yemken tbeyen lik bli 3endek daght dem tale3 men binhom: seda3 dial rass lktir, mouchkil f chouf awla ro2ya.Ila kenti kat3ani men had l2a3rad awla 3endek choukouk, kanes7ek temchi tzor tbib bach dir ta7alil o lfo7osat lmonasiba. " 
+        ]
+      },
+      {
+        "tag": "tension1",
+        "patterns": [
+          "كيفاش نعرف واش عندي الضغط ديال الدم؟","واش غاينعاني من الضغط ديال الدم؟","شنو هي علامات الضغط ديال الدم؟","الضغط ديال الدم"
+        ],
+        "responses": [
+          "الضغط ديال الدم ممكن يتم تشخيصو من طرف الطبيب خلال زيارة طبية. فبعض العلامات لي ممكن تدل على وجود ضغط دم كيكونو ليكلفات زائدة ديال الراس، دوار، مشاكل في الرؤية، بغاو يكون غير واضح ديال الأعراض. منين تبان عليك علامات هاكا، غادي يكون عندك ضرورة تدير تحليل للضغط ديال دم عند الدكتور."
+        ]
+      },
+
+      {
+      "tag": "Consultation générale",
+      "patterns": [
+       "عندي ألم في البطن، ماذا أفعل؟"," علاش كرشي كدرني؟","علاش عندي وجع فكرشي؟","عندي وجع فكرشي، اش ندير؟"," وجع فكرشي","الكرش","البطن" 
+      ],
+      "responses": [
+      " يُمكن أن يكون الألم في البطن ناتجًا عن عدة أسباب بحال الإجهاد، الغازات، أو مشكلات هضمية. يُنصح بالراحة وشرب السوائل وزيارة الطبيب لتحديد السبب بدقة."] 
+      },
+      {
+      "tag": "Consultation générale1",
+      "patterns": [
+      "3endi 2alam fl batn", "ach andir?","3endi alam fl batn","3lach kerchi kaderni?","3lach 3endi wje3 f kerchi","wje3 fl kerch","lbatn"
+      ],
+      "responses": [
+      "Yemken ikoun alam f lbatn bsbab bzef dial lhwayj menhum: al 2ijhad, ghazat, o machakil hadmiya. L'afdal trtah w tchrab sawa2il w tzor tbib bache y3ref sabab."] 
+      },
+      {
         "tag": "rhume",
         "patterns": [
-        "ما هو العلاج المناسب للزكام؟","كفاش نعالج العطيس ؟","العطسة","العطسة" ],
+      "نيفي كي سيل", "سدري عامر","رواح","دربني لبرد","ما هو العلاج المناسب للزكام؟","كفاش نعالج العطيس ؟","العطسة","العطسة"],
         "responses": [
-         "يُمكن تخفيف أعراض الزكام بشرب السوائل الدافئة، الراحة، واستخدام مسكنات الألم ومزيلات الاحتقان. إذا استمرت الأعراض أو تفاقمت، يُنصح بزيارة الطبيب."    ]
+        "يُمكن أن يكون الزكام بسبب العدوى بفيروسات تصيب الجهاز التنفسي، مما يؤدي إلى التهاب الأغشية المخاطية وإفرازات الأنف والحلق. يمكن تخفيف أعراض الزكام بشرب السوائل الدافئة، الراحة، واستخدام مسكنات الألم ومزيلات الاحتقان. إذا استمرت الأعراض أو تفاقمت، يُنصح بزيارة الطبيب للحصول على تقييم دقيق والعلاج المناسب."   ]
+      },
+{
+        "tag": "rhume1",
+        "patterns": [
+        "nifi ki sil","sedri 3amer","rwah","rwa7","Ma houwa 3ilaj lmonasib li zokam?","kifach n3alej zokam?","l3ats","l3tis","zoukam","zokam","drebni lberd" ],
+        "responses": [
+         "Ymken, ikoun zokam bsbab 3adwa b vayrousat katsib al jihaz tanafousi, li kay2ed l2iltihab fl 2aghchiya lmakhatiya w ifrazat fl nif o l7al9.Ymken tkhfif a3rad zokam b: chorb sawa2il li dafi2a, ra7a w isti3mal mosakinat l2alam. Ila tzadet awla b9at l7ala kif 9bel khasek tzor tbib 2akhisa2i." ]
+      },
+      {
+        "tag": "douleur",
+        "patterns": [
+       "دوخة","شقيقة","كفاش نخفف الام الرأس","وجع الرأس","كيدرني راسي" ,"كيف يمكنني التخفيف من آلام الرأس؟","درني راسي","راسي"],
+        "responses": [
+          "العوامل لي كتسبب فالصداع كثرة الضغط النفسي، ونقص نعاس، صداع، تناول بعض الأطعمة المحفزة بحال الشكلاط والكافيين،وتوتر العضلات في الرقبة والكتفين. يُمكن تخفيف آلام الرأس بالراحة، وشرب الماء بزاف، واستخدام المسكنات الخفيفة او كينات من بعد ما تزور طبيب او يعطيه ليك ."   ]
+      },
+{
+        "tag": "douleur1",
+        "patterns": [
+        "kifach nkhefef alam ra2s?","waja3 ra2s","ch9i9a","waja3 ra2s","derni rassi","rassi","rasi","chqiqa"],
+        "responses": [
+          "Men bin 3awamil li katsebeb f alam ra2s katrat daght nafsi, naqs n3as, tanawol 2at3ima mohafiza bhal choklat o lkafein, w tawator l3adali f raqaba o katifayn. Ymken tkhfif alam ra2s aw chqiqa b ra7a, chorb lmaa bzef, w istikhdam mosakinat awla kinat men be3d ma tzor tbib o i3tih lik.  "   ]
+      },
+
+      {
+        "tag": "corona",
+        "patterns": [
+       "كوفيد 19","كوفيد","كورونا","ما هي الإجراءات الوقائية من فيروس كورونا؟,"],
+        "responses": [
+          ".هو فيروس يسبب مرضًا تنفسيًا خطيرًا. عندما يصاب الشخص بفيروس كورونا، قد يظهر عليه أعراض مثل الحمى، والسعال، وصعوبة في التنفس، وقد يتطور المرض إلى حالات خطيرة تستلزم العناية الطبية. عندو عدة عوامل بحال الاتصال المباشر بشخص مصاب بيه، والتجمعات لكبيرة في الأماكن المسدودة، واللامبالاة بارتداء الكمامة وعدم غسل اليدين بانتظام. يمكن الحد من انتشار فيروس كورونا باتباع إجراءات الوقاية بحال تجنب الأماكن المزدحمة، وارتداء الكمامة في الأماكن العامة، وغسل اليدين بانتظام بالماء والصابون 20 ثانية لفوق، واحترام مسافة آمنة مع الآخرين"   ]
+      },
+{
+        "tag": "corona1",
+        "patterns": [
+       "corona","covid-19"],
+        "responses": [
+         "Virus Corona awla Covid-19, houwa virus kaysebeb marad tanafousi khatir. Mnin kaytsab bih chakhs, kaybano elih 2a3rad bhal skhana, lkehba w so3obat tanafos, i9der itewer lhalata s3iba khass l3iyana tibiya. 3endo 3awamil awla asbab bhal al 2itisal lmoubachir b chakhs mosab bih, tajamo3at lkbira fl 2amakin lmsdouda,lamobalat brtida2 lkemama o 3adam ghasl lyadayn bntidam. Yemken l7ad men intichar Corona btiba3 2ijra2at wi9a2iya bhal tajanoub l2amakin lmozda7ima, 2irtida2 lkmama fl blays l3ama, ghasl lyadayn b intidam bl ma o saboun 20 taniya lfoq, ihtiram masafat l2aman m3a lakhrin."]
+      },
+      {
+        "tag": "stress",
+        "patterns": [
+       "التوتر","كيف يمكنني التعامل مع الضغط النفسي؟","ما هي الطرق للتخفيف من التوتر والقلق؟","القلق","الضغط النفسي"],
+        "responses": [
+         "الضغط النفسي هو رد فعل طبيعي للجسم تجاه الضغوطات أو الظروف الصعبة، ويمكن  ايكون ليه تأثيرات سلبية على الصحة العامة. من بين تأثيرات الضغط النفسي تقد تكون القلق، الاكتئاب، التوتر، الأرق، زيادة ضغط الدم، وتأثيرات سلبية على الجهاز المناعي. للتخفيف من الضغط النفسي، يُنصح بممارسة التمارين الرياضية بانتظام، التنفس العميق، الاسترخاء والتأمل، الابتعاد عن المواقف المحفوفة بالتوتر، ممارسة الهوايات لكتهدن الأعصاب بحال  الرسم أو القراءة، والتحدث مع مختص في الصحة النفسية عند الحاجة."  ]
+      },
+{
+        "tag": "stress1",
+        "patterns": [
+       "tawator","l9ala9","daght nafsi"],
+        "responses": [
+           "daght nafsi houwa rad fi3li tabi3i liljism tijah doghotat aw dorouf sa3ba, o yemken ikoun lih ta2tirat silbiya 3la si7a l3ama. Men bin te2tirat daght nafsi t9ed tkoun l9ala9, l2ikti2ab, tawator, l2araq, ziyadat daght dem w ta2tirat silbiya 3ala ljihaz lmana3i. li takhfif min daght nafsi, younsa7 b moumarasat tamarin riyadia b ntidam, tanafos l3amiq, l2istirkha2 w ta2amol lbo3d 3la lmawa9if lmach7ouna, moumarasat lhiwayat li kateheden l2a3sab bhal rassm aw l9ira2a, w lhedra m3a mokhtass f si7a nafsiya mnin te7tajo. "   ]
+      },
+      {
+        "tag": " allergies",
+        "patterns": [
+       "كيف يمكنني معرفة إذا كانت لدي حساسية؟","حساسية"],
+        "responses": [
+           "الحساسية هي رد فعل مناعي غير طبيعي تجاه مادة معينة كيتعرض ليه الجسم. يمكن تظهر الحساسية عادة على شكل حكة، احمرار، تورم، أو تهيج في الجلد، و تقد تصاحبها أعراض أخرى بحال احتقان الأنف، سيلان الأنف، وعسر الهضم. يُنصح بمراجعة الطبيب لإجراء الفحوصات اللازمة باش تحديد نوع الحساسية والمادة المسببة والعلاج المناسب. يمكن للأطباء استخدام اختبارات الحساسية بحال اختبار الجلد أو تحليل الدم باش تحدد الحساسية بدقة ووصف العلاج المناسب للمريض."  ]
+      },
+{
+        "tag": " allergies1",
+        "patterns": [
+       "hasasiya"],
+        "responses": [
+           "lhasasiya hiya rad fi3l mana3i ghayr tabi3i tijah mada mo3ayana kayt3ered lih ljism. Yemken tban lhasasiya 3adatan 3la chakl haka, ihmirar, tawaroum aw tahayouj fl jild, o t9ed tkoun m3aha 2a3rad akhra bhal ihti9an l2anf, sayalan l2anf w 3osr fl hadm. Younsa7 bi mouraja3at tabib li 2ijra2 lfo7osat lazima bach t7eded naw3 lhasasiya o lmada lmosabiba o l3ilaj lmonasib.   Yemken lil 2atiba2 istikhdam ikhtibarat l7asasiya bhal 2ikhtibar ljild aw ta7lil dam bach t7eded l7asasiya b di9a o wasf l3ilaj lmonasib l mrid. "  ]
+      },
+      {
+        "tag": "alimentation ",
+        "patterns": [
+       "الجسم","البدن","صحة ديالي","كيفاش نحافض على صحة ديالي؟"],
+        "responses": [ 
+       "غادي تاكلو الفواكه والخضراوات ديالك كل يوم، والحبوب الكاملة، ومصادر صحية للبروتين بحال لحم لي فيها نقص فالدهون، وتبعدو عن السكريات معالجة والأطعمة لي فيها  الدهون بزاف."
+           ]
+      },
+
+{
+        "tag": "alimentation1",
+        "patterns": [
+         "ljism","lbadan","se7a diali","sa7a diali","se7a","sa7a","saha","seha"],
+        "responses": [
+         "Ghadi taklo lfawakih o lkhodar dialek kola nhar, w lhobob lkamila, w masadir sihiya dial protein bhal l7em  li fiha naqs f dohoun, w tbe3do 3an soukariyat mo3alija w l2at3ima li fha douhoun bzef."
+           ]
+      },
+      {
+        "tag": "sommeil réparateur",
+        "patterns": [
+       "نوم","كيف يمكنني تحسين نومي؟","نعاس","نعس","منعستش"],
+        "responses": [
+         "عدم النوم الجيد اقد يكون  ناتجً عن بزاف ديال الأسباب، بحال القلق والتوتر، والاضطرابات النفسية بحال الاكتئاب، واضطرابات النوم بحال  الأرق والتسارع في النوم، وتناول الكافيين بكميات كبيرة، والألم الشديد أو الأمراض المزمنة، بالإضافة لعوامل البيئية بحال  صداع والإضاءة الزائدة في الغرفة. باش نحسنو النوم ديالنا ، يُنصح بتحديد موعد ثابت للنوم ولفياق، وخلق بيئة مريحة للنوم مفيهاش صداع والأضواء بزاف ، وتجنب تناول المنبهات بحال الكافيين قبل النوم."]
+      },
+{
+        "tag": "sommeil réparateur1",
+        "patterns": [
+       "N3as","nawm","naoum","n3es","man3estch"],
+        "responses": [
+          "3adam nawm i9ed ikoun natij 3anbzef dial l2asbab, bhal l9ala9 w tawator, 2idtirabat nafsiya bhal L2ikti2ab, 2idtirab nawm bhal l2araq w tasaro3 f nawm, tanawol lkafein bkimiyat kbira, 2alam chadid w l2amrad lmozmina, bl 2idafa l3awamil bi2iya bhal sda3 w l2ida2a zayda fl ghorfa. Bach n7esno men nawm dialna, younsa7 bta7did maw3id tabit linawm w lfya9, khalq bi2a mouri7a lnawm   mafihach sda3 w l2adwa2 bzef, o tajanoub tanawol monabihat bhal Caffein 9bel nawm. "
+           ]
+      },
+      {
+        "tag": "vaccinations",
+        "patterns": [
+       "هل اللقاحات ضرورية؟","اللقاح"],
+        "responses": [
+        "اللقاحات هي تقنية طبية كتستخدم باش تقدم حماية ضد الأمراض المعدية من خلال تعزيز جهاز المناعة. ينصح بشدة باتباع جدول التطعيم  والتحدث مع الطبيب باش تاخد  المعلومات اللازمة. يُمكن تعطى في مراكز الرعاية الصحية المختلفة، بحال المستشفيات، عيادات الطب العام، ومراكز التطعيم التابعة للحكومة. يُنصح بالتحدث مع الطبيب أو مقدم الرعاية الصحية باش تعرف فين دير التطعيمات  و الوقت لمناسب ليها."
+           ]
+      },
+
+{
+        "tag": "vaccinations1",
+        "patterns": [
+       "vaccin","tat3im","li9a7","liqah"],
+        "responses": [
+          "Li9a7at hiya ti9niya tibiya katestekhdem bach t9edem himaya ded l2amrad lmo3diya men khilal ta3ziz lmana3a. Younsa7 b 2itiba3 jadwal tat3im w takalom m3a tabib bach takhod lma3loumat lazima.Yemken te3ta f lmarakiz sihiya, bhal lmoustachfayat, 3iyada tabib 3am w marakiz tat3im tab3a l7omoka.    Younsa7 b takalom m3a tabib aw mo9adim ri3aya si7iya bach te3ref fin adir tat3imat o lwqt lmonasib liha."
+           ]
+      },
+
+      {
+        "tag": "coeur",
+        "patterns": [
+       "ما هي أفضل الطرق للوقاية من الأمراض القلبية؟","لقلب","الأمراض القلبية","الأمراض ديال القلب"],
+        "responses": [
+          "الأمراض القلبية هي مجموعة من الحالات لكتؤثر على القلب والأوعية الدموية المحيطة بيه.الأسباب للإصابة بأمراض القلب تتكون بسباب التدخين، التغذية غير الصحية والغنية بالدهون ، الوزن الزائد و لغلض، نقص التمارين الرياضية، وارتفاع ضغط الدم وارتفاع الكولسترول.العواقب الصحية لأمراض القلب كتشمل ارتفاع ضغط الدم، والتأثير على الأوعية الدموية لكيؤدي إلى الجلطات، وضعف القلب، وأمراض الشرايين بحال الذبحة الصدرية والتصلب اللويحي.لوقاية من أمراض القلب والأوعية الدموية، ينصح بممارسة التمارين الرياضية بانتظام بحال المشي السريع أو السباحة، الحفاظ على وزن صحي، تناول الأطعمة الغنية بالألياف بحال الفواكه والخضروات، تجنب التدخين، والحد من استهلاك الأطعمة الغنية بالدهون المشبعة"
+          
+           ]
+      },
+
+{
+        "tag": "coeur1",
+        "patterns": [
+      "l9elb","9albi","9elbi"],
+        "responses": [
+           "l2amrad lqalbiya hiya majmou3a men l7alat li kat2eter 3la lqelb o l2aw3iya damawiya lmohita bih.l2asbab lil 2isaba b 2amrad lqalb tatkoun bsbab tadkhin, taghdiya ghayr si7iya w lghaniya bdohoun, lghold, naqs tamarin riyadiya,irtifa3 daght dam w lcholestérol. l3awaqib si7iya l2amrad lqalb katchmel 2irtifa3 daght dem, ta2tir 3la l2aw3iya damawiya li kay2edi ljalatat, do3f lqalb, 2amrad charayin bhal dab7a sadriya w tasalob lowaiji. lil wi9aya min 2amrad lqalb w l2aw3iya damawiya, younsa7 bi moumarasat tamarin riyadiya b ntidam bhal lmachy sari3 o siba7a, l7ifad 3la wazn si7i, tanawol 2at3ima ghaniya b 2alyaf bhal lfawakih w lkhodrawat, be3ed 3la tadkhin, w l7ad mn 2istihlak l2at3ima lghaniya b dohoun lmouchba3a."
+           ]
+      },
+      {
+        "tag": "diabète",
+        "patterns": [
+      "مرض السكر", "السكر","كيف يمكن التحكم في مستوى السكر في الدم؟" ,"ما هي الإجراءات الوقائية لمنع ارتفاع مستوى السكر في الدم؟","السكري","الداء السكري"],
+        "responses": [
+       "مرض السكري هو اضطراب في النظام الغذائي والهضمي لكيؤدي إلى زيادة مستويات السكر في الدم، ويسببها عدة عوامل بحال التورث الوراثي والنمط الحياتي غير الصحي. يمكن  ايؤدي زيادة مستويات السكر في الدم لمشاكل صحية خطيرة بحال أمراض القلب والكلى، ويمكن لحد منها من خلال ممارسة التمارين الرياضية بانتظام، الحفاظ على وزن صحي، واتباع نظام غذائي متوازن.ضروري الالتزام بالعلاجات الموصوفة من قبل الطبيب ومراقبة مستويات السكر في الدم بانتظام للحفاظ على الصحة العامة.الا  كنت كتشعر بالعطش الشديد والتبول بزاف بشكل غير عادي، فقد يكون عندك مشكلة في مستوى السكر في الدم. من الأفضل  تزور الطبيب باش دير الفحوصات اللازمة  باش تأكد من وجود مرض السكري."
+    ]  },
+
+{
+      "tag": "diabete1",
+      "patterns": [
+        "soukar","soukari","marad soukari","da2 soukari"
+      ],
+      "responses": [
+       "marad soukari houwa 2idtirab f nidam lghida2i w lhadmi li kay2edi ila ziyadat moustawayat soukar f dem, men asbab had lmarad lwirata w namat lhayat ghayr si7i. Yemken 2i2edi ziyadat moustawa soukar f dem l machakil khatira bhal 2amrad lqalb w lkiliy, w yemken l7ad menha mn khilal moumarasat tamarin riyadia b intidam, l7ifad 3la lwazn si7i w 2itiba3 nidam ghida2i moutawazin. Darouri l 2iltizam bl 3ilajat lmawsoufa men 3end tbib w moura9abat moustawayat soukar f dem b 2intidam lil 7ifad 3la si7a l3ama. Ila kenti katch3er bl 3tech chadid w tabawol bzaf bchakl ghayr 3adi, fa 2i9ed ikoun 3endek mouchil f moustawa soukar f dem. Men l2a7san tzor tbib bach dir lfo7osat lazima bach t2eked men wojoud marad soukari."      ]
+      },
+
+      {
+        "tag": "os",
+        "patterns": [
+       "كيف يمكن تقوية العظام والوقاية من الهشاشة؟" ,"ما هي الإرشادات للحفاظ على صحة العظام والمفاصل؟","الهشاشة","العظام","المفاصل","هشاشة العظام"],
+        "responses": [
+            "هشاشة العظام هي حالة طبية تتميز بضعف ونقص في كثافة العظام، لكيجعلها أكثر هشاشة وتعرضها للكسور بسهولة أكثر من المعتاد. كتحدث هذه الحالة عادةً نتيجة لفقدان العظام للمعادن الهامة بحال الكالسيوم والفوسفور،  عدم ممارسة التمارين الرياضية بشكل منتظم، التدخين وتناول الكحول بكثرة. هذه العوامل يمكن  تؤدي إلى انخفاض كثافة العظام وزيادة خطر الكسور.لتجنب ضعف العظام، يُنصح بتناول كميات كافية من الكالسيوم وفيتامين د، وممارسة التمارين الرياضية لكتعزز قوة العظام بحال المشي ورفع الأثقال، والابتعاد عن التدخين والكحول، والحفاظ على وزن صحي. للحد من ضعف العظام، من المهم اتباع نظام غذائي متوازن لكيحتوي على الكالسيوم وفيتامين د، وممارسة الرياضة بانتظام لتقوية العظام، وتجنب السلوكيات التي تؤثر سلباً على صحة العظام بحال التدخين وتناول الكحول بكثرة، والتوجه لطبيب العظام في حالة وجود أي مشاكل أو استفسارات تتعلق بصحة العظام."
+           ]
+      },
+
+{
+        "tag": "os1",
+        "patterns": [
+       "hachachat l3idam","lhachacha","l3idam","lmawasil","rkabi"],
+        "responses": [
+             "hachachat l3idam hiya hala tibiya tatmeyez b do3f o noqs fkatafat l3idam, li kayj3elha aktar hachacha o ta3arod lil kosor b sohola kter. kat7det had l7ala 3adatan natija lfo9dan l3idam l ma3adin lmohima bhal Calcium o lphosphore, 3adam moumarasat tamarin riyadia b chakl mountadim, tadkhin w tanawol lko7ol b katra. Had L3awamil yemken t2edi l 2inkhifad katafat l3idam o ziyadat khatar l kosor. li tajanoub do3f l3idam, younsa7 bi tanawol kimiyat kafiya men Calcium o vitamine C, w momarasat riyada li kat3ezez qowat l3idam bhal lmachy w raf3 l2at9al, w l2ibti3ad 3an tadkhin w lko7ol w l7ifad 3ala wazn si7i. Lil 7ad men do3f l3idam, men lmohim 2itiba3 nidam ghida2i moutawazin li kay7tawi 3la l Calcium o vitamine D, w momarasat riyada b intidam li ta9wiyat l3idam, o tajanob souloukiyat li kat2eter silbiyan 3la si7at l3idam bhal tadkhin w tanawol lko7ol b ketra, w tawajoh ltabib l3idam f 7alat wojoud ay machakil aw istifsarat tat3ele9 b si7at l3idam.  "
+           ]
+      },
+
+      {
+        "tag": "santé mentale",
+        "patterns": [
+       "العقل","كيف يمكنني الحفاظ على صحة عقلية جيدة؟","كيف يمكن تعزيز الصحة العقلية؟","صحة عقلية","البال","راحة البال"],
+        "responses": [
+              "الصحة النفسية هي الحالة ديال الراحة العاطفية والنفسية والاجتماعية لشخص. باش تحميها، يتعين اتباع عادات حياتية صحية، وتعزيز العلاقات الاجتماعية الإيجابية،تواصل مع الأصدقاء والعائلة، ممارسة التقنيات الاسترخائية بحال التأمل واليوغا الألغاز والألعاب الذهنية، ممارسة الهوايات لكتمنحك فرصة للاسترخاء، والبحث عن المساعدة المهنية عند الحاجة وتنمية مهارات تعامل مع التوتر وتعزيز التوازن بين مختلف جوانب الحياة اليومية. تترتب على الصحة النفسية السيئة عواقب سلبية تشمل المشاكل الصحية الجسدية، وتدهور العلاقات الشخصية، واضطرابات المزاج. دكشي علاش، كينبغي التعامل مع الصحة النفسية بجدية وطلب المساعدة عند الحاجة من خلال اللجوء إلى المتخصصين في مجال الصحة النفسية."
+           ]
+      },
+{
+        "tag": "santé mentale1",
+        "patterns": [
+       "se7a nafsiya","nafs","se7a l3a9liya","lbal","ra7at lbal"],
+        "responses": [
+                "si7a nafsiya hiya halat dial ra7a l3atifiya w nafsiya w l2ijtima3iya lchakhs. Bach te7miha, kayt3eyen 2itiba3 3adat hayatiya si7iya, ta3ziz l3ala9at l2ijtima3iya l2ijabiya, tawasol m3a l2asdi9a2 w l3a2ila, moumarasat tiqniyat istirkha2iya bhal ta2amol, yoga, l2al3ab dihniya,momarasat hiwayat li katmen7ek forsat l2istirkha2, tanmiyat maharat ta3amol m3a tawator o ta3ziz tawazoun bayn mokhtalaf jawanib lhayat lyawmiya. katreteb 3la se7a nafsiya sayi2a 3awa9ib silbiya katchmel machakil f se7a ljasadiya, tadahwor l3ala9at chakhsiya w 2idtirabat lmizaj.Dakchi elach, kaynbaghi ta3amoul m3a se7a nafsiya b jidiya w talab lmosa3ada 3end lhaja men khilal loujou2 lmokhtassin f majal se7a nafsiya. "]
+      },
+      {
+        "tag": "poids",
+        "patterns": [
+       "تقل","كيف يؤثر الوزن على ضغط الدم؟","الوزن","لغلض","غليض","غليضة"],
+        "responses": [
+               "الوزن عندو تأثير كبير على الصحة العامة، اقدر  يؤثر على بزاف ديال الجوانب المختلفة للصحة. منين كيكون الوزن زائد، يمكن  يزيد من خطر الإصابة ببزاف  الأمراض المزمنة بحال أمراض القلب والأوعية الدموية، السكري، ارتفاع ضغط الدم، أمراض الكبد، التهاب المفاصل، وحتى بعض أنواع ديال السرطان.  يمكن  يؤثر الوزن الزائد على جودة الحياة، لكيزيد من المشاكل اليومية  بحال صعوبة التنقل والتنفس و نعاس. باش نعتني بالوزن ونحافض على الصحة، خصني نتبع نمط حياة صحي كيتضمن تناول وجبات متوازنة وغنية بالفواكه والخضروات والألياف، ممارسة التمارين الرياضية بانتظام،  نبعد على الأطعمة غير الصحية الغنية بالدهون والسكريات والملح، والحفاظ على نوم جيد وكافٍ. ضروري ادارو فحوصات طبية منتظمة ومتابعة صحة الوزن بانتظام، والتحدث مع الطبيب الا كان  أي مشاكل صحية تتعلق بالوزن أو لا  إدارة الوزن."
+           ]
+      },
+
+{
+        "tag": "poids1",
+        "patterns": [
+       "lwazn","t9ol","lghold","ghlida","t9ila","ghlid"],
+        "responses": [
+               "lwazn 3endo ta2tir kbir 3la se7a l3ama, i9der y2eter ela bzef dial ljawanib lmokhtalifa lse7a. Mnin ki koun lwazn za2id, yemken yzid men khatar l2isaba b bzaf dial l2amrad lmouzmina bhal 2amrad lqalb w l2aw3iya damawiya, soukari, irtifa3 daght dem, 2amrad lkabid, iltihab lmafasil o hta ba3d anwa3 dial saratan. Yemken i2eter lwazn za2id 3la jawdat lhayat, li kayzid men machakil lyawmiya bhal so3oubat tanaqol w tanafos w n3as. Bach ne3tani bl wazn o n7afed 3la se7a, khaseni  ntebe3 namat hayat si7i kaytdemen tanawol wajabat moutawazina w ghaniya bl fawakih w lkhodrawat w l2alyaf, momarasat tamarin riyadiya b intidam, nbe3ed 3la l2at3ima hayr si7iya lghaniya b dohoun o soukariat w lmel7a w l7ifad 3la nawm jayid  kafi. Darouri idaro fo7osat tibiya mountadima w motaba3at si7at lwazn b intidam, w tahadot m3a tabib ila kan ay machakil si7iya kat3eleq fl wazn awla idarat lwazn     "
+           ]
+      },
+
+      {
+        "tag": "Cafeine",
+        "patterns": [
+       "الكافيين"," لقهوة"],
+        "responses": [
+               "الكافيين هو مادة كيميائية كتكون فبعض النباتات طبيعيا بحال حبوب البن و أوراق الشاي.  كيزيد من الوعي و الانتباه بسبب انه كيحرك الجهاز العصبي المركزي. أكل كميات معتدلة من الكافيين آمن لأغلب الناس،  ولكن  مني كتناول كميات كبيرة ممكن يسبب الأرق و التوتر و زيادة في ضربات القلب.  يمكن يؤثر  حتى على مستوى السكر في الدم و يزيد من مقاومة الجسم للأنسولين، و هادشي ممكن يزيد من احتمالية الواحد يكون عنده داء السكري. و بالنسبة لضغط الدم، الكافيين اقد يرفع ضغط الدم، دكشي علاش من لاحسن يبعدو عليه ناس لي عندهم ضغط مرتفع."
+           ]
+      },
+
+      {
+        "tag": "Cafeine1",
+        "patterns": [
+       "Cafeine", "l9ahwa","qahwa"],
+        "responses": [
+               "Cafeine awla lqahwa hiya mada kimya2iya katkoun f ba3d nabatat tabi3iya bhal hoboub bon w 2awra9 chay. kayzid men lwa3y w l2intibah b sabab anaho kayherek ljihaz l3asabi lmarkazi. 2akl kimiyat mou3tadila men lcafeine 2men l aghlab nass, walakin mni katakol kimiyat kbira momkin isebeb l2araq o tawator o ziyadat f darabat lqalb. Yemken i2eter hta 3la moustawa soukar fdam w izid men mo9awamat ljism l2ansouline, w hadchi moumkin izid hta men 2i7timaliyat lwahed ykoun 3endo da2 soukari. W b nisba l daght dem, lcafeine i9ed irfe3 deght dem dakchi elach men l2a7san ibe3do elih nass li 3endhom daght mourtafi3 "
+           ]
       }
-      
+
+
+
+
   ]
 }
