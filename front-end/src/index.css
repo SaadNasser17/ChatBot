@@ -4,27 +4,14 @@
 
 /* styles.css */
 .hide-scrollbar::-webkit-scrollbar {
-    display: none; /* for Chrome, Safari, and Opera */
+    display: none;
   }
   
   .hide-scrollbar {
-    -ms-overflow-style: none;  /* for Internet Explorer, Edge */
-    scrollbar-width: none;  /* for Firefox */
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
   }
-/*   
-  .embla {
-    overflow: hidden;
-  }
-  
-  .embla__container {
-    display: flex;
-    will-change: transform;
-  }
-  
-  .embla__slide {
-    position: relative;
-    flex: 0 0 auto;
-    width: 100%; /* Adjust width as needed */
+
   
   
   .embla {
@@ -37,7 +24,6 @@
   }
   
   .embla__slide {
-    flex: 0 0 33.333%; /* Each slide takes up one-third of the carousel */
-    padding: 0 10px; /* Optional padding for spacing between items */
+    flex:30%; 
+    padding:1 10px; 
   }
-  

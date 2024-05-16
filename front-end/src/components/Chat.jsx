@@ -24,7 +24,7 @@ export default function Chat() {
     }
   }, [initialMessageSet]);
 
-  // Typing effect for bot messages
+  // Typing effect 
   useEffect(() => {
     messages.forEach((msg, index) => {
       if (msg.type !== "user" && !messageRefs.current[index]?.typed) {
@@ -52,12 +52,12 @@ export default function Chat() {
 
   // scroll automatic
   useEffect(() => {
-    // Scroll to the bottom of the chat whenever messages change
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
+  // toggle
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
   };
@@ -77,6 +77,7 @@ export default function Chat() {
       callFlaskAPI(msg, currentTime);
     }
   };
+  
   const fetchDoctorsForSpecialty = (specialtyName) => {
     console.log(`Fetching doctors for ${specialtyName}`);
     setSelectedSpecialty({ name: specialtyName });
