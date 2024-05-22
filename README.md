@@ -5,5 +5,5 @@ Displays list of specialties ✅
 Displays list of doctors according to the specialty ✅
 Shows original agenda ✅
 Filters the agenda ⏳
-Takes user info ⏳
+Takes user info ✅
 Takes the reservations ⏳
