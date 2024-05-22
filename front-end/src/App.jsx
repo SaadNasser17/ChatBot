@@ -1,10 +1,11 @@
-import React from 'react'
-import Chat from './components/Chat'
+import React from 'react';
+import Chat from './components/Chat';
+import { BookingProvider } from './components/BookingContext';
 
 export default function App() {
   return (
-   <>
-   <Chat/>
-   </>
-  )
+    <BookingProvider>
+      <Chat />
+    </BookingProvider>
+  );
 }
