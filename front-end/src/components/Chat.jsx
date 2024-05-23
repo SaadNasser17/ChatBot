@@ -3,9 +3,9 @@ import "../index.css";
 import { IoChatbubbles, IoCloseOutline, IoSend } from "react-icons/io5";
 import SpecialtiesDropdown from "./SpecialtiesDropdown";
 import Doctor from "./Doctor";
-import Typed from "typed.js";
 import { motion } from "framer-motion";
 import { useBooking } from "./BookingContext";
+import AniText from "./Anitext"; // Import the AniText component
 
 export default function Chat() {
   const { bookingDetails, setBookingDetails } = useBooking();
@@ -18,7 +18,6 @@ export default function Chat() {
   const [selectedSpecialty, setSelectedSpecialty] = useState(null);
   const [showDoctors, setShowDoctors] = useState(false);
   const [appointmentStep, setAppointmentStep] = useState(0);
-  const messageRefs = useRef([]);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -27,31 +26,6 @@ export default function Chat() {
       setInitialMessageSet(true);
     }
   }, [initialMessageSet]);
-
-  useEffect(() => {
-    messages.forEach((msg, index) => {
-      if (msg.type !== "user" && !messageRefs.current[index]?.typed) {
-        const options = {
-          strings: [msg.text],
-          typeSpeed: 40,
-          showCursor: false,
-        };
-        messageRefs.current[index] = {
-          ...messageRefs.current[index],
-          typed: new Typed(
-            messageRefs.current[index]?.el || document.createElement("span"),
-            options
-          ),
-        };
-      }
-    });
-
-    return () => {
-      messageRefs.current.forEach((ref) => {
-        ref?.typed?.destroy();
-      });
-    };
-  }, [messages]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -152,13 +126,13 @@ export default function Chat() {
   const getNextQuestion = (step) => {
     switch (step) {
       case 1:
-        return "What's your first name?";
+        return "Achno smitek?";
       case 2:
-        return "What's your last name?";
+        return "Achno knitek?";
       case 3:
-        return "What's your phone number?";
+        return "3tini ra9m lhatif dyalk?";
       case 4:
-        return "What's your email?";
+        return "Chnahowa l'email dyalk?";
       default:
         return "";
     }
@@ -177,22 +151,30 @@ export default function Chat() {
                 timeSlot: bookingDetails.timeSlot,
                 first_name: bookingDetails.first_name,
                 last_name: bookingDetails.last_name,
-                phone_number: bookingDetails.phone_number
+                phone_number: bookingDetails.phone_number,
+                email: bookingDetails.email,
             }),
         });
 
         if (!response.ok) throw new Error("Network response was not ok.");
 
         const data = await response.json();
-        displayBotMessage(`First Name: ${bookingDetails.first_name} Last Name: ${bookingDetails.last_name} Phone Number: ${bookingDetails.phone_number} Email: ${bookingDetails.email} Doctor: ${bookingDetails.doctorName} Time Slot: ${bookingDetails.timeSlot}`);
+        displayBotMessage(`t2akad liya mn ma3lomat dyalk.
+        Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${bookingDetails.phone_number} Email: ${bookingDetails.email} Tbib: ${bookingDetails.doctorName} lwe9t: ${bookingDetails.timeSlot}`);
     } catch (error) {
         console.error("Error finalizing appointment:", error);
-        displayBotMessage("An error occurred while saving the appointment.");
+        displayBotMessage("w9e3 lina mochkil wakha t3awad mn lwl?.");
     }
   };
 
   const displayUserMessage = (message, time) => {
-    setMessages((prev) => [...prev, { text: message, type: "user", time }]);
+    console.log("User Message:", message);
+    setMessages((prev) => {
+      console.log("Previous Messages Before User Message:", prev); // Debugging
+      const newMessages = [...prev, { text: message, type: "user", time }];
+      console.log("New Messages After User Message:", newMessages); // Debugging
+      return newMessages;
+    });
   };
 
   const displayBotMessage = (message) => {
@@ -200,10 +182,13 @@ export default function Chat() {
       hour: "2-digit",
       minute: "2-digit",
     });
-    setMessages((prev) => [
-      ...prev,
-      { text: message, type: "bot", time: currentTime },
-    ]);
+    console.log("Bot Message:", message);
+    setMessages((prev) => {
+      console.log("Previous Messages Before Bot Message:", prev); // Debugging
+      const newMessages = [...prev, { text: message, type: "bot", time: currentTime }];
+      console.log("New Messages After Bot Message:", newMessages); // Debugging
+      return newMessages;
+    });
   };
 
   const fetchSpecialties = () => {
@@ -260,20 +245,17 @@ export default function Chat() {
                 </div>
                 <div className="chat-header">{msg.name}</div>
                 <div
-                  ref={(el) =>
-                    (messageRefs.current[index] = {
-                      ...messageRefs.current[index],
-                      el,
-                    })
-                  }
                   className="chat-bubble text-sm p-2 text-black"
                   style={{
-                    backgroundColor:
-                      msg.type === "user" ? "#CBF8F5" : "#CEF0FC",
+                    backgroundColor: msg.type === "user" ? "#CBF8F5" : "#CEF0FC",
                     maxWidth: "75%",
                   }}
                 >
-                  {msg.text}
+                  {msg.type === "bot" ? (
+                    <AniText msg={msg.text} />
+                  ) : (
+                    msg.text
+                  )}
                 </div>
                 <div className="chat-footer text-xs opacity-50">
                   {msg.type === "user" ? `Seen at ${msg.time}` : `Delivered ${msg.time}`}
@@ -287,24 +269,24 @@ export default function Chat() {
                 fetchDoctorsForSpecialty={fetchDoctorsForSpecialty}
               />
             )}
-    {showDoctors && selectedSpecialty && (
-  <Doctor
-    specialty={selectedSpecialty.name}
-    onSlotClick={(doctorName, PcsID, slot) => {
-      setBookingDetails({ doctorName, PcsID, timeSlot: slot });
-      displayBotMessage(
-        `You've selected an appointment with ${doctorName} at ${slot}. Please provide your details.`
-      );
-      setShowSpecialtiesDropdown(false);
-      setShowDoctors(false);
-      setAppointmentStep(1);
-    }}
-  />
-)}
+            {showDoctors && selectedSpecialty && (
+              <Doctor
+                specialty={selectedSpecialty.name}
+                onSlotClick={(doctorName, PcsID, slot) => {
+                  setBookingDetails({ doctorName, PcsID, timeSlot: slot });
+                  displayBotMessage(
+                    `Chokran 7it khtariti ${doctorName} m3a ${slot}. 3tini smitek 3afak.`
+                  );
+                  setShowSpecialtiesDropdown(false);
+                  setShowDoctors(false);
+                  setAppointmentStep(1);
+                }}
+              />
+            )}
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="flex items-center justify-end w-full p-2 rounded-full bg-white shadow-inner py- px-4">
+          <div className="flex items-center justify-end w-full  rounded-full shadow-inner px-4 bg-white ">
             <input
               type="text"
               placeholder="Type a message..."

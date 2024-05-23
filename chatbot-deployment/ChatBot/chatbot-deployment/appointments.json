@@ -3,26 +3,14 @@
         "data": [
             {
                 "praticien": {
-                    "name": "Dr. Hicham EL hadad",
-                    "PcsID": 1775,
-                    "timeSlot": "11:30"
+                    "name": "Dr. maximum max",
+                    "PraticienCentreSoinID": 1803,
+                    "timeSlot": "19:30"
                 },
                 "patient": {
-                    "first_name": "saad",
-                    "last_name": "housny",
-                    "phone_number": "1233"
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. Hicham EL hadad",
-                    "PraticienCentreSoinID": 1775,
-                    "timeSlot": "12:00"
-                },
-                "patient": {
-                    "first_name": "saad",
-                    "last_name": "housny",
-                    "phone_number": "1234"
+                    "first_name": "nizar",
+                    "last_name": "belmahfoud",
+                    "phone_number": "0610101010"
                 }
             }
         ]
