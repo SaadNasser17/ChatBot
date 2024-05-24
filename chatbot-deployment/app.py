@@ -46,7 +46,7 @@ def get_response_and_tag(intent_tag):
 
 @app.route("/get_specialties")
 def get_specialties():
-    response = requests.get("https://apiuat.nabady.ma/api/specialites")
+    response = requests.get("https://apipreprod.nabady.ma/api/specialites")
     specialties = response.json()
     return jsonify(specialties)
 

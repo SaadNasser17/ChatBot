@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../index.css";
-import { IoChatbubbles, IoCloseOutline, IoSend } from "react-icons/io5";
+import { IoChatbubbles, IoCloseOutline, IoSend, IoRefresh, IoSquare } from "react-icons/io5";
 import SpecialtiesDropdown from "./SpecialtiesDropdown";
 import Doctor from "./Doctor";
 import { motion } from "framer-motion";
 import { useBooking } from "./BookingContext";
-import AniText from "./Anitext"; // Import the AniText component
+import AniText from "./Anitext";
 
 export default function Chat() {
   const { bookingDetails, setBookingDetails } = useBooking();
@@ -18,6 +18,9 @@ export default function Chat() {
   const [selectedSpecialty, setSelectedSpecialty] = useState(null);
   const [showDoctors, setShowDoctors] = useState(false);
   const [appointmentStep, setAppointmentStep] = useState(0);
+  const [isBotTyping, setIsBotTyping] = useState(false);
+  const [forceStopTyping, setForceStopTyping] = useState(false);
+  const messageRefs = useRef([]);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -81,6 +84,7 @@ export default function Chat() {
   };
 
   const callFlaskAPI = (userMessage, time) => {
+    setIsBotTyping(true); // Set bot typing state to true
     fetch("http://localhost:5000/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -92,15 +96,18 @@ export default function Chat() {
         if (data.answer.includes("first name")) {
           setAppointmentStep(1);
         }
+        setIsBotTyping(false); // Set bot typing state to false after message is displayed
       })
       .catch((error) => {
         console.error("Error:", error);
         displayBotMessage("Une erreur s'est produite, veuillez réessayer.");
+        setIsBotTyping(false); // Set bot typing state to false in case of error
       });
   };
 
   const processUserResponse = async (response, step) => {
     try {
+      setIsBotTyping(true); // Set bot typing state to true
       const res = await fetch("http://localhost:5000/process_response", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -118,8 +125,10 @@ export default function Chat() {
         const nextQuestion = getNextQuestion(data.next_step);
         displayBotMessage(nextQuestion);
       }
+      setIsBotTyping(false); // Set bot typing state to false after message is displayed
     } catch (error) {
       console.error("Error processing response:", error);
+      setIsBotTyping(false); // Set bot typing state to false in case of error
     }
   };
 
@@ -202,6 +211,32 @@ export default function Chat() {
       });
   };
 
+  // Function to reset the chat
+  const resetChat = () => {
+    setMessages([]);
+    setUserMessage("");
+    setSpecialties([]);
+    setInitialMessageSet(false);
+    setShowSpecialtiesDropdown(false);
+    setSelectedSpecialty(null);
+    setShowDoctors(false);
+    setAppointmentStep(0);
+    setBookingDetails({});
+  };
+
+  // Function to stop the bot typing
+  const stopBotTyping = () => {
+    setForceStopTyping(true);
+    setIsBotTyping(false); // Stop bot typing
+  };
+
+  useEffect(() => {
+    if (forceStopTyping) {
+      const timer = setTimeout(() => setForceStopTyping(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [forceStopTyping]);
+
   return (
     <div className="fixed bottom-5 right-5 flex flex-col items-end">
       <button
@@ -222,9 +257,18 @@ export default function Chat() {
             <button className="h-6 w-24">
               <img src="logo.png" alt="logo" />
             </button>
-            <button onClick={toggleChatBox}>
-              <IoCloseOutline className="text-white h-8 w-8" />
-            </button>
+            <div className="flex items-center">
+              <button
+                onClick={resetChat}
+                className="bg-transparent p-2"
+                title="Rafraîchir le chat"
+              >
+                <IoRefresh className="text-xl text-white hover:text-gray-300" />
+              </button>
+              <button onClick={toggleChatBox}>
+                <IoCloseOutline className="text-white h-8 w-8" />
+              </button>
+            </div>
           </div>
 
           <div
@@ -262,6 +306,23 @@ export default function Chat() {
                 </div>
               </div>
             ))}
+
+            {isBotTyping && !forceStopTyping && (
+              <div className="chat chat-start my-1">
+                <div className="chat-image avatar">
+                  <div className="w-8 h-8 rounded-full overflow-hidden">
+                    <img src="bot-avatar.png" alt="Bot Avatar" />
+                  </div>
+                </div>
+                <div className="chat-bubble text-sm p-2 text-black" style={{ backgroundColor: "#CEF0FC", maxWidth: "75%" }}>
+                  <div className="typing-indicator" style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite' }}></div>
+                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.2s' }}></div>
+                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.4s' }}></div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {showSpecialtiesDropdown && (
               <SpecialtiesDropdown
@@ -301,8 +362,11 @@ export default function Chat() {
               onClick={handleUserInput}
               className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 mr-2 flex items-center justify-center gap-1 focus:outline-none focus:border-picton-blue-500 focus:border-2"
             >
-              Send
-              <IoSend className="text-xs" />
+              {isBotTyping || forceStopTyping ? (
+                <IoSquare className="text-xl" onClick={stopBotTyping} />
+              ) : (
+                <IoSend className="text-xs" />
+              )}
             </motion.button>
           </div>
         </div>
