@@ -4,7 +4,7 @@ import { IoChatbubbles, IoCloseOutline, IoSend, IoRefresh, IoSquare } from "reac
 import SpecialtiesDropdown from "./SpecialtiesDropdown";
 import Doctor from "./Doctor";
 import { motion } from "framer-motion";
-import { useBooking } from "./BookingContext";
+import { BookingProvider, useBooking } from './BookingContext';
 import AniText from "./Anitext";
 
 export default function Chat() {
@@ -25,10 +25,11 @@ export default function Chat() {
 
   useEffect(() => {
     if (!initialMessageSet) {
-      displayBotMessage("Ana NabadyBot, Bach ne9der n3awnek");
+      displayBotMessage(`Ana NabadyBot, Bach ne9der n3awnek?<br />أنا نابادي بوت، باش نقدر نعاونك؟`);
       setInitialMessageSet(true);
     }
   }, [initialMessageSet]);
+  
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -69,16 +70,21 @@ export default function Chat() {
 
   const isAppointmentRelated = (message) => {
     const appointmentKeywords = [
-      "bghyt nakhod",
-      "rendez vous",
-      "bghyt ndowz",
-      "bghyt nqabbel tabib",
-      "kanqalbek 3la rdv",
-      "wach mumkin ndowz",
-      "bghyt nqabbel doktor",
-      "bghyt n7jz",
-      "kanqalbek 3la wqt",
-      "rdv",
+      "bghyt nakhod maw3id","bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib", 
+          "kanqalbek 3la rdv", "wach mumkin ndowz", "bghyt nqabbel doktor", 
+          "bghyt n7jz", "kanqalbek 3la wqt","bghit ndir rendez-vous","bghit ndir rdv","bghit nakhod rendez vous","bghit nakhod rendez-vous","bghit nakhod rdv","bghit nakhod maw3id","bghyt nakhod maou3id","bghyt na7jez maw3id","bghyt ne7jez maou3id",
+          "momkin nji l clinic?","rdv",
+          "bghit n3ayet l doctor","bghit n3ayet l docteur","bghit n3ayet l tbib",
+          "kayn chi rdv disponible?",
+          "bghit nchouf docteur", "bghit nchouf tbib",
+          "fin momkin nl9a rdv?","fin momkin nakhod rdv?",
+          "wach momkin nl9a rendez-vous lyoma?",
+          "bghit nreserve wa9t m3a tbib",
+          "mnin ymkni ndir rendez-vous?",
+          "kifach nqder ndir rendez-vous?",
+          " momkin te3tini liste dyal tbibes disponibles.","Kifach nakhod rendez-vous avec le médecin?","consultation",    "بغيت ناخد موعد",  "بغيت ندوز", "بغيت نقابل طبيب",   " كنقلبك على rendez vous","كنقلبك على موعد", "بغيت نقابل طبيب", "واش ممكن ندوز", "بغيت نقابل دكتور", "بغيت نحجز", "بغيت نحجز موعد",
+           "كنقلبك على وقت","بغيت ندير rendez-vous","بغيت ندير rdv","بغيت ناخد rendez vous", "بغيت ناخد rendez-vous", "بغيت ناخد rdv",   "بغيت ناخد موعد",  "بغيت نحجز موعد","بغيت نشوف دكتور", "بغيت نشوف طبيب", "فين ممكن نلقى rendez vous?","فين ممكن نلقى rendez vous?",
+           "فين ممكن نلقى موعد؟","فين ممكن نلقى rendez vous؟","واش ممكن نلقى موعد ليوما؟", "بغيت نريزرفي وقت مع طبيب","ممكن تعطيني ليست ديال طبيب متاحين؟","موعد"
     ];
     return appointmentKeywords.some((keyword) => message.includes(keyword));
   };
@@ -105,43 +111,47 @@ export default function Chat() {
       });
   };
 
+  
   const processUserResponse = async (response, step) => {
     try {
-      setIsBotTyping(true); // Set bot typing state to true
-      const res = await fetch("http://localhost:5000/process_response", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ response, step }),
-      });
-      const data = await res.json();
-      if (data.complete) {
-        finalizeAppointment();
-      } else {
-        setBookingDetails((prevDetails) => ({
-          ...prevDetails,
-          [step === 1 ? "first_name" : step === 2 ? "last_name" : step === 3 ? "phone_number" : "email"]: response,
-        }));
-        setAppointmentStep(data.next_step);
-        const nextQuestion = getNextQuestion(data.next_step);
-        displayBotMessage(nextQuestion);
-      }
-      setIsBotTyping(false); // Set bot typing state to false after message is displayed
+        setIsBotTyping(true); // Set bot typing state to true
+        const res = await fetch("http://localhost:5000/process_response", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ response, step }),
+        });
+        const data = await res.json();
+        if (data.complete) {
+            console.log('Final booking details:', bookingDetails); // Debugging
+            finalizeAppointment();
+        } else {
+            setBookingDetails((prevDetails) => ({
+                ...prevDetails,
+                [step === 1 ? "first_name" : step === 2 ? "last_name" : step === 3 ? "phone_number" : step === 4 ? "email" : ""]: response,
+            }));
+            setAppointmentStep(data.next_step);
+            const nextQuestion = getNextQuestion(data.next_step);
+            displayBotMessage(nextQuestion);
+        }
+        setIsBotTyping(false); // Set bot typing state to false after message is displayed
     } catch (error) {
-      console.error("Error processing response:", error);
-      setIsBotTyping(false); // Set bot typing state to false in case of error
+        console.error("Error processing response:", error);
+        setIsBotTyping(false); // Set bot typing state to false in case of error
     }
-  };
+};
+  
 
   const getNextQuestion = (step) => {
     switch (step) {
       case 1:
-        return "Achno smitek?";
+        return "Achno ism chakhsi dyalk?";
       case 2:
-        return "Achno knitek?";
+        return "Achno ism 3a2ili dyalk?";
       case 3:
         return "3tini ra9m lhatif dyalk?";
       case 4:
         return "Chnahowa l'email dyalk?";
+     
       default:
         return "";
     }
@@ -169,12 +179,13 @@ export default function Chat() {
 
         const data = await response.json();
         displayBotMessage(`t2akad liya mn ma3lomat dyalk.
-        Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${bookingDetails.phone_number} Email: ${bookingDetails.email} Tbib: ${bookingDetails.doctorName} lwe9t: ${bookingDetails.timeSlot}`);
+        Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${bookingDetails.phone_number} Tbib: ${bookingDetails.doctorName} lwe9t: ${bookingDetails.timeSlot}`);
+
     } catch (error) {
         console.error("Error finalizing appointment:", error);
         displayBotMessage("w9e3 lina mochkil wakha t3awad mn lwl?.");
     }
-  };
+};  
 
   const displayUserMessage = (message, time) => {
     console.log("User Message:", message);
@@ -226,8 +237,8 @@ export default function Chat() {
 
   // Function to stop the bot typing
   const stopBotTyping = () => {
-    setForceStopTyping(true);
     setIsBotTyping(false); // Stop bot typing
+    setForceStopTyping(true);
   };
 
   useEffect(() => {
@@ -246,7 +257,7 @@ export default function Chat() {
         <IoChatbubbles className="text-xl w-16 h-8" />
       </button>
       {isOpen && (
-        <div className="bg-black-squeeze w-80 h-96 flex flex-col justify-between rounded-xl fixed bottom-14 right-18">
+        <div className="bg-black-squeeze w-80 h-96 flex flex-col justify-between rounded-xl fixed bottom-20 right-18">
           <div
             style={{
               backgroundImage:
@@ -296,7 +307,7 @@ export default function Chat() {
                   }}
                 >
                   {msg.type === "bot" ? (
-                    <AniText msg={msg.text} />
+                    <AniText msg={msg.text} forceStopTyping={forceStopTyping} />
                   ) : (
                     msg.text
                   )}
@@ -336,7 +347,7 @@ export default function Chat() {
                 onSlotClick={(doctorName, PcsID, slot) => {
                   setBookingDetails({ doctorName, PcsID, timeSlot: slot });
                   displayBotMessage(
-                    `Chokran 7it khtariti ${doctorName} m3a ${slot}. 3tini smitek 3afak.`
+                    `Chokran 7it khtariti ${doctorName} m3a ${slot}. 3tini ism chakhsi dyalk 3afak.`
                   );
                   setShowSpecialtiesDropdown(false);
                   setShowDoctors(false);
@@ -347,11 +358,11 @@ export default function Chat() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="flex items-center justify-end w-full  rounded-full shadow-inner px-4 bg-white ">
+          <div className="flex items-center justify-end w-full rounded-full shadow-inner px-4 ">
             <input
               type="text"
               placeholder="Type a message..."
-              className="pl-4 pr-10 py-2 w-full rounded bg-white focus:border-none focus:outline-none"
+              className="pl-4 pr-10 py-2 bg-black-squeeze w-full rounded bg-white focus:border-none focus:outline-none"
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
               onKeyUp={(e) => e.key === "Enter" && handleUserInput()}
@@ -362,11 +373,15 @@ export default function Chat() {
               onClick={handleUserInput}
               className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 mr-2 flex items-center justify-center gap-1 focus:outline-none focus:border-picton-blue-500 focus:border-2"
             >
-              {isBotTyping || forceStopTyping ? (
-                <IoSquare className="text-xl" onClick={stopBotTyping} />
-              ) : (
-                <IoSend className="text-xs" />
-              )}
+              <IoSend className="text-xs" />
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={stopBotTyping}
+              className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 flex items-center justify-center gap-1 focus:outline-none focus:border-picton-blue-500 focus:border-2"
+            >
+              <IoSquare className="text-xs" />
             </motion.button>
           </div>
         </div>

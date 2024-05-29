@@ -26,6 +26,17 @@
         "Sbah nor, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?" ]
       
     },
+
+    {
+      "tag": "2",
+      "patterns": [
+        "سلام"
+      ],
+      "responses": [
+        "سلام، مرحبا بكم في نابادي بوت. أنا هنا باش نساعدكم و نعاونكم تحجزو المواعيد ديالكم. كاين شي حاجة نعاونك فيها؟"
+      ]}
+    ,
+
     {
       "tag": "greeting3",
       "patterns": [

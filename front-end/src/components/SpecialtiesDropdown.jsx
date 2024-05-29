@@ -12,7 +12,7 @@ const specialtiesTranslation = {
     "urologie": "جراحة المسالك البولية",
     "chirurgie cardio": "جراحة القلب",
     "chirurgie vasculaire": "جراحة الأوعية الدموية",
-    "chirurgie générale": "الجراحة العامة",
+    "chirurgie général": "الجراحة العامة",
     "chirurgie orthopédiste": "جراحة العظام",
     "traumatologie": "طب الإصابات",
     "orthopédie": "جراحة العظام",
@@ -43,13 +43,13 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
       <button
         key={specialty.id}
         onClick={() => fetchDoctorsForSpecialty(specialty.name)}
-        className="bg-picton-blue-500 opacity-40 text-white p-1 m-1 rounded-lg hover:bg-persian-green-500"
+        className="bg-picton-blue-500 opacity-40 text-white p-1 m-1 rounded-lg hover:bg-persian-green-500 flex-none"
+        style={{ minWidth: "100px", padding: "0.5rem 1rem" }}
       >
         {specialtiesTranslation[specialty.name] || specialty.name}
       </button>
     ));
   };
-
 
   const handleShowMore = () => {
     setLastDisplayedIndex((prevIndex) =>
@@ -59,13 +59,15 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
 
   return (
     <div className="p-3 bg-black-squeeze rounded-b-xl overflow-hidden shadow-lg">
-      {displaySpecialties(0, lastDisplayedIndex)}
+      <div className="flex overflow-x-auto">
+        {displaySpecialties(0, lastDisplayedIndex)}
+      </div>
       {lastDisplayedIndex < specialties.length && (
         <button
           onClick={handleShowMore}
           className="bg-picton-blue-500 hover:bg-persian-green-600 text-white p-1 rounded mt-2 text-sm"
         >
-          bghiti ktr?
+          بغيتي كتر؟
         </button>
       )}
     </div>

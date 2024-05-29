@@ -1,7 +1,6 @@
-// Doctor.jsx
-
 import React, { useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 
 function Doctor({ specialty, onSlotClick }) {
   const [doctors, setDoctors] = useState([]);
@@ -129,13 +128,14 @@ function Doctor({ specialty, onSlotClick }) {
 
     return (
       <div className="embla" ref={emblaRef}>
-        <span className="text-lg bold">Sway3 li mojodin:</span>
-        <div className="embla__container">
+        <span className="text-lg bold">معاش بغيتي؟</span>
+        <div className="embla__container flex overflow-x-auto">
           {filteredSlots.map((slot, index) => (
-            <div className="embla__slide" key={index}>
+            <div className="embla__slide flex-none" key={index}>
               <button
                 onClick={() => onSlotClick(doctor.name, doctor.PcsID, slot)}
-                className="btn btn-primary my-2"
+                className="btn btn-primary my-2 mx-1"
+                style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
               >
                 {slot}
               </button>
@@ -147,33 +147,42 @@ function Doctor({ specialty, onSlotClick }) {
   };
 
   return (
-    <div className="rounded-lg p-4">
+    <div className="rounded-lg p-4 bg-white shadow-md">
       {loading && (
         <p className="text-blue-500">hana kn9alab f {currentSpecialty}</p>
       )}
       {doctors.map((doctor, index) => (
         <div
           key={index}
-          className="mb-2 p-2 border rounded-lg hover:bg-gray-100"
+          className="mb-4 p-4 border rounded-lg hover:bg-gray-100 shadow-sm"
         >
-          <strong className="font-semibold">{doctor.name}</strong>
-          <br />
-          <span className="text-sm text-gray-700">Tel: {doctor.tel}</span>
-          <br />
-          <span className="text-sm text-gray-700">
-            Email:
-            <a
-              href={`mailto:${doctor.email}`}
-              className="text-blue-500 hover:text-blue-700 underline"
-            >
-              {doctor.email}
-            </a>
-          </span>
-          <br />
-          <span className="text-sm text-gray-700">
-            Address: {doctor.address}
-          </span>
-          <br />
+          <strong className="font-semibold text-xl mb-2 block">{doctor.name}</strong>
+          <div className="mb-2 flex items-center">
+            <FaPhone className="mr-2 text-blue-500" />
+            <span className="text-gray-700">{doctor.tel}</span>
+          </div>
+          <div className="mb-2 flex items-center">
+            <FaEnvelope className="mr-2 text-blue-500" />
+            <span className="text-gray-700">
+             
+              <a
+                href={`mailto:${doctor.email}`}
+                className="text-blue-500 hover:text-blue-700 underline break-all"
+              >
+                {doctor.email}
+              </a>
+            </span>
+          </div>
+          <div className="mb-2 flex items-center">
+            <FaMapMarkerAlt className="mr-2 text-blue-500" />
+            <span className="text-gray-700">{doctor.address}</span>
+          </div>
+          <div className="mb-2 flex items-center">
+            <FaCalendarAlt className="mr-2 text-blue-500" />
+            <span className="text-gray-700">
+               {doctor.agendaConfig.heureOuverture} - {doctor.agendaConfig.heureFermeture}
+            </span>
+          </div>
           {createAgendaGrid(doctor.agendaConfig, doctor)}
         </div>
       ))}

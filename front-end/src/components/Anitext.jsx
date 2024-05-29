@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import Typed from "typed.js";
 
-function AniText({ msg }) {
+function AniText({ msg, forceStopTyping }) {
   const el = useRef(null);
+  const typed = useRef(null);
 
   useEffect(() => {
     const options = {
@@ -10,12 +11,20 @@ function AniText({ msg }) {
       typeSpeed: 40,
       showCursor: false,
     };
-    const typed = new Typed(el.current, options);
+    typed.current = new Typed(el.current, options);
 
     return () => {
-      typed.destroy();
+      if (typed.current) {
+        typed.current.destroy();
+      }
     };
   }, [msg]);
+
+  useEffect(() => {
+    if (forceStopTyping && typed.current) {
+      typed.current.stop();
+    }
+  }, [forceStopTyping]);
 
   return <span ref={el}></span>;
 }
