@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const specialtiesTranslation = {
     "anesthésie": "تخدير",
@@ -33,39 +33,57 @@ const specialtiesTranslation = {
     "médecine physique et de réadaptation": "الطب الفيزيائي وإعادة التأهيل"
 };
 
-function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
-  const [lastDisplayedIndex, setLastDisplayedIndex] = useState(2);
+const customOrder = [
+  "médecine générale", "pédiatrie", "gynécologie obstétrique", "cardiologie", "endocrinologie", "dermatologie", "ophtalmologie", "pneumologie", "psychiatrie", 
+  "chirurgie orthopédiste", "traumatologie", "urologie", "gastroentérologie", "néphrologie", 
+  "neuropsychiatrie", "oto-rhino-laryngologie", "chirurgie plastique", "anesthésie", "chirurgie vasculaire", "chirurgie générale", "chirurgie cancérologique", "chirurgie cardio", "allergologie", "médecine du sport", 
+  "diabétologie nutritionnelle", "nutrition", "médecine interne", "médecine physique et de réadaptation", "médecine du travail", "orthopédie"
+];
 
-  const displaySpecialties = (startIndex, endIndex) => {
-    const visibleSpecialties = specialties.slice(startIndex, endIndex + 1);
-    console.log(visibleSpecialties); // Ajoutez cette ligne pour vérifier les noms de spécialités
-    return visibleSpecialties.map((specialty) => (
-      <button
-        key={specialty.id}
-        onClick={() => fetchDoctorsForSpecialty(specialty.name)}
-        className="bg-picton-blue-500 opacity-40 text-white p-1 m-1 rounded-lg hover:bg-persian-green-500 flex-none"
-        style={{ minWidth: "100px", padding: "0.5rem 1rem" }}
-      >
-        {specialtiesTranslation[specialty.name] || specialty.name}
-      </button>
-    ));
-  };
+function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [orderedSpecialties, setOrderedSpecialties] = useState([]);
+
+  useEffect(() => {
+    const ordered = customOrder.map(name => specialties.find(s => s.name === name)).filter(Boolean);
+    const remaining = specialties.filter(s => !customOrder.includes(s.name));
+    setOrderedSpecialties([...ordered, ...remaining]);
+  }, [specialties]);
 
   const handleShowMore = () => {
-    setLastDisplayedIndex((prevIndex) =>
-      Math.min(prevIndex + 3, specialties.length)
-    );
+    setCurrentIndex((prevIndex) => Math.min(prevIndex + 3, orderedSpecialties.length));
   };
 
   return (
     <div className="p-3 bg-black-squeeze rounded-b-xl overflow-hidden shadow-lg">
-      <div className="flex overflow-x-auto">
-        {displaySpecialties(0, lastDisplayedIndex)}
+      <div className="flex space-x-2">
+        {orderedSpecialties.slice(currentIndex, currentIndex + 3).map((specialty) => (
+          <button
+            key={specialty.id}
+            onClick={() => fetchDoctorsForSpecialty(specialty.name)}
+            className="text-white p-1 rounded-lg hover:bg-persian-green-500"
+            style={{
+              backgroundColor: "#87CEEB", // Bleu ciel
+              minWidth: "80px",
+              maxWidth: "80px",
+              whiteSpace: "normal",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              padding: "0.25rem 0.5rem",
+              fontSize: "0.65rem",  // Petite taille de police
+              lineHeight: "0.85rem",  // Hauteur de ligne pour ajuster l'espacement
+              height: "2.5rem",  // Hauteur fixe pour uniformité
+              textAlign: "center",  // Centrer le texte
+            }}
+          >
+            {specialtiesTranslation[specialty.name] || specialty.name}
+          </button>
+        ))}
       </div>
-      {lastDisplayedIndex < specialties.length && (
+      {currentIndex + 3 < orderedSpecialties.length && (
         <button
           onClick={handleShowMore}
-          className="bg-picton-blue-500 hover:bg-persian-green-600 text-white p-1 rounded mt-2 text-sm"
+          className="bg-persian-green-500 hover:bg-teal-600 text-white p-1 rounded mt-2 text-xs"
         >
           بغيتي كتر؟
         </button>

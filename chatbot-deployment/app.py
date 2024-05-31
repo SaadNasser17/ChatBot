@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import requests
 import json
@@ -52,7 +52,7 @@ def get_specialties():
 
 def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, isIframe=False, referrer=""):
     response = requests.post(
-        "https://apiuat.nabady.ma/api/users/medecin/search",
+        "https://apipreprod.nabady.ma/api/users/medecin/search",
         json={
             "query": query,
             "consultation": consultation,
@@ -66,7 +66,7 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         doctors = response.json()['praticien']['data']
         for doctor in doctors:
             pcs_id = doctor['0']['praticienCentreSoins'][0]['id']
-            appointments_response = requests.get(f"https://apiuat.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
+            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
             if appointments_response.ok:
                 unavailable_times = appointments_response.json()
                 doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)
@@ -132,9 +132,10 @@ def process_response():
         session['appointment_details']['last_name'] = response
     elif step == 3:
         session['appointment_details']['phone_number'] = response
-    elif step == 4:
-        session['appointment_details']['email'] = response
+
         return jsonify({"message": "Response processed", "next_step": step + 1, "complete": True})
+    
+    session.modified = True
     return jsonify({"message": "Response processed", "next_step": step + 1})
 
 

@@ -121,24 +121,29 @@ export default function Chat() {
             body: JSON.stringify({ response, step }),
         });
         const data = await res.json();
+        
+        // Update booking details with the response for the current step
+        setBookingDetails((prevDetails) => ({
+            ...prevDetails,
+            [step === 1 ? "first_name" : step === 2 ? "last_name" : step === 3 ? "phone_number" : step === 4 ? "email" : ""]: response,
+        }));
+
         if (data.complete) {
-            console.log('Final booking details:', bookingDetails); // Debugging
             finalizeAppointment();
         } else {
-            setBookingDetails((prevDetails) => ({
-                ...prevDetails,
-                [step === 1 ? "first_name" : step === 2 ? "last_name" : step === 3 ? "phone_number" : step === 4 ? "email" : ""]: response,
-            }));
             setAppointmentStep(data.next_step);
             const nextQuestion = getNextQuestion(data.next_step);
             displayBotMessage(nextQuestion);
         }
+        
         setIsBotTyping(false); // Set bot typing state to false after message is displayed
     } catch (error) {
         console.error("Error processing response:", error);
         setIsBotTyping(false); // Set bot typing state to false in case of error
     }
 };
+
+
   
 
   const getNextQuestion = (step) => {
@@ -149,9 +154,7 @@ export default function Chat() {
         return "Achno ism 3a2ili dyalk?";
       case 3:
         return "3tini ra9m lhatif dyalk?";
-      case 4:
-        return "Chnahowa l'email dyalk?";
-     
+      
       default:
         return "";
     }
@@ -171,21 +174,26 @@ export default function Chat() {
                 first_name: bookingDetails.first_name,
                 last_name: bookingDetails.last_name,
                 phone_number: bookingDetails.phone_number,
-                email: bookingDetails.email,
+                email: bookingDetails.email,  // Ensure email is included in the request body
             }),
         });
 
         if (!response.ok) throw new Error("Network response was not ok.");
 
         const data = await response.json();
+
+        // Display the confirmation message with up-to-date booking details
         displayBotMessage(`t2akad liya mn ma3lomat dyalk.
-        Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${bookingDetails.phone_number} Tbib: ${bookingDetails.doctorName} lwe9t: ${bookingDetails.timeSlot}`);
+        Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${bookingDetails.phone_number}, Tbib: ${bookingDetails.doctorName}, lwe9t: ${bookingDetails.timeSlot}`);
 
     } catch (error) {
         console.error("Error finalizing appointment:", error);
         displayBotMessage("w9e3 lina mochkil wakha t3awad mn lwl?.");
     }
-};  
+};
+
+
+ 
 
   const displayUserMessage = (message, time) => {
     console.log("User Message:", message);

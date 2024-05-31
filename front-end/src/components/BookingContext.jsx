@@ -7,7 +7,15 @@ export function useBooking() {
 }
 
 export function BookingProvider({ children }) {
-    const [bookingDetails, setBookingDetails] = useState({});
+    const [bookingDetails, setBookingDetails] = useState({
+        doctorName: '',
+        PcsID: '',
+        timeSlot: '',
+        first_name: '',
+        last_name: '',
+        phone_number: '',
+        email: ''
+    });
 
     return (
         <BookingContext.Provider value={{ bookingDetails, setBookingDetails }}>
