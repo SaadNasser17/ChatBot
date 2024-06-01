@@ -66,7 +66,7 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         doctors = response.json()['praticien']['data']
         for doctor in doctors:
             pcs_id = doctor['0']['praticienCentreSoins'][0]['id']
-            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
+            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{PcsID}/day/0/limit/1")
             if appointments_response.ok:
                 unavailable_times = appointments_response.json()
                 doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)
@@ -75,6 +75,40 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         return doctors
     else:
         return None
+
+@app.route('/register_user', methods=['POST'])
+def register_user():
+    data = request.get_json()
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    phone_number = data.get('phone_number')
+    email = data.get('email')
+
+    user_data = {
+        "user": {
+            "typeUser": {
+                "@id": "/api/type_users/24",
+                "@type": "TypeUser",
+                "libelle": "Patient",
+                "variableName": "patient",
+                "id": 24
+            },
+            "firstname": first_name,
+            "lastname": last_name,
+            "tel": phone_number,
+            "email": email,
+            "password": "Elajdoc@2022",
+            "consentement": True
+        },
+        "validateBYCode": False
+    }
+
+    response = requests.post('https://apipreprod.nabady.ma/api/users/register', json=user_data)
+
+    if response.status_code == 201:
+        return jsonify({'message': 'User registered successfully!'}), 201
+    else:
+        return jsonify({'error': 'Failed to register user'}), response.status_code
 
 @app.route("/get_doctors", methods=["POST"])
 def get_doctors():

@@ -4,7 +4,7 @@ import { IoChatbubbles, IoCloseOutline, IoSend, IoRefresh, IoSquare } from "reac
 import SpecialtiesDropdown from "./SpecialtiesDropdown";
 import Doctor from "./Doctor";
 import { motion } from "framer-motion";
-import { BookingProvider, useBooking } from './BookingContext';
+import { useBooking } from './BookingContext';
 import AniText from "./Anitext";
 
 export default function Chat() {
@@ -20,8 +20,9 @@ export default function Chat() {
   const [appointmentStep, setAppointmentStep] = useState(0);
   const [isBotTyping, setIsBotTyping] = useState(false);
   const [forceStopTyping, setForceStopTyping] = useState(false);
-  const messageRefs = useRef([]);
   const messagesEndRef = useRef(null);
+  const [generatedEmail, setGeneratedEmail] = useState('');
+  const [waitingForConfirmation, setWaitingForConfirmation] = useState(false);
 
   useEffect(() => {
     if (!initialMessageSet) {
@@ -29,7 +30,6 @@ export default function Chat() {
       setInitialMessageSet(true);
     }
   }, [initialMessageSet]);
-  
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -51,14 +51,102 @@ export default function Chat() {
       displayUserMessage(msg, currentTime);
       setUserMessage("");
 
-      if (appointmentStep > 0) {
-        await processUserResponse(msg, appointmentStep);
+      if (appointmentStep === 3) {
+        setBookingDetails((prevDetails) => ({
+          ...prevDetails,
+          phone_number: msg,
+        }));
+        await processUserResponse(msg);
+      } else if (appointmentStep > 0) {
+        await processUserResponse(msg);
       } else if (isAppointmentRelated(msg)) {
         fetchSpecialties();
         setShowSpecialtiesDropdown(true);
       } else {
         callFlaskAPI(msg, currentTime);
       }
+    }
+  };
+
+  const processUserResponse = async (response) => {
+    try {
+      switch (appointmentStep) {
+        case 1:
+          setBookingDetails({ ...bookingDetails, first_name: response });
+          displayBotMessage("Achno ism 3a2ili dyalk?");
+          setAppointmentStep(2);
+          break;
+
+        case 2:
+          setBookingDetails({ ...bookingDetails, last_name: response });
+          displayBotMessage("3tini ra9m lhatif dyalk?");
+          setAppointmentStep(3);
+          break;
+
+        case 3:
+          setBookingDetails({ ...bookingDetails, phone_number: response });
+          const confirmationMessage = `t2akad liya mn ma3lomat dyalk.
+          Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${response}, Tbib: ${bookingDetails.doctorName}, lwe9t: ${bookingDetails.timeSlot}`;
+          displayBotMessage(confirmationMessage);
+          displayBotMessage("Ah wlla la?");
+          setWaitingForConfirmation(true);
+          break;
+
+        default:
+          displayBotMessage("Ma fhmtsh, 3afak 3awd ghi mra.");
+          break;
+      }
+    } catch (error) {
+      console.error("Error processing user response:", error);
+      displayBotMessage("w9e3 lina mochkil, wakha t3awad mn lwl?");
+    }
+  };
+
+  const handleConfirmation = async (confirmation) => {
+    if (confirmation === "ah") {
+      await finalizeAppointment();
+    } else {
+      displayBotMessage("Okay, let's start over with your first name.");
+      resetAppointmentDetails();
+      setAppointmentStep(1);
+    }
+    setWaitingForConfirmation(false);
+  };
+
+  const finalizeAppointment = async () => {
+    try {
+      const randomEmail = generateRandomEmail();
+      setGeneratedEmail(randomEmail);
+  
+      // Ensure the state is updated before making the API call
+      setBookingDetails((prevDetails) => ({
+        ...prevDetails,
+        email: randomEmail,
+      }));
+  
+      // Wait a short time to ensure the state is set
+      await new Promise((resolve) => setTimeout(resolve, 0));
+  
+      const response = await fetch("http://localhost:5000/register_user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          first_name: bookingDetails.first_name,
+          last_name: bookingDetails.last_name,
+          phone_number: bookingDetails.phone_number,
+          email: randomEmail,
+        }),
+      });
+  
+      if (!response.ok) throw new Error("Network response was not ok.");
+  
+      const data = await response.json();
+      displayBotMessage(`Appointment confirmed: ${JSON.stringify(data)}`);
+    } catch (error) {
+      console.error("Error finalizing appointment:", error);
+      displayBotMessage("An error occurred, please try again.");
     }
   };
 
@@ -70,27 +158,27 @@ export default function Chat() {
 
   const isAppointmentRelated = (message) => {
     const appointmentKeywords = [
-      "bghyt nakhod maw3id","bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib", 
-          "kanqalbek 3la rdv", "wach mumkin ndowz", "bghyt nqabbel doktor", 
-          "bghyt n7jz", "kanqalbek 3la wqt","bghit ndir rendez-vous","bghit ndir rdv","bghit nakhod rendez vous","bghit nakhod rendez-vous","bghit nakhod rdv","bghit nakhod maw3id","bghyt nakhod maou3id","bghyt na7jez maw3id","bghyt ne7jez maou3id",
-          "momkin nji l clinic?","rdv",
-          "bghit n3ayet l doctor","bghit n3ayet l docteur","bghit n3ayet l tbib",
-          "kayn chi rdv disponible?",
-          "bghit nchouf docteur", "bghit nchouf tbib",
-          "fin momkin nl9a rdv?","fin momkin nakhod rdv?",
-          "wach momkin nl9a rendez-vous lyoma?",
-          "bghit nreserve wa9t m3a tbib",
-          "mnin ymkni ndir rendez-vous?",
-          "kifach nqder ndir rendez-vous?",
-          " momkin te3tini liste dyal tbibes disponibles.","Kifach nakhod rendez-vous avec le médecin?","consultation",    "بغيت ناخد موعد",  "بغيت ندوز", "بغيت نقابل طبيب",   " كنقلبك على rendez vous","كنقلبك على موعد", "بغيت نقابل طبيب", "واش ممكن ندوز", "بغيت نقابل دكتور", "بغيت نحجز", "بغيت نحجز موعد",
-           "كنقلبك على وقت","بغيت ندير rendez-vous","بغيت ندير rdv","بغيت ناخد rendez vous", "بغيت ناخد rendez-vous", "بغيت ناخد rdv",   "بغيت ناخد موعد",  "بغيت نحجز موعد","بغيت نشوف دكتور", "بغيت نشوف طبيب", "فين ممكن نلقى rendez vous?","فين ممكن نلقى rendez vous?",
-           "فين ممكن نلقى موعد؟","فين ممكن نلقى rendez vous؟","واش ممكن نلقى موعد ليوما؟", "بغيت نريزرفي وقت مع طبيب","ممكن تعطيني ليست ديال طبيب متاحين؟","موعد"
+      "bghyt nakhod maw3id", "bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib",
+      "kanqalbek 3la rdv", "wach mumkin ndowz", "bghyt nqabbel doktor",
+      "bghyt n7jz", "kanqalbek 3la wqt", "bghit ndir rendez-vous", "bghit ndir rdv", "bghit nakhod rendez vous", "bghit nakhod rendez-vous", "bghit nakhod rdv", "bghit nakhod maw3id", "bghyt nakhod maou3id", "bghyt na7jez maw3id", "bghyt ne7jez maou3id",
+      "momkin nji l clinic?", "rdv",
+      "bghit n3ayet l doctor", "bghit n3ayet l docteur", "bghit n3ayet l tbib",
+      "kayn chi rdv disponible?",
+      "bghit nchouf docteur", "bghit nchouf tbib",
+      "fin momkin nl9a rdv?", "fin momkin nakhod rdv?",
+      "wach momkin nl9a rendez-vous lyoma?",
+      "bghit nreserve wa9t m3a tbib",
+      "mnin ymkni ndir rendez-vous?",
+      "kifach nqder ndir rendez-vous?",
+      "momkin te3tini liste dyal tbibes disponibles.", "Kifach nakhod rendez-vous avec le médecin?", "consultation", "بغيت ناخد موعد", "بغيت ندوز", "بغيت نقابل طبيب", "كنقلبك على rendez vous", "كنقلبك على موعد", "بغيت نقابل طبيب", "واش ممكن ندوز", "بغيت نقابل دكتور", "بغيت نحجز", "بغيت نحجز موعد",
+      "كنقلبك على وقت", "بغيت ندير rendez-vous", "بغيت ندير rdv", "بغيت ناخد rendez vous", "بغيت ناخد rendez-vous", "بغيت ناخد rdv", "بغيت ناخد موعد", "بغيت نحجز موعد", "بغيت نشوف دكتور", "بغيت نشوف طبيب", "فين ممكن نلقى rendez vous?", "فين ممكن نلقى rendez vous?",
+      "فين ممكن نلقى موعد؟", "فين ممكن نلقى rendez vous؟", "واش ممكن نلقى موعد ليوما؟", "بغيت نريزرفي وقت مع طبيب", "ممكن تعطيني ليست ديال طبيب متاحين؟", "موعد"
     ];
     return appointmentKeywords.some((keyword) => message.includes(keyword));
   };
 
   const callFlaskAPI = (userMessage, time) => {
-    setIsBotTyping(true); // Set bot typing state to true
+    setIsBotTyping(true);
     fetch("http://localhost:5000/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -102,107 +190,38 @@ export default function Chat() {
         if (data.answer.includes("first name")) {
           setAppointmentStep(1);
         }
-        setIsBotTyping(false); // Set bot typing state to false after message is displayed
+        setIsBotTyping(false);
       })
       .catch((error) => {
         console.error("Error:", error);
         displayBotMessage("Une erreur s'est produite, veuillez réessayer.");
-        setIsBotTyping(false); // Set bot typing state to false in case of error
+        setIsBotTyping(false);
       });
   };
 
-  
-  const processUserResponse = async (response, step) => {
-    try {
-        setIsBotTyping(true); // Set bot typing state to true
-        const res = await fetch("http://localhost:5000/process_response", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ response, step }),
-        });
-        const data = await res.json();
-        
-        // Update booking details with the response for the current step
-        setBookingDetails((prevDetails) => ({
-            ...prevDetails,
-            [step === 1 ? "first_name" : step === 2 ? "last_name" : step === 3 ? "phone_number" : step === 4 ? "email" : ""]: response,
-        }));
-
-        if (data.complete) {
-            finalizeAppointment();
-        } else {
-            setAppointmentStep(data.next_step);
-            const nextQuestion = getNextQuestion(data.next_step);
-            displayBotMessage(nextQuestion);
-        }
-        
-        setIsBotTyping(false); // Set bot typing state to false after message is displayed
-    } catch (error) {
-        console.error("Error processing response:", error);
-        setIsBotTyping(false); // Set bot typing state to false in case of error
-    }
+ const generateRandomEmail = () => {
+  const randomChars = Math.random().toString(36).substring(2, 10);
+  return `${randomChars}@yopmail.com`;
 };
 
-
-  
-
-  const getNextQuestion = (step) => {
-    switch (step) {
-      case 1:
-        return "Achno ism chakhsi dyalk?";
-      case 2:
-        return "Achno ism 3a2ili dyalk?";
-      case 3:
-        return "3tini ra9m lhatif dyalk?";
-      
-      default:
-        return "";
-    }
+  const addMessage = (text, type) => {
+    setMessages((prevMessages) => [...prevMessages, { text, type, time: new Date().toLocaleTimeString() }]);
   };
 
-  const finalizeAppointment = async () => {
-    try {
-        const response = await fetch("http://localhost:5000/save_appointment", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                doctorName: bookingDetails.doctorName,
-                PcsID: bookingDetails.PcsID,
-                timeSlot: bookingDetails.timeSlot,
-                first_name: bookingDetails.first_name,
-                last_name: bookingDetails.last_name,
-                phone_number: bookingDetails.phone_number,
-                email: bookingDetails.email,  // Ensure email is included in the request body
-            }),
-        });
-
-        if (!response.ok) throw new Error("Network response was not ok.");
-
-        const data = await response.json();
-
-        // Display the confirmation message with up-to-date booking details
-        displayBotMessage(`t2akad liya mn ma3lomat dyalk.
-        Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${bookingDetails.phone_number}, Tbib: ${bookingDetails.doctorName}, lwe9t: ${bookingDetails.timeSlot}`);
-
-    } catch (error) {
-        console.error("Error finalizing appointment:", error);
-        displayBotMessage("w9e3 lina mochkil wakha t3awad mn lwl?.");
-    }
-};
-
-
- 
+  const resetAppointmentDetails = () => {
+    setBookingDetails({
+      doctorName: "",
+      PcsID: "",
+      timeSlot: "",
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+      email: "",
+    });
+  };
 
   const displayUserMessage = (message, time) => {
-    console.log("User Message:", message);
-    setMessages((prev) => {
-      console.log("Previous Messages Before User Message:", prev); // Debugging
-      const newMessages = [...prev, { text: message, type: "user", time }];
-      console.log("New Messages After User Message:", newMessages); // Debugging
-      return newMessages;
-    });
+    setMessages((prev) => [...prev, { text: message, type: "user", time }]);
   };
 
   const displayBotMessage = (message) => {
@@ -210,13 +229,7 @@ export default function Chat() {
       hour: "2-digit",
       minute: "2-digit",
     });
-    console.log("Bot Message:", message);
-    setMessages((prev) => {
-      console.log("Previous Messages Before Bot Message:", prev); // Debugging
-      const newMessages = [...prev, { text: message, type: "bot", time: currentTime }];
-      console.log("New Messages After Bot Message:", newMessages); // Debugging
-      return newMessages;
-    });
+    setMessages((prev) => [...prev, { text: message, type: "bot", time: currentTime }]);
   };
 
   const fetchSpecialties = () => {
@@ -230,7 +243,6 @@ export default function Chat() {
       });
   };
 
-  // Function to reset the chat
   const resetChat = () => {
     setMessages([]);
     setUserMessage("");
@@ -240,12 +252,11 @@ export default function Chat() {
     setSelectedSpecialty(null);
     setShowDoctors(false);
     setAppointmentStep(0);
-    setBookingDetails({});
+    resetAppointmentDetails();
   };
 
-  // Function to stop the bot typing
   const stopBotTyping = () => {
-    setIsBotTyping(false); // Stop bot typing
+    setIsBotTyping(false);
     setForceStopTyping(true);
   };
 
@@ -326,22 +337,23 @@ export default function Chat() {
               </div>
             ))}
 
-            {isBotTyping && !forceStopTyping && (
-              <div className="chat chat-start my-1">
-                <div className="chat-image avatar">
-                  <div className="w-8 h-8 rounded-full overflow-hidden">
-                    <img src="bot-avatar.png" alt="Bot Avatar" />
-                  </div>
-                </div>
-                <div className="chat-bubble text-sm p-2 text-black" style={{ backgroundColor: "#CEF0FC", maxWidth: "75%" }}>
-                  <div className="typing-indicator" style={{ display: 'flex', alignItems: 'center' }}>
-                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite' }}></div>
-                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.2s' }}></div>
-                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.4s' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
+{isBotTyping && !forceStopTyping && (
+  <div className="chat chat-start my-1">
+    <div className="chat-image avatar">
+      <div className="w-8 h-8 rounded-full overflow-hidden">
+        <img src="bot-avatar.png" alt="Bot Avatar" />
+      </div>
+    </div>
+    <div className="chat-bubble text-sm p-2 text-black" style={{ backgroundColor: "#CEF0FC", maxWidth: "75%" }}>
+      <div className="typing-indicator" style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite' }}></div>
+        <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.2s' }}></div>
+        <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.4s' }}></div>
+      </div>
+    </div>
+  </div>
+)}
+
 
             {showSpecialtiesDropdown && (
               <SpecialtiesDropdown
@@ -362,6 +374,22 @@ export default function Chat() {
                   setAppointmentStep(1);
                 }}
               />
+            )}
+            {waitingForConfirmation && (
+              <div className="flex justify-center my-2">
+                <button
+                  onClick={() => handleConfirmation("ah")}
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2"
+                >
+                  Ah
+                </button>
+                <button
+                  onClick={() => handleConfirmation("la")}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2"
+                >
+                  La
+                </button>
+              </div>
             )}
             <div ref={messagesEndRef} />
           </div>
