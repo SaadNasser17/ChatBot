@@ -3,145 +3,15 @@
         "data": [
             {
                 "praticien": {
-                    "name": "Dr. maximum max",
-                    "PraticienCentreSoinID": 1803,
-                    "timeSlot": "17:20"
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "14:00"
                 },
                 "patient": {
-                    "first_name": "sasas",
+                    "first_name": "sas",
                     "last_name": "sasasa",
-                    "phone_number": "sassasa",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. maximum max",
-                    "PraticienCentreSoinID": 1803,
-                    "timeSlot": "17:40"
-                },
-                "patient": {
-                    "first_name": "saad",
-                    "last_name": "sasasa",
-                    "phone_number": "sasasasa",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. maximum max",
-                    "PraticienCentreSoinID": 1803,
-                    "timeSlot": "17:50"
-                },
-                "patient": {
-                    "first_name": "asass",
-                    "last_name": "asasasas",
-                    "phone_number": "asasasa",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. maximum max",
-                    "PraticienCentreSoinID": 1803,
-                    "timeSlot": "17:50"
-                },
-                "patient": {
-                    "first_name": "sara",
-                    "last_name": "housny",
-                    "phone_number": "07536378494",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. praticien Abdelhamid",
-                    "PraticienCentreSoinID": 1808,
-                    "timeSlot": "18:30"
-                },
-                "patient": {
-                    "first_name": "sara",
-                    "last_name": "housny",
-                    "phone_number": "0634163016",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. praticien Abdelhamid",
-                    "PraticienCentreSoinID": 1808,
-                    "timeSlot": "19:30"
-                },
-                "patient": {
-                    "first_name": "saad",
-                    "last_name": "housny",
-                    "phone_number": "0606060606",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. praticien Abdelhamid",
-                    "PraticienCentreSoinID": 1808,
-                    "timeSlot": "22:00"
-                },
-                "patient": {
-                    "first_name": "saad",
-                    "last_name": "housny",
-                    "phone_number": "0606060606",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. Benamar Farouk",
-                    "PraticienCentreSoinID": 1367,
-                    "timeSlot": "13:00"
-                },
-                "patient": {
-                    "first_name": "sara",
-                    "last_name": "housny",
-                    "phone_number": "09876543",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. Benamar Farouk",
-                    "PraticienCentreSoinID": 1367,
-                    "timeSlot": "13:00"
-                },
-                "patient": {
-                    "first_name": "sara",
-                    "last_name": "hous",
-                    "phone_number": "09876543",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. Benamar Farouk",
-                    "PraticienCentreSoinID": 1367,
-                    "timeSlot": "15:00"
-                },
-                "patient": {
-                    "first_name": "ss",
-                    "last_name": "bb",
-                    "phone_number": "34567",
-                    "email": null
-                }
-            },
-            {
-                "praticien": {
-                    "name": "Dr. Benamar Farouk",
-                    "PraticienCentreSoinID": 1367,
-                    "timeSlot": "15:00"
-                },
-                "patient": {
-                    "first_name": "ss",
-                    "last_name": "bb",
-                    "phone_number": "2345678",
-                    "email": null
+                    "phone_number": "123121",
+                    "patientId": 700455
                 }
             }
         ]

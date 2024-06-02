@@ -106,6 +106,77 @@ def register_user():
     response = requests.post('https://apipreprod.nabady.ma/api/users/register', json=user_data)
 
     if response.status_code == 201:
+        data = response.json()
+        patient_id = data["user"]["id"]
+        print(f"Patient ID: {patient_id}")  # Print the patient ID
+        return jsonify({'message': 'User registered successfully!', 'patient_id': patient_id}), 201
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+        return jsonify({'error': 'Failed to register user'}), response.status_code
+
+    data = request.get_json()
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    phone_number = data.get('phone_number')
+    email = data.get('email')
+
+    user_data = {
+        "user": {
+            "typeUser": {
+                "@id": "/api/type_users/24",
+                "@type": "TypeUser",
+                "libelle": "Patient",
+                "variableName": "patient",
+                "id": 24
+            },
+            "firstname": first_name,
+            "lastname": last_name,
+            "tel": phone_number,
+            "email": email,
+            "password": "Elajdoc@2022",
+            "consentement": True
+        },
+        "validateBYCode": False
+    }
+
+    response = requests.post('https://apipreprod.nabady.ma/api/users/register', json=user_data)
+
+    if response.status_code == 201:
+        data = response.json()
+        patient_id = data["user"]["id"]
+        print(f"Patient ID: {patient_id}")  # Print the patient ID
+        return jsonify({'message': 'User registered successfully!'}), 201
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+        return jsonify({'error': 'Failed to register user'}), response.status_code
+    data = request.get_json()
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    phone_number = data.get('phone_number')
+    email = data.get('email')
+
+    user_data = {
+        "user": {
+            "typeUser": {
+                "@id": "/api/type_users/24",
+                "@type": "TypeUser",
+                "libelle": "Patient",
+                "variableName": "patient",
+                "id": 24
+            },
+            "firstname": first_name,
+            "lastname": last_name,
+            "tel": phone_number,
+            "email": email,
+            "password": "Elajdoc@2022",
+            "consentement": True
+        },
+        "validateBYCode": False
+    }
+
+    response = requests.post('https://apipreprod.nabady.ma/api/users/register', json=user_data)
+
+    if response.status_code == 201:
         return jsonify({'message': 'User registered successfully!'}), 201
     else:
         return jsonify({'error': 'Failed to register user'}), response.status_code
@@ -178,6 +249,36 @@ def save_appointment():
     data = request.get_json()
     directory = 'ChatBot/chatbot-deployment'
     filename = 'appointments.json'
+    filepath = os.path.join(directory, filename)
+    
+    appointment_details = {
+        "praticien": {
+            "name": data.get("doctorName"),
+            "PraticienCentreSoinID": data.get("PcsID"),
+            "timeSlot": data.get("timeSlot")
+        },
+        "patient": {
+            "first_name": data.get("first_name"),
+            "last_name": data.get("last_name"),
+            "phone_number": data.get("phone_number"),
+            "patientId": data.get("patientId")  # Get the patientId from the request
+        }
+    }
+    
+    if os.path.isfile(filepath):
+        with open(filepath, 'r+') as file:
+            file_data = json.load(file)
+            file_data['praticien']['data'].append(appointment_details)
+            file.seek(0)
+            json.dump(file_data, file, indent=4)
+    else:
+        with open(filepath, 'w') as file:
+            json.dump({"praticien": {"data": [appointment_details]}}, file, indent=4)
+
+    return jsonify({"message": "Data saved successfully!"})
+    data = request.get_json()
+    directory = 'ChatBot/chatbot-deployment'
+    filename = 'appointments.json'
     
     filepath = os.path.join(directory, filename)
     
@@ -191,7 +292,7 @@ def save_appointment():
             "first_name": data.get("first_name"),
             "last_name": data.get("last_name"),
             "phone_number": data.get("phone_number"),
-            "email": data.get("email")
+            "PatientID": data.get("")
         }
     }
     

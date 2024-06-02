@@ -50,8 +50,11 @@ export default function Chat() {
       });
       displayUserMessage(msg, currentTime);
       setUserMessage("");
-
-      if (appointmentStep === 3) {
+  
+      if (waitingForConfirmation) {
+        // If waiting for confirmation, handle the user's response
+        handleConfirmation(msg);
+      } else if (appointmentStep === 3) {
         setBookingDetails((prevDetails) => ({
           ...prevDetails,
           phone_number: msg,
@@ -105,14 +108,15 @@ export default function Chat() {
   const handleConfirmation = async (confirmation) => {
     if (confirmation === "ah") {
       await finalizeAppointment();
+      setWaitingForConfirmation(false);
     } else {
-      displayBotMessage("Okay, let's start over with your first name.");
+      displayBotMessage("wakha 3awd 3tini l ism chakhsi dyalk.");
       resetAppointmentDetails();
       setAppointmentStep(1);
+      setWaitingForConfirmation(false);
     }
-    setWaitingForConfirmation(false);
   };
-
+  
   const finalizeAppointment = async () => {
     try {
       const randomEmail = generateRandomEmail();
@@ -143,13 +147,45 @@ export default function Chat() {
       if (!response.ok) throw new Error("Network response was not ok.");
   
       const data = await response.json();
-      displayBotMessage(`Appointment confirmed: ${JSON.stringify(data)}`);
+      const patientId = data.patient_id;
+      
+      if (patientId) {
+        // Save the appointment details with the patientId
+        await saveAppointmentDetails(patientId);
+        // displayBotMessage(`Appointment confirmed with patient ID: ${patientId}`);
+      } else {
+        console.error("Patient ID not found in the response.");
+        displayBotMessage("وقع خطأ، عفاك ضغط على زر التحديث");
+      }
     } catch (error) {
       console.error("Error finalizing appointment:", error);
-      displayBotMessage("An error occurred, please try again.");
+      displayBotMessage("وقع خطأ، عفاك ضغط على زر التحديث");
     }
   };
-
+  
+  const saveAppointmentDetails = async (patientId) => {
+    try {
+      const response = await fetch("http://localhost:5000/save_appointment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...bookingDetails,
+          patientId,
+        }),
+      });
+  
+      if (!response.ok) throw new Error("Failed to save appointment details.");
+  
+      const data = await response.json();
+      console.log("Appointment details saved:", data);
+    } catch (error) {
+      console.error("Error saving appointment details:", error);
+    }
+  };
+  
+  
   const fetchDoctorsForSpecialty = async (specialtyName) => {
     console.log(`Fetching doctors for ${specialtyName}`);
     setSelectedSpecialty({ name: specialtyName });
