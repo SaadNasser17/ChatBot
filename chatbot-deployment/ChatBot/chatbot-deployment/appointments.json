@@ -14,6 +14,48 @@
                     "patientId": 700482,
                     "gpatientId": 690994
                 }
+            },
+            {
+                "praticien": {
+                    "name": "Dr. LFERDE  ELHASSANE ",
+                    "PraticienCentreSoinID": 418,
+                    "timeSlot": "2024-06-03T08:00:42.254Z"
+                },
+                "patient": {
+                    "first_name": "sara",
+                    "last_name": "hou",
+                    "phone_number": "098765432",
+                    "patientId": 700484,
+                    "gpatientId": null
+                }
+            },
+            {
+                "praticien": {
+                    "name": "Dr. LFERDE  ELHASSANE ",
+                    "PraticienCentreSoinID": 418,
+                    "timeSlot": "2024-06-03T08:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "sara",
+                    "last_name": "housny",
+                    "phone_number": "098765432",
+                    "patientId": 700485,
+                    "gpatientId": 690997
+                }
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Marzouk Abdelfatah",
+                    "PraticienCentreSoinID": 439,
+                    "timeSlot": "2024-06-03T16:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "hehe",
+                    "phone_number": "09876543",
+                    "patientId": 700490,
+                    "gpatientId": 691002
+                }
             }
         ]
     }

@@ -88,8 +88,11 @@ export default function Chat() {
 
         case 3:
           setBookingDetails({ ...bookingDetails, phone_number: response });
+          const date = new Date(bookingDetails.timeSlot);
+          const formattedDate = date.toISOString().split('T')[0];
+          const formattedTime = date.toTimeString().split(' ')[0].substring(0, 5);
           const confirmationMessage = `t2akad liya mn ma3lomat dyalk.
-          Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${response}, Tbib: ${bookingDetails.doctorName}, lwe9t: ${bookingDetails.timeSlot}`;
+          Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${response}, Tbib: ${bookingDetails.doctorName}, lwe9t: ${formattedDate} ${formattedTime}`;
           displayBotMessage(confirmationMessage);
           displayBotMessage("Ah wlla la?");
           setWaitingForConfirmation(true);
@@ -116,8 +119,7 @@ export default function Chat() {
       setWaitingForConfirmation(false);
     }
   };
-  
-  
+
   const finalizeAppointment = async () => {
     try {
       const randomEmail = generateRandomEmail();
@@ -154,7 +156,7 @@ export default function Chat() {
       if (patientId && gpatientId) {
         // Save the appointment details with the patientId and gpatientId
         await saveAppointmentDetails(patientId, gpatientId);
-        displayBotMessage(`Appointment confirmed with patient ID: ${patientId} and gpatient ID: ${gpatientId}`);
+        displayBotMessage(`lmaw3id t2eked lik`);
       } else {
         console.error("Patient ID or GPatient ID not found in the response.");
         displayBotMessage("وقع خطأ، عفاك ضغط على زر التحديث");
@@ -408,6 +410,8 @@ export default function Chat() {
                   selectedDate.setMilliseconds(0);
 
                   const isoString = selectedDate.toISOString();
+                  const formattedDate = selectedDate.toISOString().split('T')[0];
+                  const formattedTime = selectedDate.toTimeString().split(' ')[0].substring(0, 5);
 
                   setBookingDetails({
                     doctorName,
@@ -415,7 +419,7 @@ export default function Chat() {
                     timeSlot: isoString,
                   });
 
-                  displayBotMessage(`Chokran 7it khtariti ${doctorName} m3a ${isoString}. 3tini ism chakhsi dyalk 3afak.`);
+                  displayBotMessage(`Chokran 7it khtariti ${doctorName} nhar ${formattedDate} m3a ${formattedTime}. 3tini ism chakhsi dyalk 3afak.`);
                   setShowSpecialtiesDropdown(false);
                   setShowDoctors(false);
                   setAppointmentStep(1);
