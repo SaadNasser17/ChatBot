@@ -245,16 +245,15 @@ export default function Chat() {
   };
 
   const resetAppointmentDetails = () => {
-    setBookingDetails({
-      doctorName: "",
-      PcsID: "",
-      timeSlot: "",
+    setBookingDetails((prevDetails) => ({
+      ...prevDetails,
       first_name: "",
       last_name: "",
       phone_number: "",
       email: "",
-    });
+    }));
   };
+  
 
   const displayUserMessage = (message, time) => {
     setMessages((prev) => [...prev, { text: message, type: "user", time }]);

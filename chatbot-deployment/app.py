@@ -20,7 +20,6 @@ def get_response(message):
             return random.choice(intent["responses"])
     return "Mafhamtch t9der t3awd"
 
-
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json()
@@ -46,13 +45,13 @@ def get_response_and_tag(intent_tag):
 
 @app.route("/get_specialties")
 def get_specialties():
-    response = requests.get("https://apipreprod.nabady.ma/api/specialites")
+    response = requests.get("https://apiuat.nabady.ma/api/specialites")
     specialties = response.json()
     return jsonify(specialties)
 
 def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, isIframe=False, referrer=""):
     response = requests.post(
-        "https://apipreprod.nabady.ma/api/users/medecin/search",
+        "https://apiuat.nabady.ma/api/users/medecin/search",
         json={
             "query": query,
             "consultation": consultation,
@@ -66,7 +65,7 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         doctors = response.json()['praticien']['data']
         for doctor in doctors:
             pcs_id = doctor['0']['praticienCentreSoins'][0]['id']
-            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{PcsID}/day/0/limit/1")
+            appointments_response = requests.get(f"https://apiuat.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
             if appointments_response.ok:
                 unavailable_times = appointments_response.json()
                 doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)
@@ -103,7 +102,7 @@ def register_user():
         "validateBYCode": False
     }
 
-    response = requests.post('https://apipreprod.nabady.ma/api/users/register', json=user_data)
+    response = requests.post('https://apiuat.nabady.ma/api/users/register', json=user_data)
 
     if response.status_code == 201:
         data = response.json()
@@ -112,73 +111,6 @@ def register_user():
         return jsonify({'message': 'User registered successfully!', 'patient_id': patient_id}), 201
     else:
         print(f"Error: {response.status_code} - {response.text}")
-        return jsonify({'error': 'Failed to register user'}), response.status_code
-
-    data = request.get_json()
-    first_name = data.get('first_name')
-    last_name = data.get('last_name')
-    phone_number = data.get('phone_number')
-    email = data.get('email')
-
-    user_data = {
-        "user": {
-            "typeUser": {
-                "@id": "/api/type_users/24",
-                "@type": "TypeUser",
-                "libelle": "Patient",
-                "variableName": "patient",
-                "id": 24
-            },
-            "firstname": first_name,
-            "lastname": last_name,
-            "tel": phone_number,
-            "email": email,
-            "password": "Elajdoc@2022",
-            "consentement": True
-        },
-        "validateBYCode": False
-    }
-
-    response = requests.post('https://apipreprod.nabady.ma/api/users/register', json=user_data)
-
-    if response.status_code == 201:
-        data = response.json()
-        patient_id = data["user"]["id"]
-        print(f"Patient ID: {patient_id}")  # Print the patient ID
-        return jsonify({'message': 'User registered successfully!'}), 201
-    else:
-        print(f"Error: {response.status_code} - {response.text}")
-        return jsonify({'error': 'Failed to register user'}), response.status_code
-    data = request.get_json()
-    first_name = data.get('first_name')
-    last_name = data.get('last_name')
-    phone_number = data.get('phone_number')
-    email = data.get('email')
-
-    user_data = {
-        "user": {
-            "typeUser": {
-                "@id": "/api/type_users/24",
-                "@type": "TypeUser",
-                "libelle": "Patient",
-                "variableName": "patient",
-                "id": 24
-            },
-            "firstname": first_name,
-            "lastname": last_name,
-            "tel": phone_number,
-            "email": email,
-            "password": "Elajdoc@2022",
-            "consentement": True
-        },
-        "validateBYCode": False
-    }
-
-    response = requests.post('https://apipreprod.nabady.ma/api/users/register', json=user_data)
-
-    if response.status_code == 201:
-        return jsonify({'message': 'User registered successfully!'}), 201
-    else:
         return jsonify({'error': 'Failed to register user'}), response.status_code
 
 @app.route("/get_doctors", methods=["POST"])
@@ -243,7 +175,6 @@ def process_response():
     session.modified = True
     return jsonify({"message": "Response processed", "next_step": step + 1})
 
-
 @app.route('/save_appointment', methods=['POST'])
 def save_appointment():
     data = request.get_json()
@@ -276,38 +207,6 @@ def save_appointment():
             json.dump({"praticien": {"data": [appointment_details]}}, file, indent=4)
 
     return jsonify({"message": "Data saved successfully!"})
-    data = request.get_json()
-    directory = 'ChatBot/chatbot-deployment'
-    filename = 'appointments.json'
-    
-    filepath = os.path.join(directory, filename)
-    
-    appointment_details = {
-        "praticien": {
-            "name": data.get("doctorName"),
-            "PraticienCentreSoinID": data.get("PcsID"),
-            "timeSlot": data.get("timeSlot")
-        },
-        "patient": {
-            "first_name": data.get("first_name"),
-            "last_name": data.get("last_name"),
-            "phone_number": data.get("phone_number"),
-            "PatientID": data.get("")
-        }
-    }
-    
-    if os.path.isfile(filepath):
-        with open(filepath, 'r+') as file:
-            file_data = json.load(file)
-            file_data['praticien']['data'].append(appointment_details)
-            file.seek(0)
-            json.dump(file_data, file, indent=4)
-    else:
-        with open(filepath, 'w') as file:
-            json.dump({"praticien": {"data": [appointment_details]}}, file, indent=4)
-
-    return jsonify({"message": "Data saved successfully!"})
-
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,15 +3,15 @@
         "data": [
             {
                 "praticien": {
-                    "name": "Dr. Zaidani Asmaa",
-                    "PraticienCentreSoinID": 63,
-                    "timeSlot": "14:00"
+                    "name": "Dr. Hicham EL hadad",
+                    "PraticienCentreSoinID": 1775,
+                    "timeSlot": "13:00"
                 },
                 "patient": {
-                    "first_name": "sas",
-                    "last_name": "sasasa",
-                    "phone_number": "123121",
-                    "patientId": 700455
+                    "first_name": "aya",
+                    "last_name": "mibtech",
+                    "phone_number": "09876543",
+                    "patientId": 179822
                 }
             }
         ]
