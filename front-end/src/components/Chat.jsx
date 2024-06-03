@@ -110,12 +110,13 @@ export default function Chat() {
       await finalizeAppointment();
       setWaitingForConfirmation(false);
     } else {
-      displayBotMessage("Okay, let's start over with your first name.");
+      displayBotMessage("wakha 3awd 3tini l ism chakhsi dyalk.");
       resetAppointmentDetails();
       setAppointmentStep(1);
       setWaitingForConfirmation(false);
     }
   };
+  
   
   const finalizeAppointment = async () => {
     try {
@@ -246,15 +247,13 @@ export default function Chat() {
   };
 
   const resetAppointmentDetails = () => {
-    setBookingDetails({
-      doctorName: "",
-      PcsID: "",
-      timeSlot: "",
+    setBookingDetails((prevDetails) => ({
+      ...prevDetails,
       first_name: "",
       last_name: "",
       phone_number: "",
       email: "",
-    });
+    }));
   };
 
   const displayUserMessage = (message, time) => {
