@@ -45,13 +45,13 @@ def get_response_and_tag(intent_tag):
 
 @app.route("/get_specialties")
 def get_specialties():
-    response = requests.get("https://apiuat.nabady.ma/api/specialites")
+    response = requests.get("https://apipreprod.nabady.ma/api/specialites")
     specialties = response.json()
     return jsonify(specialties)
 
 def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, isIframe=False, referrer=""):
     response = requests.post(
-        "https://apiuat.nabady.ma/api/users/medecin/search",
+        "https://apipreprod.nabady.ma/api/users/medecin/search",
         json={
             "query": query,
             "consultation": consultation,
@@ -65,7 +65,7 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         doctors = response.json()['praticien']['data']
         for doctor in doctors:
             pcs_id = doctor['0']['praticienCentreSoins'][0]['id']
-            appointments_response = requests.get(f"https://apiuat.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
+            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{PcsID}/day/0/limit/1")
             if appointments_response.ok:
                 unavailable_times = appointments_response.json()
                 doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)
@@ -102,13 +102,14 @@ def register_user():
         "validateBYCode": False
     }
 
-    response = requests.post('https://apiuat.nabady.ma/api/users/register', json=user_data)
+    response = requests.post('https://apipreprod.nabady.ma/api/users/register', json=user_data)
 
     if response.status_code == 201:
         data = response.json()
         patient_id = data["user"]["id"]
-        print(f"Patient ID: {patient_id}")  # Print the patient ID
-        return jsonify({'message': 'User registered successfully!', 'patient_id': patient_id}), 201
+        gpatient_id = data["user"]["gpatient"]["id"] if data["user"]["gpatient"] else None
+        print(f"Patient ID: {patient_id}, GPatient ID: {gpatient_id}")  # Print the patient and gpatient IDs
+        return jsonify({'message': 'User registered successfully!', 'patient_id': patient_id, 'gpatient_id': gpatient_id}), 201
     else:
         print(f"Error: {response.status_code} - {response.text}")
         return jsonify({'error': 'Failed to register user'}), response.status_code
@@ -192,7 +193,8 @@ def save_appointment():
             "first_name": data.get("first_name"),
             "last_name": data.get("last_name"),
             "phone_number": data.get("phone_number"),
-            "patientId": data.get("patientId")  # Get the patientId from the request
+            "patientId": data.get("patientId"),  # Get the patientId from the request
+            "gpatientId": data.get("gpatientId")  # Get the gpatientId from the request
         }
     }
     

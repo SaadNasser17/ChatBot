@@ -26,7 +26,7 @@ function Doctor({ specialty, onSlotClick }) {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://apiuat.nabady.ma/api/users/medecin/search",
+        "https://apipreprod.nabady.ma/api/users/medecin/search",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

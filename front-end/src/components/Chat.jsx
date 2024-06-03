@@ -110,7 +110,7 @@ export default function Chat() {
       await finalizeAppointment();
       setWaitingForConfirmation(false);
     } else {
-      displayBotMessage("wakha 3awd 3tini l ism chakhsi dyalk.");
+      displayBotMessage("Okay, let's start over with your first name.");
       resetAppointmentDetails();
       setAppointmentStep(1);
       setWaitingForConfirmation(false);
@@ -148,13 +148,14 @@ export default function Chat() {
   
       const data = await response.json();
       const patientId = data.patient_id;
+      const gpatientId = data.gpatient_id;
       
-      if (patientId) {
-        // Save the appointment details with the patientId
-        await saveAppointmentDetails(patientId);
-        // displayBotMessage(`Appointment confirmed with patient ID: ${patientId}`);
+      if (patientId && gpatientId) {
+        // Save the appointment details with the patientId and gpatientId
+        await saveAppointmentDetails(patientId, gpatientId);
+        displayBotMessage(`Appointment confirmed with patient ID: ${patientId} and gpatient ID: ${gpatientId}`);
       } else {
-        console.error("Patient ID not found in the response.");
+        console.error("Patient ID or GPatient ID not found in the response.");
         displayBotMessage("وقع خطأ، عفاك ضغط على زر التحديث");
       }
     } catch (error) {
@@ -162,8 +163,8 @@ export default function Chat() {
       displayBotMessage("وقع خطأ، عفاك ضغط على زر التحديث");
     }
   };
-  
-  const saveAppointmentDetails = async (patientId) => {
+
+  const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
       const response = await fetch("http://localhost:5000/save_appointment", {
         method: "POST",
@@ -173,6 +174,7 @@ export default function Chat() {
         body: JSON.stringify({
           ...bookingDetails,
           patientId,
+          gpatientId,
         }),
       });
   
@@ -184,8 +186,7 @@ export default function Chat() {
       console.error("Error saving appointment details:", error);
     }
   };
-  
-  
+
   const fetchDoctorsForSpecialty = async (specialtyName) => {
     console.log(`Fetching doctors for ${specialtyName}`);
     setSelectedSpecialty({ name: specialtyName });
@@ -245,15 +246,16 @@ export default function Chat() {
   };
 
   const resetAppointmentDetails = () => {
-    setBookingDetails((prevDetails) => ({
-      ...prevDetails,
+    setBookingDetails({
+      doctorName: "",
+      PcsID: "",
+      timeSlot: "",
       first_name: "",
       last_name: "",
       phone_number: "",
       email: "",
-    }));
+    });
   };
-  
 
   const displayUserMessage = (message, time) => {
     setMessages((prev) => [...prev, { text: message, type: "user", time }]);
@@ -389,7 +391,6 @@ export default function Chat() {
   </div>
 )}
 
-
             {showSpecialtiesDropdown && (
               <SpecialtiesDropdown
                 specialties={specialties}
@@ -400,10 +401,22 @@ export default function Chat() {
               <Doctor
                 specialty={selectedSpecialty.name}
                 onSlotClick={(doctorName, PcsID, slot) => {
-                  setBookingDetails({ doctorName, PcsID, timeSlot: slot });
-                  displayBotMessage(
-                    `Chokran 7it khtariti ${doctorName} m3a ${slot}. 3tini ism chakhsi dyalk 3afak.`
-                  );
+                  const selectedDate = new Date(); // Replace with the actual date the slot is for
+                  const [hours, minutes] = slot.split(":");
+                  selectedDate.setHours(hours);
+                  selectedDate.setMinutes(minutes);
+                  selectedDate.setSeconds(0);
+                  selectedDate.setMilliseconds(0);
+
+                  const isoString = selectedDate.toISOString();
+
+                  setBookingDetails({
+                    doctorName,
+                    PcsID,
+                    timeSlot: isoString,
+                  });
+
+                  displayBotMessage(`Chokran 7it khtariti ${doctorName} m3a ${isoString}. 3tini ism chakhsi dyalk 3afak.`);
                   setShowSpecialtiesDropdown(false);
                   setShowDoctors(false);
                   setAppointmentStep(1);
