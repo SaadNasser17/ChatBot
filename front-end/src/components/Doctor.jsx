@@ -1,8 +1,10 @@
+// Doctor.jsx
+
 import React, { useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 
-function Doctor({ specialty, onSlotClick }) {
+function Doctor({ specialty, onSlotClick, fetchMotifs }) {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentSpecialty, setCurrentSpecialty] = useState("");
@@ -133,7 +135,7 @@ function Doctor({ specialty, onSlotClick }) {
           {filteredSlots.map((slot, index) => (
             <div className="embla__slide flex-none" key={index}>
               <button
-                onClick={() => onSlotClick(doctor.name, doctor.PcsID, slot)}
+                onClick={() => handleSlotClick(doctor.name, doctor.PcsID, slot)}
                 className="btn btn-primary my-2 mx-1"
                 style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
               >
@@ -144,6 +146,20 @@ function Doctor({ specialty, onSlotClick }) {
         </div>
       </div>
     );
+  };
+
+  const handleSlotClick = (doctorName, PcsID, slot) => {
+    const selectedDate = new Date(); // Replace with the actual date the slot is for
+    const [hours, minutes] = slot.split(":");
+    selectedDate.setHours(hours);
+    selectedDate.setMinutes(minutes);
+    selectedDate.setSeconds(0);
+    selectedDate.setMilliseconds(0);
+
+    const isoString = selectedDate.toISOString();
+
+    onSlotClick(doctorName, PcsID, isoString);
+    fetchMotifs(PcsID);
   };
 
   return (

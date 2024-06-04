@@ -1,3 +1,5 @@
+// Chat.jsx
+
 import React, { useState, useEffect, useRef } from "react";
 import "../index.css";
 import { IoChatbubbles, IoCloseOutline, IoSend, IoRefresh, IoSquare } from "react-icons/io5";
@@ -20,9 +22,12 @@ export default function Chat() {
   const [appointmentStep, setAppointmentStep] = useState(0);
   const [isBotTyping, setIsBotTyping] = useState(false);
   const [forceStopTyping, setForceStopTyping] = useState(false);
+  const [showMotifs, setShowMotifs] = useState(false);
+  const [motifs, setMotifs] = useState([]);
+  const [selectedMotif, setSelectedMotif] = useState(null);
+  const [waitingForConfirmation, setWaitingForConfirmation] = useState(false);
   const messagesEndRef = useRef(null);
   const [generatedEmail, setGeneratedEmail] = useState('');
-  const [waitingForConfirmation, setWaitingForConfirmation] = useState(false);
 
   useEffect(() => {
     if (!initialMessageSet) {
@@ -52,7 +57,6 @@ export default function Chat() {
       setUserMessage("");
   
       if (waitingForConfirmation) {
-        // If waiting for confirmation, handle the user's response
         handleConfirmation(msg);
       } else if (appointmentStep === 3) {
         setBookingDetails((prevDetails) => ({
@@ -87,12 +91,11 @@ export default function Chat() {
           break;
 
         case 3:
-          setBookingDetails({ ...bookingDetails, phone_number: response });
-          const date = new Date(bookingDetails.timeSlot);
-          const formattedDate = date.toISOString().split('T')[0];
-          const formattedTime = date.toTimeString().split(' ')[0].substring(0, 5);
-          const confirmationMessage = `t2akad liya mn ma3lomat dyalk.
-          Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${response}, Tbib: ${bookingDetails.doctorName}, lwe9t: ${formattedDate} ${formattedTime}`;
+          setBookingDetails((prevDetails) => ({
+            ...prevDetails,
+            phone_number: response
+          }));
+          const confirmationMessage = `t2akad liya mn ma3lomat dyalk. Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${response}, Tbib: ${bookingDetails.doctorName}, lwe9t: ${bookingDetails.timeSlot}`;
           displayBotMessage(confirmationMessage);
           displayBotMessage("Ah wlla la?");
           setWaitingForConfirmation(true);
@@ -113,7 +116,7 @@ export default function Chat() {
       await finalizeAppointment();
       setWaitingForConfirmation(false);
     } else {
-      displayBotMessage("wakha 3awd 3tini l ism chakhsi dyalk.");
+      displayBotMessage("Okay, let's start over with your first name.");
       resetAppointmentDetails();
       setAppointmentStep(1);
       setWaitingForConfirmation(false);
@@ -124,16 +127,14 @@ export default function Chat() {
     try {
       const randomEmail = generateRandomEmail();
       setGeneratedEmail(randomEmail);
-  
-      // Ensure the state is updated before making the API call
+
       setBookingDetails((prevDetails) => ({
         ...prevDetails,
         email: randomEmail,
       }));
-  
-      // Wait a short time to ensure the state is set
+
       await new Promise((resolve) => setTimeout(resolve, 0));
-  
+
       const response = await fetch("http://localhost:5000/register_user", {
         method: "POST",
         headers: {
@@ -146,29 +147,34 @@ export default function Chat() {
           email: randomEmail,
         }),
       });
-  
+
       if (!response.ok) throw new Error("Network response was not ok.");
-  
+
       const data = await response.json();
       const patientId = data.patient_id;
       const gpatientId = data.gpatient_id;
-      
+
+      console.log("Patient ID:", patientId, "GPatient ID:", gpatientId); 
+
       if (patientId && gpatientId) {
-        // Save the appointment details with the patientId and gpatientId
-        await saveAppointmentDetails(patientId, gpatientId);
-        displayBotMessage(`lmaw3id t2eked lik`);
+        console.log("Saving appointment with motif ID:", selectedMotif.motifId);
+        await saveAppointmentDetails(patientId, gpatientId, selectedMotif.motifId);
+        displayBotMessage(`Appointment confirmed with patient ID: ${patientId}`);
       } else {
         console.error("Patient ID or GPatient ID not found in the response.");
-        displayBotMessage("وقع خطأ، عفاك ضغط على زر التحديث");
+        displayBotMessage("An error occurred, please try again.");
       }
     } catch (error) {
       console.error("Error finalizing appointment:", error);
-      displayBotMessage("وقع خطأ، عفاك ضغط على زر التحديث");
+      displayBotMessage("An error occurred, please try again.");
     }
   };
 
+
   const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
+      const { motifFamilleId } = selectedMotif;
+      console.log("Saving appointment details with motif famille ID:", motifFamilleId);
       const response = await fetch("http://localhost:5000/save_appointment", {
         method: "POST",
         headers: {
@@ -178,6 +184,7 @@ export default function Chat() {
           ...bookingDetails,
           patientId,
           gpatientId,
+          motifFamilleId,
         }),
       });
   
@@ -239,23 +246,27 @@ export default function Chat() {
       });
   };
 
- const generateRandomEmail = () => {
-  const randomChars = Math.random().toString(36).substring(2, 10);
-  return `${randomChars}@yopmail.com`;
-};
+  const generateRandomEmail = () => {
+    const randomChars = Math.random().toString(36).substring(2, 10);
+    return `${randomChars}@yopmail.com`;
+  };
 
   const addMessage = (text, type) => {
     setMessages((prevMessages) => [...prevMessages, { text, type, time: new Date().toLocaleTimeString() }]);
   };
 
   const resetAppointmentDetails = () => {
-    setBookingDetails((prevDetails) => ({
-      ...prevDetails,
+    setBookingDetails({
+      doctorName: "",
+      PcsID: "",
+      timeSlot: "",
       first_name: "",
       last_name: "",
       phone_number: "",
       email: "",
-    }));
+      motif: "", // Reset the motif
+      motifFamilleId: "" // Reset the motif famille ID
+    });
   };
 
   const displayUserMessage = (message, time) => {
@@ -279,6 +290,30 @@ export default function Chat() {
       .catch((error) => {
         console.error("Error fetching specialties:", error);
       });
+  };
+
+  
+  const fetchMotifs = async (PcsID) => {
+    try {
+      console.log("Fetching motifs for PcsID:", PcsID);
+      const response = await fetch(`http://localhost:5000/get_motifs?PcsID=${PcsID}`);
+      console.log("API response status:", response.status);
+      if (!response.ok) throw new Error("Network response was not ok.");
+      const data = await response.json();
+      console.log("Motifs fetched:", data);
+      setMotifs(data["hydra:member"]);
+      setShowMotifs(true);
+    } catch (error) {
+      console.error("Error fetching motifs:", error);
+    }
+  };
+
+  const handleMotifClick = (motifFamilleId, motifId) => {
+    console.log("Motif selected:", motifId, motifFamilleId);
+    setSelectedMotif({ motifId, motifFamilleId });
+    setShowMotifs(false);
+    setAppointmentStep(1);
+    displayBotMessage("3tini ism chakhsi dyalk 3afak.");
   };
 
   const resetChat = () => {
@@ -375,22 +410,22 @@ export default function Chat() {
               </div>
             ))}
 
-{isBotTyping && !forceStopTyping && (
-  <div className="chat chat-start my-1">
-    <div className="chat-image avatar">
-      <div className="w-8 h-8 rounded-full overflow-hidden">
-        <img src="bot-avatar.png" alt="Bot Avatar" />
-      </div>
-    </div>
-    <div className="chat-bubble text-sm p-2 text-black" style={{ backgroundColor: "#CEF0FC", maxWidth: "75%" }}>
-      <div className="typing-indicator" style={{ display: 'flex', alignItems: 'center' }}>
-        <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite' }}></div>
-        <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.2s' }}></div>
-        <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.4s' }}></div>
-      </div>
-    </div>
-  </div>
-)}
+            {isBotTyping && !forceStopTyping && (
+              <div className="chat chat-start my-1">
+                <div className="chat-image avatar">
+                  <div className="w-8 h-8 rounded-full overflow-hidden">
+                    <img src="bot-avatar.png" alt="Bot Avatar" />
+                  </div>
+                </div>
+                <div className="chat-bubble text-sm p-2 text-black" style={{ backgroundColor: "#CEF0FC", maxWidth: "75%" }}>
+                  <div className="typing-indicator" style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite' }}></div>
+                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.2s' }}></div>
+                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.4s' }}></div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {showSpecialtiesDropdown && (
               <SpecialtiesDropdown
@@ -402,30 +437,34 @@ export default function Chat() {
               <Doctor
                 specialty={selectedSpecialty.name}
                 onSlotClick={(doctorName, PcsID, slot) => {
-                  const selectedDate = new Date(); // Replace with the actual date the slot is for
-                  const [hours, minutes] = slot.split(":");
-                  selectedDate.setHours(hours);
-                  selectedDate.setMinutes(minutes);
-                  selectedDate.setSeconds(0);
-                  selectedDate.setMilliseconds(0);
-
-                  const isoString = selectedDate.toISOString();
-                  const formattedDate = selectedDate.toISOString().split('T')[0];
-                  const formattedTime = selectedDate.toTimeString().split(' ')[0].substring(0, 5);
-
-                  setBookingDetails({
-                    doctorName,
-                    PcsID,
-                    timeSlot: isoString,
-                  });
-
-                  displayBotMessage(`Chokran 7it khtariti ${doctorName} nhar ${formattedDate} m3a ${formattedTime}. 3tini ism chakhsi dyalk 3afak.`);
+                  setBookingDetails({ doctorName, PcsID, timeSlot: slot });
+                  displayBotMessage(
+                    `Chokran 7it khtariti ${doctorName} m3a ${slot}. 3tini ism chakhsi dyalk 3afak.`
+                  );
                   setShowSpecialtiesDropdown(false);
                   setShowDoctors(false);
                   setAppointmentStep(1);
                 }}
+                fetchMotifs={fetchMotifs} // Pass the fetchMotifs function
               />
             )}
+
+            {showMotifs && (
+              <div className="motifs-container">
+                <span className="text-lg bold">3afak khtar sabab dyal lmaw3id:</span>
+                {motifs.map((motif) => (
+                  <button
+                    key={motif.id}
+                    onClick={() => handleMotifClick(motif.id, motif.motif.motifFamille.id)}
+                    className="btn btn-secondary my-2 mx-1"
+                    style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
+                  >
+                    {motif.motif.libelle}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {waitingForConfirmation && (
               <div className="flex justify-center my-2">
                 <button
@@ -442,6 +481,7 @@ export default function Chat() {
                 </button>
               </div>
             )}
+
             <div ref={messagesEndRef} />
           </div>
 

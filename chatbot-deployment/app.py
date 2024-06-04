@@ -1,3 +1,5 @@
+# app.py
+
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import requests
@@ -179,10 +181,12 @@ def process_response():
 @app.route('/save_appointment', methods=['POST'])
 def save_appointment():
     data = request.get_json()
+    motif_famille_id = data["motifFamilleId"]
+    print(f"Received motifFamilleId: {motif_famille_id}")
     directory = 'ChatBot/chatbot-deployment'
     filename = 'appointments.json'
     filepath = os.path.join(directory, filename)
-    
+
     appointment_details = {
         "praticien": {
             "name": data.get("doctorName"),
@@ -193,11 +197,14 @@ def save_appointment():
             "first_name": data.get("first_name"),
             "last_name": data.get("last_name"),
             "phone_number": data.get("phone_number"),
-            "patientId": data.get("patientId"),  # Get the patientId from the request
-            "gpatientId": data.get("gpatientId")  # Get the gpatientId from the request
-        }
+            "patientId": data.get("patientId"),
+            "gpatientId": data.get("gpatientId")
+        },
+        "motifFamilleId": data["motifFamilleId"]  # Access motifFamilleId directly from the request body
     }
-    
+
+    print(f"Saving appointment with details: {appointment_details}")
+
     if os.path.isfile(filepath):
         with open(filepath, 'r+') as file:
             file_data = json.load(file)
@@ -209,6 +216,23 @@ def save_appointment():
             json.dump({"praticien": {"data": [appointment_details]}}, file, indent=4)
 
     return jsonify({"message": "Data saved successfully!"})
+
+
+@app.route('/get_motifs')
+def get_motifs():
+    PcsID = request.args.get('PcsID')
+    print(f"Fetching motifs for PcsID: {PcsID}")  # Log the PcsID
+
+    response = requests.get(f"https://apipreprod.nabady.ma/api/motif_praticiens?teamMember={PcsID}")
+    print(f"API response status: {response.status_code}")  # Log the response status
+    if response.ok:
+        motifs = response.json()
+        print("Motifs fetched:", motifs)  # Log the fetched motifs
+        return jsonify(motifs)
+    else:
+        print("Failed to fetch motifs")  # Log failure
+        return jsonify({'error': 'Failed to fetch motifs'}), response.status_code
+
 
 if __name__ == "__main__":
     app.run(debug=True)
