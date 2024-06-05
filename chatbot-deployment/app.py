@@ -10,6 +10,7 @@ import os
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 app.secret_key = '1234'
+JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MTc0MDg5MjYsImV4cCI6MTcyMDAwMDkyNiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImVtYWlsIjoicGF0MUB5b3BtYWlsLmNvbSJ9.d6LU67vvR9ErGCEZ5hqWWXd0Ax0-iQWtNEP58wp186uxFyZQeTIyRZ_femAr0S_-szuou_jYeAE56clo6qDcX1MBW_eaI4PIyqIYCf1mei5cAwMIp6DUu39ySsdlxJj-4Iv1fFkwae-buFDCzZwyq7J5MTUTcTptF0H_j7iEcV3ckAkiv1jbTVenAjFiP79KU_RaykZvn2z-4FIoWR_K0F1nulYM-bE0RdCzi3TQDJje6QlW4jdwabM7cLk5HkcBcUHIEGy2dOCiem3luz-R7P47h9lMKie3o4flxHUiVJahin5KaKYdqmQu5nNdrMygmkzveHABvEkZMdXwbjYvPQ"  # Replace this with your actual JWT token
 
 intents_data = {}
 
@@ -109,13 +110,13 @@ def register_user():
     if response.status_code == 201:
         data = response.json()
         patient_id = data["user"]["id"]
-        gpatient_id = data["user"]["gpatient"]["id"] if data["user"]["gpatient"] else None
-        print(f"Patient ID: {patient_id}, GPatient ID: {gpatient_id}")  # Print the patient and gpatient IDs
+        gpatient_id = data["user"]["gpatient"]["id"]
+        print(f"Patient ID: {patient_id}, GPatient ID: {gpatient_id}")
         return jsonify({'message': 'User registered successfully!', 'patient_id': patient_id, 'gpatient_id': gpatient_id}), 201
     else:
         print(f"Error: {response.status_code} - {response.text}")
         return jsonify({'error': 'Failed to register user'}), response.status_code
-
+        
 @app.route("/get_doctors", methods=["POST"])
 def get_doctors():
     data = request.get_json()
@@ -181,9 +182,8 @@ def process_response():
 @app.route('/save_appointment', methods=['POST'])
 def save_appointment():
     data = request.get_json()
-    motif_id = data.get("motifId")
-    motif_famille_id = data.get("motifFamilleId")
-    print(f"Received motifId: {motif_id} and motifFamilleId: {motif_famille_id}")
+    motif_id = data["motifId"]
+    print(f"Received motifId: {motif_id}")
     directory = 'ChatBot/chatbot-deployment'
     filename = 'appointments.json'
     filepath = os.path.join(directory, filename)
@@ -201,8 +201,7 @@ def save_appointment():
             "patientId": data.get("patientId"),
             "gpatientId": data.get("gpatientId")
         },
-        "motifId": motif_id,  # Save motifId
-        # "motifFamilleId": motif_famille_id  # Save motifFamilleId
+        "motifId": data["motifId"]
     }
 
     print(f"Saving appointment with details: {appointment_details}")
@@ -217,8 +216,69 @@ def save_appointment():
         with open(filepath, 'w') as file:
             json.dump({"praticien": {"data": [appointment_details]}}, file, indent=4)
 
-    return jsonify({"message": "Data saved successfully!"})
+    # Send the appointment data to the API
+    ref = send_appointment_to_api(appointment_details, data.get("email"))
 
+    if ref:
+        return jsonify({"message": "Data saved successfully!", "ref": ref}), 200
+    else:
+        return jsonify({"error": "Failed to create appointment"}), 500
+
+
+def send_appointment_to_api(appointment_details, email):
+    appointment_data = {
+        "praticienCs": appointment_details["praticien"]["PraticienCentreSoinID"],
+        "patient": appointment_details["patient"]["patientId"],
+        "date_time_start": appointment_details["praticien"]["timeSlot"],
+        "motif": appointment_details["motifId"],
+        "type_rdv": "Cabinet",
+        "id": None,
+        "typeNotif": "sms",
+        "emailParent": email
+    }
+
+    headers = {
+        "Authorization": f"Bearer {JWT_TOKEN}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post('https://apipreprod.nabady.ma/api/agenda_evenements/prise-rdv', json=appointment_data, headers=headers)
+
+    if response.status_code == 201 or response.status_code == 200:
+        response_data = response.json()
+        ref = response_data.get('id')
+        print("Appointment created successfully. Response:", response_data)
+        return ref
+    else:
+        print(f"Failed to create appointment. Status code: {response.status_code}, Response: {response.text}")
+        return None
+
+
+
+
+@app.route('/confirm_appointment', methods=['POST'])
+def confirm_appointment():
+    data = request.get_json()
+    code = data.get('code')
+    ref = data.get('ref')
+
+    confirmation_data = {
+        "code": code,
+        "type": "R",
+        "ref": ref
+    }
+
+    headers = {
+        "Authorization": f"Bearer {JWT_TOKEN}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post('https://apipreprod.nabady.ma/api/sms/confirm', json=confirmation_data, headers=headers)
+
+    if response.status_code == 200:
+        return jsonify({"message": "Appointment confirmed successfully!"}), 200
+    else:
+        return jsonify({"error": "Failed to confirm appointment."}), response.status_code
 
 
 @app.route('/get_motifs')

@@ -28,6 +28,8 @@ export default function Chat() {
   const [waitingForConfirmation, setWaitingForConfirmation] = useState(false);
   const messagesEndRef = useRef(null);
   const [generatedEmail, setGeneratedEmail] = useState('');
+  const [waitingForSmsCode, setWaitingForSmsCode] = useState(false);
+  const [appointmentRef, setAppointmentRef] = useState(null);
 
   useEffect(() => {
     if (!initialMessageSet) {
@@ -56,7 +58,9 @@ export default function Chat() {
       displayUserMessage(msg, currentTime);
       setUserMessage("");
   
-      if (waitingForConfirmation) {
+      if (waitingForSmsCode) {
+        handleSmsCodeInput(msg);
+      } else if (waitingForConfirmation) {
         handleConfirmation(msg);
       } else if (appointmentStep === 3) {
         setBookingDetails((prevDetails) => ({
@@ -192,8 +196,8 @@ export default function Chat() {
 
   const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
-      const { motifId, motifFamilleId } = selectedMotif;
-      console.log("Saving appointment details with motif ID:", motifId, "and motif famille ID:", motifFamilleId);
+      const { motifId } = selectedMotif;
+      console.log("Saving appointment details with motif ID:", motifId);
       const response = await fetch("http://localhost:5000/save_appointment", {
         method: "POST",
         headers: {
@@ -204,19 +208,48 @@ export default function Chat() {
           patientId,
           gpatientId,
           motifId,
-          motifFamilleId,
         }),
       });
   
-      if (!response.ok) throw new Error("Failed to save appointment details.");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Failed to save appointment details: ${errorData.error || "Unknown error"}`);
+      }
   
       const data = await response.json();
-      console.log("Appointment details saved:", data);
+      setAppointmentRef(data.ref);
+      displayBotMessage("daba ghadi iwaslek wahd l code f sms , 3afak 3tih liya bach nconfirmiw le rdv");
+      setWaitingForSmsCode(true);
     } catch (error) {
       console.error("Error saving appointment details:", error);
+      displayBotMessage("Failed to save appointment details. Please try again.");
     }
   };
   
+
+const handleSmsCodeInput = async (code) => {
+  try {
+    const response = await fetch("http://localhost:5000/confirm_appointment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        code,
+        ref: appointmentRef,
+      }),
+    });
+
+    if (!response.ok) throw new Error("Failed to confirm appointment.");
+
+    displayBotMessage("تم تأكيد الموعد بنجاح! زورنا مرة أخرى");
+    setWaitingForSmsCode(false);
+  } catch (error) {
+    console.error("Error confirming appointment:", error);
+    displayBotMessage("Failed to confirm appointment. Please try again.");
+  }
+};
+
 
   const fetchDoctorsForSpecialty = async (specialtyName) => {
     console.log(`Fetching doctors for ${specialtyName}`);

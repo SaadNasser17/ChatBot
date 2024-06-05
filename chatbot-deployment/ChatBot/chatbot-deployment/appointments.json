@@ -47,6 +47,126 @@
                 },
                 "motifId": 403,
                 "motifFamilleId": 1
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-05T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "naasss",
+                    "phone_number": "0648051951",
+                    "patientId": 700522,
+                    "gpatientId": 691034
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-05T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "naasss",
+                    "phone_number": "0648051951",
+                    "patientId": 700523,
+                    "gpatientId": 691035
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-05T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "naasss",
+                    "phone_number": "0648051951",
+                    "patientId": 700530,
+                    "gpatientId": 691042
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-05T14:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saaad",
+                    "phone_number": "0648051951",
+                    "patientId": 700536,
+                    "gpatientId": 691048
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. chaoui el faiz SALWA",
+                    "PraticienCentreSoinID": 225,
+                    "timeSlot": "2024-06-05T14:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nasser",
+                    "phone_number": "0648051951",
+                    "patientId": 700539,
+                    "gpatientId": 691051
+                },
+                "motifId": 27
+            },
+            {
+                "praticien": {
+                    "name": "Dr. ELAKROUD Abdessamad",
+                    "PraticienCentreSoinID": 2193,
+                    "timeSlot": "2024-06-05T14:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "abdelhamid",
+                    "last_name": "qaiss",
+                    "phone_number": "0672163557",
+                    "patientId": 700541,
+                    "gpatientId": 691053
+                },
+                "motifId": 649
+            },
+            {
+                "praticien": {
+                    "name": "Dr. SENNOUNE Bilal",
+                    "PraticienCentreSoinID": 611,
+                    "timeSlot": "2024-06-05T16:15:00.000Z"
+                },
+                "patient": {
+                    "first_name": "aya",
+                    "last_name": "bb",
+                    "phone_number": "0640155038",
+                    "patientId": 700543,
+                    "gpatientId": 691055
+                },
+                "motifId": 17
+            },
+            {
+                "praticien": {
+                    "name": "Dr. SENNOUNE Bilal",
+                    "PraticienCentreSoinID": 611,
+                    "timeSlot": "2024-06-05T16:15:00.000Z"
+                },
+                "patient": {
+                    "first_name": "aya",
+                    "last_name": "bb",
+                    "phone_number": "0640155038",
+                    "patientId": 700544,
+                    "gpatientId": 691056
+                },
+                "motifId": 17
             }
         ]
     }
