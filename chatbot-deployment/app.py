@@ -181,8 +181,9 @@ def process_response():
 @app.route('/save_appointment', methods=['POST'])
 def save_appointment():
     data = request.get_json()
-    motif_famille_id = data["motifFamilleId"]
-    print(f"Received motifFamilleId: {motif_famille_id}")
+    motif_id = data.get("motifId")
+    motif_famille_id = data.get("motifFamilleId")
+    print(f"Received motifId: {motif_id} and motifFamilleId: {motif_famille_id}")
     directory = 'ChatBot/chatbot-deployment'
     filename = 'appointments.json'
     filepath = os.path.join(directory, filename)
@@ -200,7 +201,8 @@ def save_appointment():
             "patientId": data.get("patientId"),
             "gpatientId": data.get("gpatientId")
         },
-        "motifFamilleId": data["motifFamilleId"]  # Access motifFamilleId directly from the request body
+        "motifId": motif_id,  # Save motifId
+        # "motifFamilleId": motif_famille_id  # Save motifFamilleId
     }
 
     print(f"Saving appointment with details: {appointment_details}")
@@ -216,6 +218,7 @@ def save_appointment():
             json.dump({"praticien": {"data": [appointment_details]}}, file, indent=4)
 
     return jsonify({"message": "Data saved successfully!"})
+
 
 
 @app.route('/get_motifs')

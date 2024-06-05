@@ -1,5 +1,4 @@
 // Doctor.jsx
-
 import React, { useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
@@ -148,7 +147,7 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     );
   };
 
-  const handleSlotClick = (doctorName, PcsID, slot) => {
+  const handleSlotClick = async (doctorName, PcsID, slot) => {
     const selectedDate = new Date(); // Replace with the actual date the slot is for
     const [hours, minutes] = slot.split(":");
     selectedDate.setHours(hours);
@@ -159,8 +158,11 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     const isoString = selectedDate.toISOString();
 
     onSlotClick(doctorName, PcsID, isoString);
+    await delay(6000); // Adjust this delay as needed
     fetchMotifs(PcsID);
   };
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   return (
     <div className="rounded-lg p-4 bg-white shadow-md">

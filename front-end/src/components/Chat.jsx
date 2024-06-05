@@ -75,6 +75,8 @@ export default function Chat() {
     }
   };
 
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   const processUserResponse = async (response) => {
     try {
       switch (appointmentStep) {
@@ -83,24 +85,39 @@ export default function Chat() {
           displayBotMessage("Achno ism 3a2ili dyalk?");
           setAppointmentStep(2);
           break;
-
+  
         case 2:
           setBookingDetails({ ...bookingDetails, last_name: response });
           displayBotMessage("3tini ra9m lhatif dyalk?");
           setAppointmentStep(3);
           break;
-
+  
         case 3:
           setBookingDetails((prevDetails) => ({
             ...prevDetails,
-            phone_number: response
+            phone_number: response,
           }));
-          const confirmationMessage = `t2akad liya mn ma3lomat dyalk. Smitek: ${bookingDetails.first_name}, Knitek: ${bookingDetails.last_name}, Ra9m dyalk: ${response}, Tbib: ${bookingDetails.doctorName}, lwe9t: ${bookingDetails.timeSlot}`;
+  
+          // Extract the time part from ISO 8601 format
+          const timePart = bookingDetails.timeSlot.substring(11, 16);
+  
+          // Create a formatted confirmation message
+          const confirmationMessage = `
+            t2akad liya mn ma3lomat dyalk.<br>
+            Smitek: ${bookingDetails.first_name},<br>
+            Knitek: ${bookingDetails.last_name},<br>
+            Ra9m dyalk: ${response},<br>
+            Tbib: ${bookingDetails.doctorName},<br>
+            lwe9t: ${timePart}
+          `;
+          
           displayBotMessage(confirmationMessage);
-          displayBotMessage("Ah wlla la?");
+          await delay(10500); // Delay before showing confirmation message
+          displayBotMessage("ila lma3lomat s7a7 dghat 3la ah<br>ila lma3lomat ghalat dghat 3la la?");
+          await delay(4500); // Delay before displaying the buttons
           setWaitingForConfirmation(true);
           break;
-
+  
         default:
           displayBotMessage("Ma fhmtsh, 3afak 3awd ghi mra.");
           break;
@@ -110,13 +127,15 @@ export default function Chat() {
       displayBotMessage("w9e3 lina mochkil, wakha t3awad mn lwl?");
     }
   };
+  
+  
 
   const handleConfirmation = async (confirmation) => {
     if (confirmation === "ah") {
       await finalizeAppointment();
       setWaitingForConfirmation(false);
     } else {
-      displayBotMessage("Okay, let's start over with your first name.");
+      displayBotMessage("wakha 3awd 3tini ism chakhsi dyalk");
       resetAppointmentDetails();
       setAppointmentStep(1);
       setWaitingForConfirmation(false);
@@ -159,7 +178,7 @@ export default function Chat() {
       if (patientId && gpatientId) {
         console.log("Saving appointment with motif ID:", selectedMotif.motifId);
         await saveAppointmentDetails(patientId, gpatientId, selectedMotif.motifId);
-        displayBotMessage(`Appointment confirmed with patient ID: ${patientId}`);
+        // displayBotMessage(`Appointment confirmed with patient ID: ${patientId}`);
       } else {
         console.error("Patient ID or GPatient ID not found in the response.");
         displayBotMessage("An error occurred, please try again.");
@@ -173,8 +192,8 @@ export default function Chat() {
 
   const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
-      const { motifFamilleId } = selectedMotif;
-      console.log("Saving appointment details with motif famille ID:", motifFamilleId);
+      const { motifId, motifFamilleId } = selectedMotif;
+      console.log("Saving appointment details with motif ID:", motifId, "and motif famille ID:", motifFamilleId);
       const response = await fetch("http://localhost:5000/save_appointment", {
         method: "POST",
         headers: {
@@ -184,6 +203,7 @@ export default function Chat() {
           ...bookingDetails,
           patientId,
           gpatientId,
+          motifId,
           motifFamilleId,
         }),
       });
@@ -196,6 +216,7 @@ export default function Chat() {
       console.error("Error saving appointment details:", error);
     }
   };
+  
 
   const fetchDoctorsForSpecialty = async (specialtyName) => {
     console.log(`Fetching doctors for ${specialtyName}`);
@@ -307,14 +328,15 @@ export default function Chat() {
       console.error("Error fetching motifs:", error);
     }
   };
-
-  const handleMotifClick = (motifFamilleId, motifId) => {
+  
+  const handleMotifClick = (motifId, motifFamilleId) => {
     console.log("Motif selected:", motifId, motifFamilleId);
     setSelectedMotif({ motifId, motifFamilleId });
     setShowMotifs(false);
     setAppointmentStep(1);
     displayBotMessage("3tini ism chakhsi dyalk 3afak.");
   };
+  
 
   const resetChat = () => {
     setMessages([]);
@@ -433,13 +455,16 @@ export default function Chat() {
                 fetchDoctorsForSpecialty={fetchDoctorsForSpecialty}
               />
             )}
-            {showDoctors && selectedSpecialty && (
+                      {showDoctors && selectedSpecialty && (
               <Doctor
                 specialty={selectedSpecialty.name}
                 onSlotClick={(doctorName, PcsID, slot) => {
+                  // Extract the time part from ISO 8601 format
+                  const timePart = slot.substring(11, 16);
+                  
                   setBookingDetails({ doctorName, PcsID, timeSlot: slot });
                   displayBotMessage(
-                    `Chokran 7it khtariti ${doctorName} m3a ${slot}. 3tini ism chakhsi dyalk 3afak.`
+                    `Chokran 7it khtariti ${doctorName} m3a ${timePart}. 3afak khtar sabab dyal lmaw3id:`
                   );
                   setShowSpecialtiesDropdown(false);
                   setShowDoctors(false);
@@ -449,9 +474,10 @@ export default function Chat() {
               />
             )}
 
+
             {showMotifs && (
               <div className="motifs-container">
-                <span className="text-lg bold">3afak khtar sabab dyal lmaw3id:</span>
+                {/* <span className="text-lg bold">3afak khtar sabab dyal lmaw3id:</span> */}
                 {motifs.map((motif) => (
                   <button
                     key={motif.id}

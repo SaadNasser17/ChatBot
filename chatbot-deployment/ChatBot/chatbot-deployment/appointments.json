@@ -3,63 +3,50 @@
         "data": [
             {
                 "praticien": {
-                    "name": "Dr. Zaidani Asmaa",
-                    "PraticienCentreSoinID": 63,
-                    "timeSlot": "2024-06-04T07:30:00.000Z"
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-06-05T11:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saads",
+                    "last_name": "aaad",
+                    "phone_number": "213131",
+                    "patientId": 700517,
+                    "gpatientId": 691029
+                },
+                "motifId": 839,
+                "motifFamilleId": 1
+            },
+            {
+                "praticien": {
+                    "name": "Dr. LFERDE  ELHASSANE ",
+                    "PraticienCentreSoinID": 418,
+                    "timeSlot": "2024-06-05T11:30:00.000Z"
                 },
                 "patient": {
                     "first_name": "saad",
-                    "last_name": "sasasasa",
-                    "phone_number": "12131312",
-                    "patientId": 700500,
-                    "gpatientId": 691012
+                    "last_name": "saadada",
+                    "phone_number": "1231312",
+                    "patientId": 700518,
+                    "gpatientId": 691030
                 },
-                "motifFamilleId": 404
+                "motifFamilleId": 1
             },
             {
                 "praticien": {
                     "name": "Dr. Zaidani Asmaa",
                     "PraticienCentreSoinID": 63,
-                    "timeSlot": "2024-06-04T07:30:00.000Z"
+                    "timeSlot": "2024-06-05T11:00:00.000Z"
                 },
                 "patient": {
-                    "first_name": "sasasa",
-                    "last_name": "ddafafa",
-                    "phone_number": "31313",
-                    "patientId": 700501,
-                    "gpatientId": 691013
-                },
-                "motifFamilleId": 403
-            },
-            {
-                "praticien": {
-                    "name": "Dr. Bennouna rachid",
-                    "PraticienCentreSoinID": 151,
-                    "timeSlot": "2024-06-04T16:00:00.000Z"
-                },
-                "patient": {
-                    "first_name": "saaad",
-                    "last_name": "sasasasa",
-                    "phone_number": "43567",
-                    "patientId": 700503,
-                    "gpatientId": 691015
-                },
-                "motifFamilleId": 25
-            },
-            {
-                "praticien": {
-                    "name": "Dr. Bennouna rachid",
-                    "PraticienCentreSoinID": 151,
-                    "timeSlot": "2024-06-04T16:00:00.000Z"
-                },
-                "patient": {
-                    "first_name": "saaad",
+                    "first_name": "saad",
                     "last_name": "sasasa",
-                    "phone_number": "1312121",
-                    "patientId": 700506,
-                    "gpatientId": 691018
+                    "phone_number": "a131312",
+                    "patientId": 700520,
+                    "gpatientId": 691032
                 },
-                "motifFamilleId": 25
+                "motifId": 403,
+                "motifFamilleId": 1
             }
         ]
     }
