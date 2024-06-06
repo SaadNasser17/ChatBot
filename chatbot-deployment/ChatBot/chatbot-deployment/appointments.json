@@ -60,6 +60,36 @@
                     "gpatientId": 691073
                 },
                 "motifId": 404
+            },
+            {
+                "praticien": {
+                    "name": "Dr. BENDAHMAN  Amina",
+                    "PraticienCentreSoinID": 107,
+                    "timeSlot": "2024-06-06T16:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nasser",
+                    "phone_number": "0648051951",
+                    "patientId": 700569,
+                    "gpatientId": 691081
+                },
+                "motifId": 824
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Ettanji Adnane",
+                    "PraticienCentreSoinID": 1907,
+                    "timeSlot": "2024-06-06T16:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saaddd",
+                    "phone_number": "0648051951",
+                    "patientId": 700570,
+                    "gpatientId": 691082
+                },
+                "motifId": 148
             }
         ]
     }

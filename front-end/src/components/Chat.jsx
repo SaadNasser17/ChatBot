@@ -248,13 +248,19 @@ export default function Chat() {
   
       if (!response.ok) throw new Error("Failed to confirm appointment.");
   
-      displayBotMessage("تم تأكيد الموعد بنجاح! زورنا مرة أخرى");
+      // Display a success message
+      displayBotMessage("Appointment confirmed successfully!");
+  
+      // Reset the appointment details and step
+      resetAppointmentDetails();
+      setAppointmentStep(0);
+  
+      // Reset the waitingForSmsCode state to allow the chatbot to continue with /predict
       setWaitingForSmsCode(false);
-      resetAppointmentDetails(); // Reset appointment details after successful confirmation
     } catch (error) {
       console.error("Error confirming appointment:", error);
       if (error.message === "Invalid OTP") {
-        displayBotMessage("l code ghalat 3afak 3awd dakhal l code s7i7");
+        displayBotMessage("The code is incorrect. Please enter the correct code.");
       } else {
         displayBotMessage("Failed to confirm appointment. Please try again.");
       }
