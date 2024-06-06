@@ -160,9 +160,11 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     onSlotClick(doctorName, PcsID, isoString);
     await delay(6000); // Adjust this delay as needed
     fetchMotifs(PcsID);
-  };
+};
 
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
 
   return (
     <div className="rounded-lg p-4 bg-white shadow-md">

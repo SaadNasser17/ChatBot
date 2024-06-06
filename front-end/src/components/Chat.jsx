@@ -1,5 +1,3 @@
-// Chat.jsx
-
 import React, { useState, useEffect, useRef } from "react";
 import "../index.css";
 import { IoChatbubbles, IoCloseOutline, IoSend, IoRefresh, IoSquare } from "react-icons/io5";
@@ -85,26 +83,27 @@ export default function Chat() {
     try {
       switch (appointmentStep) {
         case 1:
-          setBookingDetails({ ...bookingDetails, first_name: response });
+          setBookingDetails((prevDetails) => ({ ...prevDetails, first_name: response }));
           displayBotMessage("Achno ism 3a2ili dyalk?");
           setAppointmentStep(2);
           break;
-  
+
         case 2:
-          setBookingDetails({ ...bookingDetails, last_name: response });
+          setBookingDetails((prevDetails) => ({ ...prevDetails, last_name: response }));
           displayBotMessage("3tini ra9m lhatif dyalk?");
           setAppointmentStep(3);
           break;
-  
+
         case 3:
-          setBookingDetails((prevDetails) => ({
-            ...prevDetails,
-            phone_number: response,
-          }));
-  
+          setBookingDetails((prevDetails) => ({ ...prevDetails, phone_number: response }));
+
           // Extract the time part from ISO 8601 format
           const timePart = bookingDetails.timeSlot.substring(11, 16);
-  
+
+          // Extract the day part
+          const appointmentDate = new Date(bookingDetails.timeSlot);
+          const dayPart = appointmentDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: '2-digit' });
+
           // Create a formatted confirmation message
           const confirmationMessage = `
             t2akad liya mn ma3lomat dyalk.<br>
@@ -112,16 +111,17 @@ export default function Chat() {
             Knitek: ${bookingDetails.last_name},<br>
             Ra9m dyalk: ${response},<br>
             Tbib: ${bookingDetails.doctorName},<br>
-            lwe9t: ${timePart}
+            lwe9t: ${timePart},<br>
+            Nhar: ${dayPart}
           `;
-          
+
           displayBotMessage(confirmationMessage);
           await delay(10500); // Delay before showing confirmation message
           displayBotMessage("ila lma3lomat s7a7 dghat 3la ah<br>ila lma3lomat ghalat dghat 3la la?");
           await delay(4500); // Delay before displaying the buttons
           setWaitingForConfirmation(true);
           break;
-  
+
         default:
           displayBotMessage("Ma fhmtsh, 3afak 3awd ghi mra.");
           break;
@@ -131,8 +131,6 @@ export default function Chat() {
       displayBotMessage("w9e3 lina mochkil, wakha t3awad mn lwl?");
     }
   };
-  
-  
 
   const handleConfirmation = async (confirmation) => {
     if (confirmation === "ah") {
@@ -140,7 +138,14 @@ export default function Chat() {
       setWaitingForConfirmation(false);
     } else {
       displayBotMessage("wakha 3awd 3tini ism chakhsi dyalk");
-      resetAppointmentDetails();
+      // Preserve doctorName and timeSlot when resetting other details
+      setBookingDetails((prevDetails) => ({
+        ...prevDetails,
+        first_name: "",
+        last_name: "",
+        phone_number: "",
+        email: "",
+      }));
       setAppointmentStep(1);
       setWaitingForConfirmation(false);
     }
@@ -182,7 +187,6 @@ export default function Chat() {
       if (patientId && gpatientId) {
         console.log("Saving appointment with motif ID:", selectedMotif.motifId);
         await saveAppointmentDetails(patientId, gpatientId, selectedMotif.motifId);
-        // displayBotMessage(`Appointment confirmed with patient ID: ${patientId}`);
       } else {
         console.error("Patient ID or GPatient ID not found in the response.");
         displayBotMessage("An error occurred, please try again.");
@@ -192,7 +196,6 @@ export default function Chat() {
       displayBotMessage("An error occurred, please try again.");
     }
   };
-
 
   const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
@@ -210,12 +213,12 @@ export default function Chat() {
           motifId,
         }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(`Failed to save appointment details: ${errorData.error || "Unknown error"}`);
       }
-  
+
       const data = await response.json();
       setAppointmentRef(data.ref);
       displayBotMessage("daba ghadi iwaslek wahd l code f sms , 3afak 3tih liya bach nconfirmiw le rdv");
@@ -225,7 +228,6 @@ export default function Chat() {
       displayBotMessage("Failed to save appointment details. Please try again.");
     }
   };
-  
 
 const handleSmsCodeInput = async (code) => {
   try {
@@ -249,7 +251,6 @@ const handleSmsCodeInput = async (code) => {
     displayBotMessage("Failed to confirm appointment. Please try again.");
   }
 };
-
 
   const fetchDoctorsForSpecialty = async (specialtyName) => {
     console.log(`Fetching doctors for ${specialtyName}`);
@@ -346,7 +347,6 @@ const handleSmsCodeInput = async (code) => {
       });
   };
 
-  
   const fetchMotifs = async (PcsID) => {
     try {
       console.log("Fetching motifs for PcsID:", PcsID);
@@ -361,7 +361,7 @@ const handleSmsCodeInput = async (code) => {
       console.error("Error fetching motifs:", error);
     }
   };
-  
+
   const handleMotifClick = (motifId, motifFamilleId) => {
     console.log("Motif selected:", motifId, motifFamilleId);
     setSelectedMotif({ motifId, motifFamilleId });
@@ -369,7 +369,6 @@ const handleSmsCodeInput = async (code) => {
     setAppointmentStep(1);
     displayBotMessage("3tini ism chakhsi dyalk 3afak.");
   };
-  
 
   const resetChat = () => {
     setMessages([]);
@@ -494,10 +493,14 @@ const handleSmsCodeInput = async (code) => {
                 onSlotClick={(doctorName, PcsID, slot) => {
                   // Extract the time part from ISO 8601 format
                   const timePart = slot.substring(11, 16);
+
+                  // Extract the day part
+                  const appointmentDate = new Date(slot);
+                  const dayPart = appointmentDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: '2-digit' });
                   
                   setBookingDetails({ doctorName, PcsID, timeSlot: slot });
                   displayBotMessage(
-                    `Chokran 7it khtariti ${doctorName} m3a ${timePart}. 3afak khtar sabab dyal lmaw3id:`
+                    `Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak khtar sabab dyal lmaw3id:`
                   );
                   setShowSpecialtiesDropdown(false);
                   setShowDoctors(false);
@@ -507,10 +510,8 @@ const handleSmsCodeInput = async (code) => {
               />
             )}
 
-
             {showMotifs && (
               <div className="motifs-container">
-                {/* <span className="text-lg bold">3afak khtar sabab dyal lmaw3id:</span> */}
                 {motifs.map((motif) => (
                   <button
                     key={motif.id}
