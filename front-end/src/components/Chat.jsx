@@ -221,11 +221,11 @@ export default function Chat() {
 
       const data = await response.json();
       setAppointmentRef(data.ref);
-      displayBotMessage("daba ghadi iwaslek wahd l code f sms , 3afak 3tih liya bach nconfirmiw le rdv");
+      displayBotMessage("daba ghadi iwaslek wahd ramz f sms , 3afak 3tih liya bach n2eked lik lmaw3id");
       setWaitingForSmsCode(true);
     } catch (error) {
       console.error("Error saving appointment details:", error);
-      displayBotMessage("Failed to save appointment details. Please try again.");
+      displayBotMessage("Kayn mouchkil, 7awel mera akhra!");
     }
   };
 
