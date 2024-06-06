@@ -1,0 +1,1 @@
+                    className="text-sm bg-persian-green-500 rounded-lg my-1 mx-1"

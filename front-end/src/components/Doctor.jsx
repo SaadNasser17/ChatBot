@@ -57,7 +57,7 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
         const doctor = item["0"];
         return {
           name: `Dr. ${doctor.lastname} ${doctor.firstname}`,
-          PcsID: doctor.praticienCentreSoins[0].id, // Extracting PcsID
+          PcsID: doctor.praticienCentreSoins[0].id, 
           tel: doctor.tel,
           email: doctor.email,
           address: doctor.adresse,
@@ -94,7 +94,7 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     endTime.setHours(closingHour, 0, 0, 0);
 
     if (now >= endTime) {
-        slotTime.setDate(now.getDate() + 1); // Move to the next day
+        slotTime.setDate(now.getDate() + 1);
         slotTime.setHours(openingHour, 0, 0, 0);
     }
 
@@ -130,12 +130,12 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     return (
       <div className="embla" ref={emblaRef}>
         <span className="text-lg bold">معاش بغيتي؟</span>
-        <div className="embla__container flex overflow-x-auto">
+        <div className="embla__container flex  overflow-x-auto">
           {filteredSlots.map((slot, index) => (
             <div className="embla__slide flex-none" key={index}>
               <button
                 onClick={() => handleSlotClick(doctor.name, doctor.PcsID, slot)}
-                className="btn btn-primary my-2 mx-1"
+                className=" bg-picton-blue-300 rounded-lg text-sm my-2 mx-1"
                 style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
               >
                 {slot}
@@ -165,23 +165,23 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   return (
-    <div className="rounded-lg p-4 bg-white shadow-md">
+    <div className="p-4">
       {loading && (
-        <p className="text-blue-500">hana kn9alab f {currentSpecialty}</p>
+        <p className="text-picton-blue-500">hana kn9alab f {currentSpecialty}</p>
       )}
       {doctors.map((doctor, index) => (
         <div
           key={index}
-          className="mb-4 p-4 border rounded-lg hover:bg-gray-100 shadow-sm"
+          className="mb-4 p-4 border rounded-lg hover:bg-jordy-blue-50 shadow-sm"
         >
-          <strong className="font-semibold text-xl mb-2 block">{doctor.name}</strong>
+          <strong className="font-semibold text-lg text-jordy-blue-800 mb-2 block">{doctor.name}</strong>
           <div className="mb-2 flex items-center">
-            <FaPhone className="mr-2 text-blue-500" />
-            <span className="text-gray-700">{doctor.tel}</span>
+            <FaPhone className="mr-2 text-picton-blue-500 text-sm" />
+            <span className="text-gray-700 text-sm">{doctor.tel}</span>
           </div>
           <div className="mb-2 flex items-center">
-            <FaEnvelope className="mr-2 text-blue-500" />
-            <span className="text-gray-700">
+            <FaEnvelope className="mr-2 text-picton-blue-500 text-sm" />
+            <span className="text-gray-700 text-sm">
              
               <a
                 href={`mailto:${doctor.email}`}
@@ -192,12 +192,12 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
             </span>
           </div>
           <div className="mb-2 flex items-center">
-            <FaMapMarkerAlt className="mr-2 text-blue-500" />
-            <span className="text-gray-700">{doctor.address}</span>
+            <FaMapMarkerAlt className="mr-2 text-picton-blue-500 text-sm" />
+            <span className="text-gray-700 text-sm">{doctor.address}</span>
           </div>
           <div className="mb-2 flex items-center">
-            <FaCalendarAlt className="mr-2 text-blue-500" />
-            <span className="text-gray-700">
+            <FaCalendarAlt className="mr-2 text-picton-blue-500 text-sm" />
+            <span className="text-gray-700 text-sm">
                {doctor.agendaConfig.heureOuverture} - {doctor.agendaConfig.heureFermeture}
             </span>
           </div>
