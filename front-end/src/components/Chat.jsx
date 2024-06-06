@@ -111,25 +111,15 @@ export default function Chat() {
           break;
 
         case 3:
-<<<<<<< HEAD
-          setBookingDetails((prevDetails) => ({
-            ...prevDetails,
-            phone_number: response,
-          }));
-=======
           setBookingDetails((prevDetails) => ({ ...prevDetails, phone_number: response }));
->>>>>>> 92ec1f4f9b1565b86fde58573cab6e5ff26aea0c
 
           // Extract the time part from ISO 8601 format
           const timePart = bookingDetails.timeSlot.substring(11, 16);
 
-<<<<<<< HEAD
-=======
           // Extract the day part
           const appointmentDate = new Date(bookingDetails.timeSlot);
           const dayPart = appointmentDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: '2-digit' });
 
->>>>>>> 92ec1f4f9b1565b86fde58573cab6e5ff26aea0c
           // Create a formatted confirmation message
           const confirmationMessage = `
             t2akad liya mn ma3lomat dyalk.<br>
@@ -214,16 +204,7 @@ export default function Chat() {
 
       if (patientId && gpatientId) {
         console.log("Saving appointment with motif ID:", selectedMotif.motifId);
-<<<<<<< HEAD
-        await saveAppointmentDetails(
-          patientId,
-          gpatientId,
-          selectedMotif.motifId
-        );
-        // displayBotMessage(`Appointment confirmed with patient ID: ${patientId}`);
-=======
         await saveAppointmentDetails(patientId, gpatientId, selectedMotif.motifId);
->>>>>>> 92ec1f4f9b1565b86fde58573cab6e5ff26aea0c
       } else {
         console.error("Patient ID or GPatient ID not found in the response.");
         displayBotMessage("An error occurred, please try again.");
@@ -274,31 +255,6 @@ export default function Chat() {
 
   const handleSmsCodeInput = async (code) => {
     try {
-<<<<<<< HEAD
-      const response = await fetch(
-        "http://localhost:5000/confirm_appointment",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            code,
-            ref: appointmentRef,
-          }),
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to confirm appointment.");
-
-      displayBotMessage("تم تأكيد الموعد بنجاح! زورنا مرة أخرى");
-      setWaitingForSmsCode(false);
-    } catch (error) {
-      console.error("Error confirming appointment:", error);
-      displayBotMessage("Failed to confirm appointment. Please try again.");
-    }
-  };
-=======
       const response = await fetch("http://localhost:5000/confirm_appointment", {
         method: "POST",
         headers: {
@@ -335,7 +291,6 @@ export default function Chat() {
     }
   };
   
->>>>>>> 92ec1f4f9b1565b86fde58573cab6e5ff26aea0c
 
   const fetchDoctorsForSpecialty = async (specialtyName) => {
     console.log(`Fetching doctors for ${specialtyName}`);
@@ -655,13 +610,10 @@ export default function Chat() {
                   // Extract the time part from ISO 8601 format
                   const timePart = slot.substring(11, 16);
 
-<<<<<<< HEAD
-=======
                   // Extract the day part
                   const appointmentDate = new Date(slot);
                   const dayPart = appointmentDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: '2-digit' });
                   
->>>>>>> 92ec1f4f9b1565b86fde58573cab6e5ff26aea0c
                   setBookingDetails({ doctorName, PcsID, timeSlot: slot });
                   displayBotMessage(
                     `Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak khtar sabab dyal lmaw3id:`
@@ -673,7 +625,6 @@ export default function Chat() {
                 fetchMotifs={fetchMotifs} // Pass the fetchMotifs function
               />
             )}
-<<<<<<< HEAD
             {/* {showMotifs && motifs.length > 0 && (
               <div className="relative group rounded-lg w-40 bg-black-squeeze-50 overflow-hidden before:absolute before:w-12 before:h-12 before:content[''] before:right-0 before:bg-picton-blue-300 before:rounded-full before:blur-lg before:[box-shadow:-60px_20px_10px_10px_#51f7e0] ">
                 <select
@@ -723,21 +674,6 @@ export default function Chat() {
                     </option>
                   ))}
                 </select>
-=======
-
-            {showMotifs && (
-              <div className="motifs-container">
-                {motifs.map((motif) => (
-                  <button
-                    key={motif.id}
-                    onClick={() => handleMotifClick(motif.id, motif.motif.motifFamille.id)}
-                    className="btn btn-secondary my-2 mx-1"
-                    style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
-                  >
-                    {motif.motif.libelle}
-                  </button>
-                ))}
->>>>>>> 92ec1f4f9b1565b86fde58573cab6e5ff26aea0c
               </div>
             )}
             {waitingForConfirmation && (
