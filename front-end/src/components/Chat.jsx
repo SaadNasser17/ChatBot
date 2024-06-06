@@ -246,10 +246,10 @@ export default function Chat() {
         throw new Error("Invalid OTP");
       }
   
-      if (!response.ok) throw new Error("Failed to confirm appointment.");
+      if (!response.ok) throw new Error("Kayn chi mouchkil, lmaw3id mat2ekedch!");
   
       // Display a success message
-      displayBotMessage("Appointment confirmed successfully!");
+      displayBotMessage("lmaw3id t2eked lik!");
   
       // Reset the appointment details and step
       resetAppointmentDetails();
@@ -260,9 +260,9 @@ export default function Chat() {
     } catch (error) {
       console.error("Error confirming appointment:", error);
       if (error.message === "Invalid OTP") {
-        displayBotMessage("The code is incorrect. Please enter the correct code.");
+        displayBotMessage("ramz machi s7i7, afak dekhel ramz s7i7 li weslek ");
       } else {
-        displayBotMessage("Failed to confirm appointment. Please try again.");
+        displayBotMessage("Ma9dernach nakhdo lik maw3id, 7awel mera akhra afak!");
       }
     }
   };
