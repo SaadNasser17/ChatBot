@@ -229,28 +229,38 @@ export default function Chat() {
     }
   };
 
-const handleSmsCodeInput = async (code) => {
-  try {
-    const response = await fetch("http://localhost:5000/confirm_appointment", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        code,
-        ref: appointmentRef,
-      }),
-    });
-
-    if (!response.ok) throw new Error("Failed to confirm appointment.");
-
-    displayBotMessage("تم تأكيد الموعد بنجاح! زورنا مرة أخرى");
-    setWaitingForSmsCode(false);
-  } catch (error) {
-    console.error("Error confirming appointment:", error);
-    displayBotMessage("Failed to confirm appointment. Please try again.");
-  }
-};
+  const handleSmsCodeInput = async (code) => {
+    try {
+      const response = await fetch("http://localhost:5000/confirm_appointment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code,
+          ref: appointmentRef,
+        }),
+      });
+  
+      if (response.status === 404) {
+        throw new Error("Invalid OTP");
+      }
+  
+      if (!response.ok) throw new Error("Failed to confirm appointment.");
+  
+      displayBotMessage("تم تأكيد الموعد بنجاح! زورنا مرة أخرى");
+      setWaitingForSmsCode(false);
+      resetAppointmentDetails(); // Reset appointment details after successful confirmation
+    } catch (error) {
+      console.error("Error confirming appointment:", error);
+      if (error.message === "Invalid OTP") {
+        displayBotMessage("l code ghalat 3afak 3awd dakhal l code s7i7");
+      } else {
+        displayBotMessage("Failed to confirm appointment. Please try again.");
+      }
+    }
+  };
+  
 
   const fetchDoctorsForSpecialty = async (specialtyName) => {
     console.log(`Fetching doctors for ${specialtyName}`);
