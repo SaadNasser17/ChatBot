@@ -103,23 +103,23 @@ export default function Chat() {
           displayBotMessage("Achno ism 3a2ili dyalk?");
           setAppointmentStep(2);
           break;
-
+  
         case 2:
           setBookingDetails((prevDetails) => ({ ...prevDetails, last_name: response }));
           displayBotMessage("3tini ra9m lhatif dyalk?");
           setAppointmentStep(3);
           break;
-
+  
         case 3:
           setBookingDetails((prevDetails) => ({ ...prevDetails, phone_number: response }));
-
+  
           // Extract the time part from ISO 8601 format
           const timePart = bookingDetails.timeSlot.substring(11, 16);
-
-          // Extract the day part
+  
+          // Extract the day part and format it as jj/MM/AAAA
           const appointmentDate = new Date(bookingDetails.timeSlot);
-          const dayPart = appointmentDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: '2-digit' });
-
+          const dayPart = `${appointmentDate.getDate().toString().padStart(2, '0')}/${(appointmentDate.getMonth() + 1).toString().padStart(2, '0')}/${appointmentDate.getFullYear()}`;
+  
           // Create a formatted confirmation message
           const confirmationMessage = `
             t2akad liya mn ma3lomat dyalk.<br>
@@ -130,16 +130,14 @@ export default function Chat() {
             lwe9t: ${timePart},<br>
             Nhar: ${dayPart}
           `;
-
+  
           displayBotMessage(confirmationMessage);
-          await delay(10500); // Delay before showing confirmation message
-          displayBotMessage(
-            "ila lma3lomat s7a7 dghat 3la <button>ah</button> <br>ila lma3lomat ghalat dghat 3la<button></button> ?"
-          );
+          await delay(10500); // Delay before showing the next message
+          displayBotMessage("ila lma3lomat s7a7 dghat 3la ah<br>ila lma3lomat ghalat dghat 3la la?");
           await delay(4500); // Delay before displaying the buttons
           setWaitingForConfirmation(true);
           break;
-
+  
         default:
           displayBotMessage("Ma fhmtsh, 3afak 3awd ghi mra.");
           break;
@@ -149,6 +147,7 @@ export default function Chat() {
       displayBotMessage("w9e3 lina mochkil, wakha t3awad mn lwl?");
     }
   };
+  
 
   const handleConfirmation = async (confirmation) => {
     if (confirmation === "ah") {
@@ -244,12 +243,12 @@ export default function Chat() {
       const data = await response.json();
       setAppointmentRef(data.ref);
       displayBotMessage(
-        "daba ghadi iwaslek wahd l code f sms , 3afak 3tih liya bach nconfirmiw le rdv"
+        "daba ghadi iwaslek wahd ramz f sms , 3afak 3tih liya bach n2ekdo lmaw3id"
       );
       setWaitingForSmsCode(true);
     } catch (error) {
       console.error("Error saving appointment details:", error);
-      displayBotMessage("Smh lina kayn chi mochkil");
+      displayBotMessage("Smhlina kayn chi mochkil");
     }
   };
 
@@ -270,23 +269,17 @@ export default function Chat() {
         throw new Error("Invalid OTP");
       }
   
-      if (!response.ok) throw new Error("Kayn chi mouchkil, lmaw3id mat2ekedch!");
+      if (!response.ok) throw new Error("Failed to confirm appointment.");
   
-      // Display a success message
-      displayBotMessage("lmaw3id t2eked lik!");
-  
-      // Reset the appointment details and step
-      resetAppointmentDetails();
-      setAppointmentStep(0);
-  
-      // Reset the waitingForSmsCode state to allow the chatbot to continue with /predict
+      displayBotMessage("تم تأكيد الموعد بنجاح! زورنا مرة أخرى");
       setWaitingForSmsCode(false);
+      resetAppointmentDetails(); // Reset appointment details after successful confirmation
     } catch (error) {
       console.error("Error confirming appointment:", error);
       if (error.message === "Invalid OTP") {
-        displayBotMessage("ramz machi s7i7, afak dekhel ramz s7i7 li weslek ");
+        displayBotMessage("ramz ghalat 3afak 3awd dakhal l code s7i7");
       } else {
-        displayBotMessage("Ma9dernach nakhdo lik maw3id, 7awel mera akhra afak!");
+        displayBotMessage("Failed to confirm appointment. Please try again.");
       }
     }
   };
@@ -605,26 +598,27 @@ export default function Chat() {
               />
             )}
             {showDoctors && selectedSpecialty && (
-              <Doctor
-                specialty={selectedSpecialty.name}
-                onSlotClick={(doctorName, PcsID, slot) => {
-                  // Extract the time part from ISO 8601 format
-                  const timePart = slot.substring(11, 16);
-
-                  // Extract the day part
-                  const appointmentDate = new Date(slot);
-                  const dayPart = appointmentDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: '2-digit' });
-                  
-                  setBookingDetails({ doctorName, PcsID, timeSlot: slot });
-                  displayBotMessage(
-                    `Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak khtar sabab dyal lmaw3id:`
-                  );
-                  setShowSpecialtiesDropdown(false);
-                  setShowDoctors(false);
-                  setAppointmentStep(1);
-                }}
-                fetchMotifs={fetchMotifs} // Pass the fetchMotifs function
-              />
+             <Doctor
+             specialty={selectedSpecialty.name}
+             onSlotClick={(doctorName, PcsID, slot) => {
+               // Extract the time part from ISO 8601 format
+               const timePart = slot.substring(11, 16);
+           
+               // Extract the day part and format it as jj/MM/AAAA
+               const appointmentDate = new Date(slot);
+               const dayPart = `${appointmentDate.getDate().toString().padStart(2, '0')}/${(appointmentDate.getMonth() + 1).toString().padStart(2, '0')}/${appointmentDate.getFullYear()}`;
+           
+               setBookingDetails({ doctorName, PcsID, timeSlot: slot });
+               displayBotMessage(
+                 `Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak khtar sabab dyal lmaw3id:`
+               );
+               setShowSpecialtiesDropdown(false);
+               setShowDoctors(false);
+               setAppointmentStep(1);
+             }}
+             fetchMotifs={fetchMotifs} // Pass the fetchMotifs function
+           />
+           
             )}
             {/* {showMotifs && motifs.length > 0 && (
               <div className="relative group rounded-lg w-40 bg-black-squeeze-50 overflow-hidden before:absolute before:w-12 before:h-12 before:content[''] before:right-0 before:bg-picton-blue-300 before:rounded-full before:blur-lg before:[box-shadow:-60px_20px_10px_10px_#51f7e0] ">
