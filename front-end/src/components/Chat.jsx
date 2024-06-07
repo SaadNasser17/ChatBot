@@ -493,6 +493,7 @@ export default function Chat() {
 
   return (
     <div className="fixed bottom-5 right-5 flex flex-col items-end">
+      {/* toggle chat */}
       <button
         onClick={toggleChatBox}
         className="bg-picton-blue-500 hover:bg-persian-green-600 text-white font-bold py-2 px-4 rounded-full"
@@ -501,12 +502,12 @@ export default function Chat() {
       </button>
 
       {isOpen && (
-        // header
         <div
           className={`bg-black-squeeze-50 ${
-            isExtended ? "w-96 h-[600px]" : "w-80 h-96"
+            isExtended ? "w-96 h-[500px]" : "w-80 h-96"
           } flex flex-col justify-between rounded-xl fixed bottom-20 right-18`}
         >
+           {/* header */}
           <div
             style={{
               backgroundImage:
