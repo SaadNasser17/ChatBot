@@ -1,11 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../index.css";
-import { IoChatbubbles, IoCloseOutline, IoSend, IoRefresh, IoSquare } from "react-icons/io5";
+import {
+  IoChatbubbles,
+  IoCloseOutline,
+  IoSend,
+  IoRefresh,
+  IoSquare,
+  IoContract,
+  IoExpand,
+} from "react-icons/io5";
 import SpecialtiesDropdown from "./SpecialtiesDropdown";
 import Doctor from "./Doctor";
 import { motion } from "framer-motion";
-import { useBooking } from './BookingContext';
+import { useBooking } from "./BookingContext";
 import AniText from "./Anitext";
+import DOt from "./DOt";
 
 export default function Chat() {
   const { bookingDetails, setBookingDetails } = useBooking();
@@ -25,13 +34,17 @@ export default function Chat() {
   const [selectedMotif, setSelectedMotif] = useState(null);
   const [waitingForConfirmation, setWaitingForConfirmation] = useState(false);
   const messagesEndRef = useRef(null);
-  const [generatedEmail, setGeneratedEmail] = useState('');
+  const [generatedEmail, setGeneratedEmail] = useState("");
   const [waitingForSmsCode, setWaitingForSmsCode] = useState(false);
   const [appointmentRef, setAppointmentRef] = useState(null);
+  const [showSendIcon, setShowSendIcon] = useState(true);
+  const [isExtended, setIsExtended] = useState(false);
 
   useEffect(() => {
     if (!initialMessageSet) {
-      displayBotMessage(`Ana NabadyBot, Bach ne9der n3awnek?<br />أنا نابادي بوت، باش نقدر نعاونك؟`);
+      displayBotMessage(
+        `Ana NabadyBot, Bach ne9der n3awnek?<br />أنا نابادي بوت، باش نقدر نعاونك؟`
+      );
       setInitialMessageSet(true);
     }
   }, [initialMessageSet]);
@@ -45,7 +58,9 @@ export default function Chat() {
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
   };
-
+  const toggleChatSize = () => {
+    setIsExtended(!isExtended);
+  };
   const handleUserInput = async () => {
     if (userMessage.trim()) {
       const msg = userMessage.trim();
@@ -55,7 +70,7 @@ export default function Chat() {
       });
       displayUserMessage(msg, currentTime);
       setUserMessage("");
-  
+
       if (waitingForSmsCode) {
         handleSmsCodeInput(msg);
       } else if (waitingForConfirmation) {
@@ -75,6 +90,7 @@ export default function Chat() {
         callFlaskAPI(msg, currentTime);
       }
     }
+    setShowSendIcon(false);
   };
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -87,23 +103,23 @@ export default function Chat() {
           displayBotMessage("Achno ism 3a2ili dyalk?");
           setAppointmentStep(2);
           break;
-
+  
         case 2:
           setBookingDetails((prevDetails) => ({ ...prevDetails, last_name: response }));
           displayBotMessage("3tini ra9m lhatif dyalk?");
           setAppointmentStep(3);
           break;
-
+  
         case 3:
           setBookingDetails((prevDetails) => ({ ...prevDetails, phone_number: response }));
-
+  
           // Extract the time part from ISO 8601 format
           const timePart = bookingDetails.timeSlot.substring(11, 16);
-
-          // Extract the day part
+  
+          // Extract the day part and format it as jj/MM/AAAA
           const appointmentDate = new Date(bookingDetails.timeSlot);
-          const dayPart = appointmentDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: '2-digit' });
-
+          const dayPart = `${appointmentDate.getDate().toString().padStart(2, '0')}/${(appointmentDate.getMonth() + 1).toString().padStart(2, '0')}/${appointmentDate.getFullYear()}`;
+  
           // Create a formatted confirmation message
           const confirmationMessage = `
             t2akad liya mn ma3lomat dyalk.<br>
@@ -114,14 +130,14 @@ export default function Chat() {
             lwe9t: ${timePart},<br>
             Nhar: ${dayPart}
           `;
-
+  
           displayBotMessage(confirmationMessage);
-          await delay(10500); // Delay before showing confirmation message
+          await delay(10500); // Delay before showing the next message
           displayBotMessage("ila lma3lomat s7a7 dghat 3la ah<br>ila lma3lomat ghalat dghat 3la la?");
           await delay(4500); // Delay before displaying the buttons
           setWaitingForConfirmation(true);
           break;
-
+  
         default:
           displayBotMessage("Ma fhmtsh, 3afak 3awd ghi mra.");
           break;
@@ -131,6 +147,7 @@ export default function Chat() {
       displayBotMessage("w9e3 lina mochkil, wakha t3awad mn lwl?");
     }
   };
+  
 
   const handleConfirmation = async (confirmation) => {
     if (confirmation === "ah") {
@@ -182,7 +199,7 @@ export default function Chat() {
       const patientId = data.patient_id;
       const gpatientId = data.gpatient_id;
 
-      console.log("Patient ID:", patientId, "GPatient ID:", gpatientId); 
+      console.log("Patient ID:", patientId, "GPatient ID:", gpatientId);
 
       if (patientId && gpatientId) {
         console.log("Saving appointment with motif ID:", selectedMotif.motifId);
@@ -216,16 +233,22 @@ export default function Chat() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(`Failed to save appointment details: ${errorData.error || "Unknown error"}`);
+        throw new Error(
+          `Failed to save appointment details: ${
+            errorData.error || "Unknown error"
+          }`
+        );
       }
 
       const data = await response.json();
       setAppointmentRef(data.ref);
-      displayBotMessage("daba ghadi iwaslek wahd ramz f sms , 3afak 3tih liya bach n2eked lik lmaw3id");
+      displayBotMessage(
+        "daba ghadi iwaslek wahd ramz f sms , 3afak 3tih liya bach n2ekdo lmaw3id"
+      );
       setWaitingForSmsCode(true);
     } catch (error) {
       console.error("Error saving appointment details:", error);
-      displayBotMessage("Kayn mouchkil, 7awel mera akhra!");
+      displayBotMessage("Smhlina kayn chi mochkil");
     }
   };
 
@@ -254,7 +277,7 @@ export default function Chat() {
     } catch (error) {
       console.error("Error confirming appointment:", error);
       if (error.message === "Invalid OTP") {
-        displayBotMessage("l code ghalat 3afak 3awd dakhal l code s7i7");
+        displayBotMessage("ramz ghalat 3afak 3awd dakhal l code s7i7");
       } else {
         displayBotMessage("Failed to confirm appointment. Please try again.");
       }
@@ -270,21 +293,69 @@ export default function Chat() {
 
   const isAppointmentRelated = (message) => {
     const appointmentKeywords = [
-      "bghyt nakhod maw3id", "bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib",
-      "kanqalbek 3la rdv", "wach mumkin ndowz", "bghyt nqabbel doktor",
-      "bghyt n7jz", "kanqalbek 3la wqt", "bghit ndir rendez-vous", "bghit ndir rdv", "bghit nakhod rendez vous", "bghit nakhod rendez-vous", "bghit nakhod rdv", "bghit nakhod maw3id", "bghyt nakhod maou3id", "bghyt na7jez maw3id", "bghyt ne7jez maou3id",
-      "momkin nji l clinic?", "rdv",
-      "bghit n3ayet l doctor", "bghit n3ayet l docteur", "bghit n3ayet l tbib",
+      "bghyt nakhod maw3id",
+      "bghyt nakhod maou3id",
+      "bghyt ndowz",
+      "bghyt nqabbel tabib",
+      "kanqalbek 3la rdv",
+      "wach mumkin ndowz",
+      "bghyt nqabbel doktor",
+      "bghyt n7jz",
+      "kanqalbek 3la wqt",
+      "bghit ndir rendez-vous",
+      "bghit ndir rdv",
+      "bghit nakhod rendez vous",
+      "bghit nakhod rendez-vous",
+      "bghit nakhod rdv",
+      "bghit nakhod maw3id",
+      "bghyt nakhod maou3id",
+      "bghyt na7jez maw3id",
+      "bghyt ne7jez maou3id",
+      "momkin nji l clinic?",
+      "rdv",
+      "bghit n3ayet l doctor",
+      "bghit n3ayet l docteur",
+      "bghit n3ayet l tbib",
       "kayn chi rdv disponible?",
-      "bghit nchouf docteur", "bghit nchouf tbib",
-      "fin momkin nl9a rdv?", "fin momkin nakhod rdv?",
+      "bghit nchouf docteur",
+      "bghit nchouf tbib",
+      "fin momkin nl9a rdv?",
+      "fin momkin nakhod rdv?",
       "wach momkin nl9a rendez-vous lyoma?",
       "bghit nreserve wa9t m3a tbib",
       "mnin ymkni ndir rendez-vous?",
       "kifach nqder ndir rendez-vous?",
-      "momkin te3tini liste dyal tbibes disponibles.", "Kifach nakhod rendez-vous avec le médecin?", "consultation", "بغيت ناخد موعد", "بغيت ندوز", "بغيت نقابل طبيب", "كنقلبك على rendez vous", "كنقلبك على موعد", "بغيت نقابل طبيب", "واش ممكن ندوز", "بغيت نقابل دكتور", "بغيت نحجز", "بغيت نحجز موعد",
-      "كنقلبك على وقت", "بغيت ندير rendez-vous", "بغيت ندير rdv", "بغيت ناخد rendez vous", "بغيت ناخد rendez-vous", "بغيت ناخد rdv", "بغيت ناخد موعد", "بغيت نحجز موعد", "بغيت نشوف دكتور", "بغيت نشوف طبيب", "فين ممكن نلقى rendez vous?", "فين ممكن نلقى rendez vous?",
-      "فين ممكن نلقى موعد؟", "فين ممكن نلقى rendez vous؟", "واش ممكن نلقى موعد ليوما؟", "بغيت نريزرفي وقت مع طبيب", "ممكن تعطيني ليست ديال طبيب متاحين؟", "موعد"
+      "momkin te3tini liste dyal tbibes disponibles.",
+      "Kifach nakhod rendez-vous avec le médecin?",
+      "consultation",
+      "بغيت ناخد موعد",
+      "بغيت ندوز",
+      "بغيت نقابل طبيب",
+      "كنقلبك على rendez vous",
+      "كنقلبك على موعد",
+      "بغيت نقابل طبيب",
+      "واش ممكن ندوز",
+      "بغيت نقابل دكتور",
+      "بغيت نحجز",
+      "بغيت نحجز موعد",
+      "كنقلبك على وقت",
+      "بغيت ندير rendez-vous",
+      "بغيت ندير rdv",
+      "بغيت ناخد rendez vous",
+      "بغيت ناخد rendez-vous",
+      "بغيت ناخد rdv",
+      "بغيت ناخد موعد",
+      "بغيت نحجز موعد",
+      "بغيت نشوف دكتور",
+      "بغيت نشوف طبيب",
+      "فين ممكن نلقى rendez vous?",
+      "فين ممكن نلقى rendez vous?",
+      "فين ممكن نلقى موعد؟",
+      "فين ممكن نلقى rendez vous؟",
+      "واش ممكن نلقى موعد ليوما؟",
+      "بغيت نريزرفي وقت مع طبيب",
+      "ممكن تعطيني ليست ديال طبيب متاحين؟",
+      "موعد",
     ];
     return appointmentKeywords.some((keyword) => message.includes(keyword));
   };
@@ -317,7 +388,10 @@ export default function Chat() {
   };
 
   const addMessage = (text, type) => {
-    setMessages((prevMessages) => [...prevMessages, { text, type, time: new Date().toLocaleTimeString() }]);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { text, type, time: new Date().toLocaleTimeString() },
+    ]);
   };
 
   const resetAppointmentDetails = () => {
@@ -330,7 +404,7 @@ export default function Chat() {
       phone_number: "",
       email: "",
       motif: "", // Reset the motif
-      motifFamilleId: "" // Reset the motif famille ID
+      motifFamilleId: "", // Reset the motif famille ID
     });
   };
 
@@ -343,7 +417,10 @@ export default function Chat() {
       hour: "2-digit",
       minute: "2-digit",
     });
-    setMessages((prev) => [...prev, { text: message, type: "bot", time: currentTime }]);
+    setMessages((prev) => [
+      ...prev,
+      { text: message, type: "bot", time: currentTime },
+    ]);
   };
 
   const fetchSpecialties = () => {
@@ -360,7 +437,9 @@ export default function Chat() {
   const fetchMotifs = async (PcsID) => {
     try {
       console.log("Fetching motifs for PcsID:", PcsID);
-      const response = await fetch(`http://localhost:5000/get_motifs?PcsID=${PcsID}`);
+      const response = await fetch(
+        `http://localhost:5000/get_motifs?PcsID=${PcsID}`
+      );
       console.log("API response status:", response.status);
       if (!response.ok) throw new Error("Network response was not ok.");
       const data = await response.json();
@@ -395,6 +474,7 @@ export default function Chat() {
   const stopBotTyping = () => {
     setIsBotTyping(false);
     setForceStopTyping(true);
+    setShowSendIcon(true);
   };
 
   useEffect(() => {
@@ -412,8 +492,14 @@ export default function Chat() {
       >
         <IoChatbubbles className="text-xl w-16 h-8" />
       </button>
+
       {isOpen && (
-        <div className="bg-black-squeeze w-80 h-96 flex flex-col justify-between rounded-xl fixed bottom-20 right-18">
+        // header
+        <div
+          className={`bg-black-squeeze-50 ${
+            isExtended ? "w-96 h-[600px]" : "w-80 h-96"
+          } flex flex-col justify-between rounded-xl fixed bottom-20 right-18`}
+        >
           <div
             style={{
               backgroundImage:
@@ -426,6 +512,17 @@ export default function Chat() {
             </button>
             <div className="flex items-center">
               <button
+                onClick={toggleChatSize}
+                className="bg-transparent p-2"
+                title={isExtended ? "Minimize Chat" : "Extend Chat"}
+              >
+                {isExtended ? (
+                  <IoContract className="text-xl text-white hover:text-gray-300" />
+                ) : (
+                  <IoExpand className="text-xl text-white hover:text-gray-300" />
+                )}
+              </button>
+              <button
                 onClick={resetChat}
                 className="bg-transparent p-2"
                 title="Rafraîchir le chat"
@@ -437,7 +534,7 @@ export default function Chat() {
               </button>
             </div>
           </div>
-
+          {/*  chat */}
           <div
             className="p-3 overflow-y-auto max-h-80 hide-scrollbar"
             style={{ minHeight: "300px" }}
@@ -458,7 +555,8 @@ export default function Chat() {
                 <div
                   className="chat-bubble text-sm p-2 text-black"
                   style={{
-                    backgroundColor: msg.type === "user" ? "#CBF8F5" : "#CEF0FC",
+                    backgroundColor:
+                      msg.type === "user" ? "#CBF8F5" : "#CEF0FC",
                     maxWidth: "75%",
                   }}
                 >
@@ -469,7 +567,9 @@ export default function Chat() {
                   )}
                 </div>
                 <div className="chat-footer text-xs opacity-50">
-                  {msg.type === "user" ? `Seen at ${msg.time}` : `Delivered ${msg.time}`}
+                  {msg.type === "user"
+                    ? `Seen at ${msg.time}`
+                    : `Delivered ${msg.time}`}
                 </div>
               </div>
             ))}
@@ -481,12 +581,11 @@ export default function Chat() {
                     <img src="bot-avatar.png" alt="Bot Avatar" />
                   </div>
                 </div>
-                <div className="chat-bubble text-sm p-2 text-black" style={{ backgroundColor: "#CEF0FC", maxWidth: "75%" }}>
-                  <div className="typing-indicator" style={{ display: 'flex', alignItems: 'center' }}>
-                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite' }}></div>
-                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.2s' }}></div>
-                    <div className="typing-dot" style={{ width: '8px', height: '8px', margin: '0 2px', backgroundColor: '#333', borderRadius: '50%', animation: 'typing 1s infinite 0.4s' }}></div>
-                  </div>
+                <div
+                  className="chat-bubble text-sm p-2 text-black"
+                  style={{ backgroundColor: "#CEF0FC", maxWidth: "75%" }}
+                >
+                  <DOt />
                 </div>
               </div>
             )}
@@ -497,44 +596,80 @@ export default function Chat() {
                 fetchDoctorsForSpecialty={fetchDoctorsForSpecialty}
               />
             )}
-                      {showDoctors && selectedSpecialty && (
-              <Doctor
-                specialty={selectedSpecialty.name}
-                onSlotClick={(doctorName, PcsID, slot) => {
-                  // Extract the time part from ISO 8601 format
-                  const timePart = slot.substring(11, 16);
-
-                  // Extract the day part
-                  const appointmentDate = new Date(slot);
-                  const dayPart = appointmentDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: '2-digit' });
-                  
-                  setBookingDetails({ doctorName, PcsID, timeSlot: slot });
-                  displayBotMessage(
-                    `Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak khtar sabab dyal lmaw3id:`
-                  );
-                  setShowSpecialtiesDropdown(false);
-                  setShowDoctors(false);
-                  setAppointmentStep(1);
-                }}
-                fetchMotifs={fetchMotifs} // Pass the fetchMotifs function
-              />
+            {showDoctors && selectedSpecialty && (
+             <Doctor
+             specialty={selectedSpecialty.name}
+             onSlotClick={(doctorName, PcsID, slot) => {
+               // Extract the time part from ISO 8601 format
+               const timePart = slot.substring(11, 16);
+           
+               // Extract the day part and format it as jj/MM/AAAA
+               const appointmentDate = new Date(slot);
+               const dayPart = `${appointmentDate.getDate().toString().padStart(2, '0')}/${(appointmentDate.getMonth() + 1).toString().padStart(2, '0')}/${appointmentDate.getFullYear()}`;
+           
+               setBookingDetails({ doctorName, PcsID, timeSlot: slot });
+               displayBotMessage(
+                 `Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak khtar sabab dyal lmaw3id:`
+               );
+               setShowSpecialtiesDropdown(false);
+               setShowDoctors(false);
+               setAppointmentStep(1);
+             }}
+             fetchMotifs={fetchMotifs} // Pass the fetchMotifs function
+           />
+           
             )}
+            {/* {showMotifs && motifs.length > 0 && (
+              <div className="relative group rounded-lg w-40 bg-black-squeeze-50 overflow-hidden before:absolute before:w-12 before:h-12 before:content[''] before:right-0 before:bg-picton-blue-300 before:rounded-full before:blur-lg before:[box-shadow:-60px_20px_10px_10px_#51f7e0] ">
+                <select
+                  onChange={(e) => {
+                    const selectedOption = e.target.value.split("-");
+                    if (selectedOption.length === 2) {
+                      handleMotifClick(selectedOption[0], selectedOption[1]);
+                    } else {
+                      console.error("Invalid motif selected:", e.target.value);
+                    }
+                  }}
+                  className="appearance-none hover:placeholder-shown:bg-emerald-500 relative bg-transparent border border-picton-blue-500 text-neutral-600 placeholder-[#CEF0FC] text-sm font-bold rounded-lg focus:ring-violet-500 focus:border-violet-500 block w-full p-2.5"
+                >
+                  <option value="" disabled selected>
+                    Ikhtar sabab
+                  </option>
+                  {motifs.map((motif) => (
+                    <option
+                      key={motif.id}
+                      value={`${motif.id}-${motif.motif.motifFamille.id}`}
+                    >
+                      {motif.motif.libelle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )} */}
 
             {showMotifs && (
-              <div className="motifs-container">
-                {motifs.map((motif) => (
-                  <button
-                    key={motif.id}
-                    onClick={() => handleMotifClick(motif.id, motif.motif.motifFamille.id)}
-                    className="btn btn-secondary my-2 mx-1"
-                    style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
-                  >
-                    {motif.motif.libelle}
-                  </button>
-                ))}
+              <div className="relative group rounded-lg w-40 bg-black-squeeze-50 overflow-hidden before:absolute before:w-12 before:h-12 before:content[''] before:right-0 before:bg-picton-blue-300 before:rounded-full before:blur-lg before:[box-shadow:-60px_20px_10px_10px_#51f7e0] ">
+                <select
+                  onChange={(e) => {
+                    const selectedOption = e.target.value.split("-");
+                    handleMotifClick(selectedOption[0], selectedOption[1]);
+                  }}
+                  className="appearance-none hover:placeholder-shown:bg-emerald-500 relative bg-transparent   border border-picton-blue-500 text-neutral-600 placeholder-[#CEF0FC] text-sm font-bold rounded-lg focus:ring-violet-500 focus:border-violet-500 block w-full p-2.5"
+                >
+                  <option value="" disabled selected>
+                    Ikhtar sabab
+                  </option>
+                  {motifs.map((motif) => (
+                    <option
+                      key={motif.id}
+                      value={`${motif.id}-${motif.motif.motifFamille.id}`}
+                    >
+                      {motif.motif.libelle}
+                    </option>
+                  ))}
+                </select>
               </div>
             )}
-
             {waitingForConfirmation && (
               <div className="flex justify-center my-2">
                 <button
@@ -551,35 +686,40 @@ export default function Chat() {
                 </button>
               </div>
             )}
-
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="flex items-center justify-end w-full rounded-full shadow-inner px-4 ">
+          {/* Input */}
+          <div className="flex items-center justify-end w-full rounded-full mb-5 bg-white shadow-sm border-t-2 px-4">
             <input
               type="text"
               placeholder="Type a message..."
-              className="pl-4 pr-10 py-2 bg-black-squeeze w-full rounded bg-white focus:border-none focus:outline-none"
+              className="p-2 pr-10 w-full bg-white rounded focus:border-none focus:outline-none"
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
               onKeyUp={(e) => e.key === "Enter" && handleUserInput()}
             />
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleUserInput}
-              className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 mr-2 flex items-center justify-center gap-1 focus:outline-none focus:border-picton-blue-500 focus:border-2"
-            >
-              <IoSend className="text-xs" />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={stopBotTyping}
-              className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 flex items-center justify-center gap-1 focus:outline-none focus:border-picton-blue-500 focus:border-2"
-            >
-              <IoSquare className="text-xs" />
-            </motion.button>
+            <div className="flex items-center gap-1">
+              {showSendIcon ? (
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleUserInput}
+                  className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 flex items-center justify-center gap-1 focus:outline-none focus:border-picton-blue-500 focus:border-2"
+                >
+                  <IoSend className="text-xs" />
+                </motion.button>
+              ) : (
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={stopBotTyping}
+                  className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 flex focus:outline-none focus:border-picton-blue-500 focus:border-2"
+                >
+                  <IoSquare className="text-xs" />
+                </motion.button>
+              )}
+            </div>
           </div>
         </div>
       )}

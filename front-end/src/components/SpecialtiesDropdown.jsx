@@ -55,7 +55,7 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
   };
 
   return (
-    <div className="p-3 bg-black-squeeze rounded-b-xl overflow-hidden shadow-lg">
+    <div className="p-3 bg-black-squeeze-50 rounded-b-xl overflow-hidden shadow-lg">
       <div className="flex space-x-2">
         {orderedSpecialties.slice(currentIndex, currentIndex + 3).map((specialty) => (
           <button
