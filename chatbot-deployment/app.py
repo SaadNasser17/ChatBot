@@ -67,8 +67,8 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
     if response.status_code == 200:
         doctors = response.json()['praticien']['data']
         for doctor in doctors:
-            pcs_id = doctor['0']['praticienCentreSoins'][0]['id']
-            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{PcsID}/day/0/limit/1")
+            pcs_id = doctor['PcsID']
+            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
             if appointments_response.ok:
                 unavailable_times = appointments_response.json()
                 doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)
@@ -144,8 +144,27 @@ def get_doctors_agenda():
     else:
         return jsonify({'error': 'Failed to fetch doctors'}), response.status_code
 
-def filter_available_slots(agenda_config, unavailable_times):
-    pass
+def filter_available_slots(agendaConfig, unavailable_times):
+    # Implement your logic to filter available slots based on unavailable times
+    available_slots = []
+    opening_hour = int(agendaConfig['heureOuverture'].split(":")[0])
+    closing_hour = int(agendaConfig['heureFermeture'].split(":")[0])
+    granularity_hours, granularity_minutes = map(int, agendaConfig['granularite'].split(":"))
+
+    slot_time = opening_hour * 60
+    end_time = closing_hour * 60
+
+    unavailable_starts = [entry["currentStart"].split(" ")[1][:5] for entry in unavailable_times['rdv']]
+
+    while slot_time < end_time:
+        hour = slot_time // 60
+        minute = slot_time % 60
+        slot_str = f"{hour:02}:{minute:02}"
+        if slot_str not in unavailable_starts:
+            available_slots.append(slot_str)
+        slot_time += granularity_hours * 60 + granularity_minutes
+
+    return available_slots
 
 @app.route('/submit_details', methods=['POST'])
 def submit_details():
