@@ -51,21 +51,27 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     }
   };
 
-  const displayDoctors = (doctorData) => {
-    const filteredDoctors = doctorData
-      .map((item) => {
+  const displayDoctors = async (doctorData) => {
+    const filteredDoctors = await Promise.all(
+      doctorData.map(async (item) => {
         const doctor = item["0"];
-        return {
+        const doctorDetails = {
           name: `Dr. ${doctor.lastname} ${doctor.firstname}`,
-          PcsID: doctor.praticienCentreSoins[0].id, 
+          PcsID: doctor.praticienCentreSoins[0].id,
           tel: doctor.tel,
           email: doctor.email,
           address: doctor.adresse,
           agendaConfig: doctor.praticienCentreSoins[0].agendaConfig,
+          unavailable_times: []
         };
+        const response = await fetch(`https://apipreprod.nabady.ma/api/holidays/praticienCs/${doctorDetails.PcsID}/day/0/limit/1`);
+        const data = await response.json();
+        doctorDetails.unavailable_times = data.rdv;
+        return doctorDetails;
       })
-      .filter((doctor) => hasAvailableSlots(doctor.agendaConfig));
-    setDoctors(filteredDoctors);
+    );
+
+    setDoctors(filteredDoctors.filter((doctor) => hasAvailableSlots(doctor.agendaConfig)));
   };
 
   const hasAvailableSlots = (agendaConfig) => {
@@ -112,6 +118,10 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
         return slotDate >= now;
     });
 
+    // Filter out taken slots
+    const takenSlots = doctor.unavailable_times.map(time => time.currentStart.split(" ")[1].substring(0, 5));
+    filteredSlots = filteredSlots.filter(slot => !takenSlots.includes(slot));
+
     if (filteredSlots.length < 2) {
         const nextDaySlots = [];
         let nextDaySlotTime = new Date(now.getTime());
@@ -127,24 +137,7 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
         filteredSlots = filteredSlots.concat(nextDaySlots);
     }
 
-    return (
-      <div className="embla" ref={emblaRef}>
-        <span className="text-lg bold">معاش بغيتي؟</span>
-        <div className="embla__container flex  overflow-x-auto">
-          {filteredSlots.map((slot, index) => (
-            <div className="embla__slide flex-none" key={index}>
-              <button
-                onClick={() => handleSlotClick(doctor.name, doctor.PcsID, slot)}
-                className=" bg-picton-blue-300 rounded-lg text-sm my-2 mx-1"
-                style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
-              >
-                {slot}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return filteredSlots;
   };
 
   const handleSlotClick = async (doctorName, PcsID, slot) => {
@@ -160,11 +153,9 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     onSlotClick(doctorName, PcsID, isoString);
     await delay(6000); // Adjust this delay as needed
     fetchMotifs(PcsID);
-};
+  };
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   return (
     <div className="p-4">
@@ -184,7 +175,6 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
           <div className="mb-2 flex items-center">
             <FaEnvelope className="mr-2 text-picton-blue-500 text-sm" />
             <span className="text-gray-700 text-sm">
-             
               <a
                 href={`mailto:${doctor.email}`}
                 className="text-blue-500 hover:text-blue-700 underline break-all"
@@ -200,10 +190,25 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
           <div className="mb-2 flex items-center">
             <FaCalendarAlt className="mr-2 text-picton-blue-500 text-sm" />
             <span className="text-gray-700 text-sm">
-               {doctor.agendaConfig.heureOuverture} - {doctor.agendaConfig.heureFermeture}
+              {doctor.agendaConfig.heureOuverture} - {doctor.agendaConfig.heureFermeture}
             </span>
           </div>
-          {createAgendaGrid(doctor.agendaConfig, doctor)}
+          <div className="embla" ref={emblaRef}>
+            <span className="text-lg bold">معاش بغيتي؟</span>
+            <div className="embla__container flex overflow-x-auto">
+              {createAgendaGrid(doctor.agendaConfig, doctor).map((slot, index) => (
+                <div className="embla__slide flex-none" key={index}>
+                  <button
+                    onClick={() => handleSlotClick(doctor.name, doctor.PcsID, slot)}
+                    className=" bg-picton-blue-300 rounded-lg text-sm my-2 mx-1"
+                    style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
+                  >
+                    {slot}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       ))}
     </div>
