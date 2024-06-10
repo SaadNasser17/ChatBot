@@ -64,6 +64,7 @@ export default function Chat() {
   const handleUserInput = async () => {
     if (userMessage.trim()) {
       const msg = userMessage.trim();
+      const lowerCaseMsg = msg.toLowerCase(); // Convert to lowercase for consistency
       const currentTime = new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
@@ -72,22 +73,22 @@ export default function Chat() {
       setUserMessage("");
 
       if (waitingForSmsCode) {
-        handleSmsCodeInput(msg);
+        handleSmsCodeInput(lowerCaseMsg);
       } else if (waitingForConfirmation) {
-        handleConfirmation(msg);
+        handleConfirmation(lowerCaseMsg);
       } else if (appointmentStep === 3) {
         setBookingDetails((prevDetails) => ({
           ...prevDetails,
-          phone_number: msg,
+          phone_number: lowerCaseMsg,
         }));
-        await processUserResponse(msg);
+        await processUserResponse(lowerCaseMsg);
       } else if (appointmentStep > 0) {
-        await processUserResponse(msg);
-      } else if (isAppointmentRelated(msg)) {
+        await processUserResponse(lowerCaseMsg);
+      } else if (isAppointmentRelated(lowerCaseMsg)) {
         fetchSpecialties();
         setShowSpecialtiesDropdown(true);
       } else {
-        callFlaskAPI(msg, currentTime);
+        callFlaskAPI(lowerCaseMsg, currentTime);
       }
     }
     setShowSendIcon(false);
@@ -300,71 +301,24 @@ export default function Chat() {
 
   const isAppointmentRelated = (message) => {
     const appointmentKeywords = [
-      "bghyt nakhod maw3id",
-      "bghyt nakhod maou3id",
-      "bghyt ndowz",
-      "bghyt nqabbel tabib",
-      "kanqalbek 3la rdv",
-      "wach mumkin ndowz",
-      "bghyt nqabbel doktor",
-      "bghyt n7jz",
-      "kanqalbek 3la wqt",
-      "bghit ndir rendez-vous",
-      "bghit ndir rdv",
-      "bghit nakhod rendez vous",
-      "bghit nakhod rendez-vous",
-      "bghit nakhod rdv",
-      "bghit nakhod maw3id",
-      "bghyt nakhod maou3id",
-      "bghyt na7jez maw3id",
-      "bghyt ne7jez maou3id",
-      "momkin nji l clinic?",
-      "rdv",
-      "bghit n3ayet l doctor",
-      "bghit n3ayet l docteur",
-      "bghit n3ayet l tbib",
-      "kayn chi rdv disponible?",
-      "bghit nchouf docteur",
-      "bghit nchouf tbib",
-      "fin momkin nl9a rdv?",
-      "fin momkin nakhod rdv?",
-      "wach momkin nl9a rendez-vous lyoma?",
-      "bghit nreserve wa9t m3a tbib",
-      "mnin ymkni ndir rendez-vous?",
-      "kifach nqder ndir rendez-vous?",
-      "momkin te3tini liste dyal tbibes disponibles.",
-      "Kifach nakhod rendez-vous avec le médecin?",
-      "consultation",
-      "بغيت ناخد موعد",
-      "بغيت ندوز",
-      "بغيت نقابل طبيب",
-      "كنقلبك على rendez vous",
-      "كنقلبك على موعد",
-      "بغيت نقابل طبيب",
-      "واش ممكن ندوز",
-      "بغيت نقابل دكتور",
-      "بغيت نحجز",
-      "بغيت نحجز موعد",
-      "كنقلبك على وقت",
-      "بغيت ندير rendez-vous",
-      "بغيت ندير rdv",
-      "بغيت ناخد rendez vous",
-      "بغيت ناخد rendez-vous",
-      "بغيت ناخد rdv",
-      "بغيت ناخد موعد",
-      "بغيت نحجز موعد",
-      "بغيت نشوف دكتور",
-      "بغيت نشوف طبيب",
-      "فين ممكن نلقى rendez vous?",
-      "فين ممكن نلقى rendez vous?",
-      "فين ممكن نلقى موعد؟",
-      "فين ممكن نلقى rendez vous؟",
-      "واش ممكن نلقى موعد ليوما؟",
-      "بغيت نريزرفي وقت مع طبيب",
-      "ممكن تعطيني ليست ديال طبيب متاحين؟",
-      "موعد",
+      "bghyt nakhod maw3id", "bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib", "kanqalbek 3la rdv",
+      "wach mumkin ndowz", "bghyt nqabbel doktor", "bghyt n7jz", "kanqalbek 3la wqt", "bghit ndir rendez-vous",
+      "bghit ndir rdv", "bghit nakhod rendez vous", "bghit nakhod rendez-vous", "bghit nakhod rdv", "bghit nakhod maw3id",
+      "bghyt nakhod maou3id", "bghyt na7jez maw3id", "bghyt ne7jez maou3id", "momkin nji l clinic?", "rdv",
+      "bghit n3ayet l doctor", "bghit n3ayet l docteur", "bghit n3ayet l tbib", "kayn chi rdv disponible?", "bghit nchouf docteur",
+      "bghit nchouf tbib", "fin momkin nl9a rdv?", "fin momkin nakhod rdv?", "wach momkin nl9a rendez-vous lyoma?",
+      "bghit nreserve wa9t m3a tbib", "mnin ymkni ndir rendez-vous?", "kifach nqder ndir rendez-vous?", 
+      "momkin te3tini liste dyal tbibes disponibles.", "Kifach nakhod rendez-vous avec le médecin?", "consultation",
+      "بغيت ناخد موعد", "بغيت ندوز", "بغيت نقابل طبيب", "كنقلبك على rendez vous", "كنقلبك على موعد", "بغيت نقابل طبيب",
+      "واش ممكن ندوز", "بغيت نقابل دكتور", "بغيت نحجز", "بغيت نحجز موعد", "كنقلبك على وقت", "بغيت ندير rendez-vous",
+      "بغيت ندير rdv", "بغيت ناخد rendez vous", "بغيت ناخد rendez-vous", "بغيت ناخد rdv", "بغيت ناخد موعد", 
+      "بغيت نحجز موعد", "بغيت نشوف دكتور", "بغيت نشوف طبيب", "فين ممكن نلقى rendez vous?", "فين ممكن نلقى rendez vous?",
+      "فين ممكن نلقى موعد؟", "فين ممكن نلقى rendez vous؟", "واش ممكن نلقى موعد ليوما؟", "بغيت نريزرفي وقت مع طبيب",
+      "ممكن تعطيني ليست ديال طبيب متاحين؟", "موعد"
     ];
-    return appointmentKeywords.some((keyword) => message.includes(keyword));
+
+    const lowerCaseMessage = message.toLowerCase();
+    return appointmentKeywords.some((keyword) => lowerCaseMessage.includes(keyword.toLowerCase()));
   };
 
   const callFlaskAPI = (userMessage, time) => {
