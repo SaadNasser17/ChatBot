@@ -152,9 +152,9 @@ export default function Chat() {
   };
 
   const handleConfirmation = async (confirmation) => {
+    setWaitingForConfirmation(false); // Hide buttons immediately
     if (confirmation === "ah") {
       await finalizeAppointment();
-      setWaitingForConfirmation(false);
     } else {
       displayBotMessage("wakha 3awd 3tini ism chakhsi dyalk");
       // Preserve doctorName and timeSlot when resetting other details
@@ -166,7 +166,6 @@ export default function Chat() {
         email: "",
       }));
       setAppointmentStep(1);
-      setWaitingForConfirmation(false);
     }
   };
 
@@ -430,6 +429,9 @@ export default function Chat() {
     setShowDoctors(false);
     setAppointmentStep(0);
     resetAppointmentDetails();
+    setShowMotifs(false); // Clear motifs when refreshing
+    setWaitingForConfirmation(false); // Clear confirmation state when refreshing
+    setWaitingForSmsCode(false); // Clear SMS code state when refreshing
   };
 
   const stopBotTyping = () => {
@@ -579,55 +581,17 @@ export default function Chat() {
                 fetchMotifs={fetchMotifs} // Pass the fetchMotifs function
               />
             )}
-            {/* {showMotifs && motifs.length > 0 && (
-              <div className="relative group rounded-lg w-40 bg-black-squeeze-50 overflow-hidden before:absolute before:w-12 before:h-12 before:content[''] before:right-0 before:bg-picton-blue-300 before:rounded-full before:blur-lg before:[box-shadow:-60px_20px_10px_10px_#51f7e0] ">
-                <select
-                  onChange={(e) => {
-                    const selectedOption = e.target.value.split("-");
-                    if (selectedOption.length === 2) {
-                      handleMotifClick(selectedOption[0], selectedOption[1]);
-                    } else {
-                      console.error("Invalid motif selected:", e.target.value);
-                    }
-                  }}
-                  className="appearance-none hover:placeholder-shown:bg-emerald-500 relative bg-transparent border border-picton-blue-500 text-neutral-600 placeholder-[#CEF0FC] text-sm font-bold rounded-lg focus:ring-violet-500 focus:border-violet-500 block w-full p-2.5"
-                >
-                  <option value="" disabled selected>
-                    Ikhtar sabab
-                  </option>
-                  {motifs.map((motif) => (
-                    <option
-                      key={motif.id}
-                      value={`${motif.id}-${motif.motif.motifFamille.id}`}
-                    >
-                      {motif.motif.libelle}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )} */}
-
             {showMotifs && (
-              <div className="relative group rounded-lg w-40 bg-black-squeeze-50 overflow-hidden before:absolute before:w-12 before:h-12 before:content[''] before:right-0 before:bg-picton-blue-300 before:rounded-full before:blur-lg before:[box-shadow:-60px_20px_10px_10px_#51f7e0] ">
-                <select
-                  onChange={(e) => {
-                    const selectedOption = e.target.value.split("-");
-                    handleMotifClick(selectedOption[0], selectedOption[1]);
-                  }}
-                  className="appearance-none hover:placeholder-shown:bg-emerald-500 relative bg-transparent   border border-picton-blue-500 text-neutral-600 placeholder-[#CEF0FC] text-sm font-bold rounded-lg focus:ring-violet-500 focus:border-violet-500 block w-full p-2.5"
-                >
-                  <option value="" disabled selected>
-                    Ikhtar sabab
-                  </option>
-                  {motifs.map((motif) => (
-                    <option
-                      key={motif.id}
-                      value={`${motif.id}-${motif.motif.motifFamille.id}`}
-                    >
-                      {motif.motif.libelle}
-                    </option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                {motifs.map((motif) => (
+                  <button
+                    key={motif.id}
+                    onClick={() => handleMotifClick(motif.id, motif.motif.motifFamille.id)}
+                    className="bg-persian-green-500 hover:bg-teal-600 text-white p-2 rounded"
+                  >
+                    {motif.motif.libelle}
+                  </button>
+                ))}
               </div>
             )}
             {waitingForConfirmation && (

@@ -90,6 +90,36 @@
                     "gpatientId": 691082
                 },
                 "motifId": 148
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-12T12:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saad",
+                    "phone_number": "0648051951",
+                    "patientId": 700651,
+                    "gpatientId": 691163
+                },
+                "motifId": "403"
+            },
+            {
+                "praticien": {
+                    "name": "Dr. RHMARI TLEMCANI Fatima-Zahra",
+                    "PraticienCentreSoinID": 1904,
+                    "timeSlot": "2024-06-12T12:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saad",
+                    "phone_number": "0648051951",
+                    "patientId": 700652,
+                    "gpatientId": 691164
+                },
+                "motifId": 144
             }
         ]
     }
