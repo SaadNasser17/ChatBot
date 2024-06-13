@@ -23,7 +23,7 @@ const arabicToLatinNumbers = (str) => {
 };
 
 const formatDateWithLatinNumbers = (date) => {
-  const options = {  day: '2-digit', month: '2-digit' };
+  const options = { day: '2-digit', month: '2-digit' };
   const formattedDate = date.toLocaleDateString('ar-EG', options);
   return arabicToLatinNumbers(formattedDate);
 };
@@ -55,17 +55,16 @@ export default function Chat() {
 
   useEffect(() => {
     if (!initialMessageSet) {
-        displayBotMessage(
-            `Ana NabadyBot, Bach ne9der n3awnek?<br />أنا نابادي بوت، باش نقدر نعاونك؟`
-        );
-        setInitialMessageSet(true);
+      displayBotMessage(
+        `Ana NabadyBot, Bach ne9der n3awnek?<br />أنا نابادي بوت، باش نقدر نعاونك؟`
+      );
+      setInitialMessageSet(true);
     }
 
     // Resetting the relevant states on component mount
     setShowMotifs(false);
     setWaitingForConfirmation(false);
-}, [initialMessageSet]);
-
+  }, [initialMessageSet]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -94,6 +93,11 @@ export default function Chat() {
       // Determine the language
       if (appointmentStep === 0 && isAppointmentRelated(lowerCaseMsg)) {
         setUseArabic(isArabic(lowerCaseMsg));
+        displayBotMessage(
+          isArabic(lowerCaseMsg)
+            ? "هاهوما الإختصاصات لي كينين ، ختار لي بغيتي"
+            : "hahoma les specialités li kaynin khtar li bghit"
+        );
         fetchSpecialties();
         setShowSpecialtiesDropdown(true);
       } else {
@@ -118,7 +122,7 @@ export default function Chat() {
 
   const isAppointmentRelated = (message) => {
     const appointmentKeywords = [
-      "bghyt nakhod maw3id", "bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib", "kanqalbek 3la rdv",
+      "bghyt nakhod maw3id", "bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib", "kanqalbek 3la rdv","rendez-vous","rendez vous","rdv","موعد",
       "wach mumkin ndowz", "bghyt nqabbel doktor", "bghyt n7jz", "kanqalbek 3la wqt", "bghit ndir rendez-vous",
       "bghit ndir rdv", "bghit nakhod rendez vous", "bghit nakhod rendez-vous", "bghit nakhod rdv", "bghit nakhod maw3id",
       "bghyt nakhod maou3id", "bghyt na7jez maw3id", "bghyt ne7jez maou3id", "momkin nji l clinic?", "rdv",
@@ -170,7 +174,7 @@ export default function Chat() {
           await delay(10500); // Delay before showing confirmation message
           displayBotMessage(
             useArabic
-              ? " إلا كانت المعلومات صحيحة اضغط على  </br><button>ah</button><br>إلا كانت المعلومات خاطئة اضغط على </br><button>la</button>"
+              ? "إلا كانت المعلومات صحيحة اضغط على <button>نعم</button><br>إلا كانت المعلومات خاطئة اضغط على <button>لا</button>"
               : "ila lma3lomat s7a7 dghat 3la <button>ah</button> <br>ila lma3lomat ghalat dghat 3la<button>la</button> ?"
           );
           await delay(4500); // Delay before displaying the buttons
@@ -189,7 +193,7 @@ export default function Chat() {
 
   const handleConfirmation = async (confirmation) => {
     setWaitingForConfirmation(false);
-    if (confirmation === "ah" || confirmation === "نعم") {
+    if (confirmation === "نعم" || confirmation === "ah") {
       await finalizeAppointment();
     } else {
       displayBotMessage(useArabic ? "حسناً، من فضلك أعد إعطائي اسمك الشخصي." : "wakha 3awd 3tini ism chakhsi dyalk");
@@ -280,8 +284,8 @@ export default function Chat() {
       setAppointmentRef(data.ref);
       displayBotMessage(
         useArabic
-          ? "دابا غادي يوصلك واحد الكود في SMS، عافاك أعطيه ليا باش نأكدوا الموعد"
-          : "daba ghadi iwaslek wahd l code f sms , 3afak 3tih liya bach nconfirmiw le rdv"
+          ? "دابا غادي يوصلك واحد الرمز في SMS، عافاك أعطيه ليا باش نأكدوا الموعد"
+          : "daba ghadi iwaslek wahd ramz f sms , 3afak 3tih liya bach lmaw3id it2eked lik"
       );
       setWaitingForSmsCode(true);
     } catch (error) {
@@ -611,16 +615,16 @@ export default function Chat() {
             {waitingForConfirmation && (
               <div className="flex justify-center my-2">
                 <button
-                  onClick={() => handleConfirmation("ah")}
+                  onClick={() => handleConfirmation("نعم")}
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2"
                 >
-                  Ah
+                  نعم
                 </button>
                 <button
-                  onClick={() => handleConfirmation("la")}
+                  onClick={() => handleConfirmation("لا")}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2"
                 >
-                  La
+                  لا
                 </button>
               </div>
             )}
