@@ -120,6 +120,36 @@
                     "gpatientId": 691164
                 },
                 "motifId": 144
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-12T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ss",
+                    "last_name": "sss",
+                    "phone_number": "sasasa",
+                    "patientId": 700653,
+                    "gpatientId": 691165
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-13T11:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saad",
+                    "phone_number": "0648051951",
+                    "patientId": 714326,
+                    "gpatientId": 704839
+                },
+                "motifId": 403
             }
         ]
     }
