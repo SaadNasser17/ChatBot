@@ -1,7 +1,7 @@
 // Doctor.jsx
 import React, { useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 
 function Doctor({ specialty, onSlotClick, fetchMotifs }) {
   const [doctors, setDoctors] = useState([]);
@@ -158,49 +158,28 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   return (
-    <div className="p-4">
+    <div className="p-2">
       {loading && (
-        <p className="text-picton-blue-500">hana kn9alab f {currentSpecialty}</p>
+        <p className="text-picton-blue-500">Loading {currentSpecialty}</p>
       )}
       {doctors.map((doctor, index) => (
         <div
           key={index}
-          className="mb-4 p-4 border rounded-lg hover:bg-jordy-blue-50 shadow-sm"
+          className="mb-2 p-2 border rounded-md hover:bg-jordy-blue-50 shadow-sm"
         >
-          <strong className="font-semibold text-lg text-jordy-blue-800 mb-2 block">{doctor.name}</strong>
-          <div className="mb-2 flex items-center">
-            <FaPhone className="mr-2 text-picton-blue-500 text-sm" />
-            <span className="text-gray-700 text-sm">{doctor.tel}</span>
-          </div>
-          <div className="mb-2 flex items-center">
-            <FaEnvelope className="mr-2 text-picton-blue-500 text-sm" />
-            <span className="text-gray-700 text-sm">
-              <a
-                href={`mailto:${doctor.email}`}
-                className="text-blue-500 hover:text-blue-700 underline break-all"
-              >
-                {doctor.email}
-              </a>
-            </span>
-          </div>
-          <div className="mb-2 flex items-center">
+          <strong className="font-semibold text-base text-jordy-blue-800 mb-1 block">{doctor.name}</strong>
+          <div className="mb-1 flex items-center">
             <FaMapMarkerAlt className="mr-2 text-picton-blue-500 text-sm" />
             <span className="text-gray-700 text-sm">{doctor.address}</span>
           </div>
-          <div className="mb-2 flex items-center">
-            <FaCalendarAlt className="mr-2 text-picton-blue-500 text-sm" />
-            <span className="text-gray-700 text-sm">
-              {doctor.agendaConfig.heureOuverture} - {doctor.agendaConfig.heureFermeture}
-            </span>
-          </div>
           <div className="embla" ref={emblaRef}>
-            <span className="text-lg bold">معاش بغيتي؟</span>
+            <span className="text-lg bold">Available Slots:</span>
             <div className="embla__container flex overflow-x-auto">
               {createAgendaGrid(doctor.agendaConfig, doctor).map((slot, index) => (
                 <div className="embla__slide flex-none" key={index}>
                   <button
                     onClick={() => handleSlotClick(doctor.name, doctor.PcsID, slot)}
-                    className=" bg-picton-blue-300 rounded-lg text-sm my-2 mx-1"
+                    className=" bg-picton-blue-300 rounded-lg text-sm my-1 mx-1"
                     style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
                   >
                     {slot}

@@ -150,6 +150,51 @@
                     "gpatientId": 704839
                 },
                 "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Bennouna rachid",
+                    "PraticienCentreSoinID": 151,
+                    "timeSlot": "2024-06-13T16:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saad",
+                    "phone_number": "0648051951",
+                    "patientId": 714340,
+                    "gpatientId": 704853
+                },
+                "motifId": 25
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Charif Khalifi Mohamed",
+                    "PraticienCentreSoinID": 2088,
+                    "timeSlot": "2024-06-13T17:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "nizar",
+                    "last_name": "belmahfoud",
+                    "phone_number": "0667964881",
+                    "patientId": 714342,
+                    "gpatientId": 704855
+                },
+                "motifId": 495
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Kadmiri Hicham",
+                    "PraticienCentreSoinID": 624,
+                    "timeSlot": "2024-06-14T03:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ss",
+                    "last_name": "dd",
+                    "phone_number": "0648051951",
+                    "patientId": 714353,
+                    "gpatientId": 704866
+                },
+                "motifId": 38
             }
         ]
     }
