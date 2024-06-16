@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { useBooking } from "./BookingContext";
 import AniText from "./Anitext";
 import DOt from "./DOt";
+import useEmblaCarousel from "embla-carousel-react";
 
 const arabicToLatinNumbers = (str) => {
   const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
@@ -52,6 +53,7 @@ export default function Chat() {
   const [showSendIcon, setShowSendIcon] = useState(true);
   const [isExtended, setIsExtended] = useState(false);
   const [useArabic, setUseArabic] = useState(false);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
 
   useEffect(() => {
     if (!initialMessageSet) {
@@ -577,25 +579,29 @@ export default function Chat() {
               />
             )}
             {showDoctors && selectedSpecialty && (
-              <Doctor
-                specialty={selectedSpecialty.name}
-                onSlotClick={(doctorName, PcsID, slot) => {
-                  const timePart = slot.substring(11, 16);
-                  const appointmentDate = new Date(slot);
-                  const dayPart = formatDateWithLatinNumbers(appointmentDate);
-                  
-                  setBookingDetails({ doctorName, PcsID, timeSlot: slot });
-                  displayBotMessage(
-                    useArabic
-                      ? `شكراً حيث اخترتي <br>${doctorName} مع ${timePart}.<br>نهار: ${dayPart}.<br>عافاك اختار سبب ديال الموعد:`
-                      : `Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak khtar sabab dyal lmaw3id:`
-                  );
-                  setShowSpecialtiesDropdown(false);
-                  setShowDoctors(false);
-                  setShowMotifs(true);
-                }}
-                fetchMotifs={fetchMotifs}
-              />
+              <div className="embla" ref={emblaRef}>
+                <div className="embla__container">
+                  <Doctor
+                    specialty={selectedSpecialty.name}
+                    onSlotClick={(doctorName, PcsID, slot) => {
+                      const timePart = slot.substring(11, 16);
+                      const appointmentDate = new Date(slot);
+                      const dayPart = formatDateWithLatinNumbers(appointmentDate);
+                      
+                      setBookingDetails({ doctorName, PcsID, timeSlot: slot });
+                      displayBotMessage(
+                        useArabic
+                          ? `شكراً حيث اخترتي <br>${doctorName} مع ${timePart}.<br>نهار: ${dayPart}.<br>عافاك اختار سبب ديال الموعد:`
+                          : `Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak khtar sabab dyal lmaw3id:`
+                      );
+                      setShowSpecialtiesDropdown(false);
+                      setShowDoctors(false);
+                      setShowMotifs(true);
+                    }}
+                    fetchMotifs={fetchMotifs}
+                  />
+                </div>
+              </div>
             )}
 
             {showMotifs && (

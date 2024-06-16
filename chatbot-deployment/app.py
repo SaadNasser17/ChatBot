@@ -68,7 +68,7 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         doctors = response.json()['praticien']['data']
         for doctor in doctors:
             pcs_id = doctor['PcsID']
-            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
+            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/2")
             if appointments_response.ok:
                 unavailable_times = appointments_response.json()
                 doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)

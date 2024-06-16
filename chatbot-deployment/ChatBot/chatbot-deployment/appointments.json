@@ -195,6 +195,51 @@
                     "gpatientId": 704866
                 },
                 "motifId": 38
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-13T23:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saads",
+                    "last_name": "asasa",
+                    "phone_number": "064801657",
+                    "patientId": 714356,
+                    "gpatientId": 704869
+                },
+                "motifId": 404
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-13T23:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "sasasas",
+                    "phone_number": "1232123",
+                    "patientId": 714357,
+                    "gpatientId": 704870
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Bennouna rachid",
+                    "PraticienCentreSoinID": 151,
+                    "timeSlot": "2024-06-14T08:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ssa",
+                    "last_name": "sasasa",
+                    "phone_number": "0648051951",
+                    "patientId": 714375,
+                    "gpatientId": 704888
+                },
+                "motifId": 25
             }
         ]
     }
