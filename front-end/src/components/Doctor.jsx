@@ -28,15 +28,7 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
 
   useEffect(() => {
     if (currentDoctor) {
-      const now = new Date();
-      const closingHour = parseInt(currentDoctor.agendaConfig.heureFermeture.split(":")[0], 10);
-      if (now.getHours() >= closingHour) {
-        setIsTomorrow(true);
-        setSlots(createAgendaGridForTomorrow(currentDoctor.agendaConfig, currentDoctor));
-      } else {
-        setIsTomorrow(false);
-        setSlots(createAgendaGrid(currentDoctor.agendaConfig, currentDoctor));
-      }
+      setSlots(createAgendaGrid(currentDoctor.agendaConfig, currentDoctor));
     }
   }, [currentDoctor]);
 
@@ -53,7 +45,7 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
             query: specialtyName,
             consultation: "undefined",
             page: 1,
-            result: 15,
+            result: 5,
             isIframe: false,
             referrer: "",
           }),
@@ -126,10 +118,18 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     const endTime = new Date();
     endTime.setHours(closingHour, 0, 0, 0);
 
-    while (slotTime < endTime) {
+    if (now >= endTime) {
+        slotTime.setDate(now.getDate() + 1);
+        slotTime.setHours(openingHour, 0, 0, 0);
+    }
+
+    while (slotTime < endTime || slotTime.getDate() !== now.getDate()) {
         slots.push(slotTime.toTimeString().substring(0, 5));
         slotTime.setHours(slotTime.getHours() + granularityHours);
         slotTime.setMinutes(slotTime.getMinutes() + granularityMinutes);
+        if (slotTime.getHours() >= closingHour) {
+            break;
+        }
     }
 
     let filteredSlots = slots.filter((slot) => {
@@ -141,33 +141,22 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     const takenSlots = doctor.unavailable_times.map(time => time.currentStart.split(" ")[1].substring(0, 5));
     filteredSlots = filteredSlots.filter(slot => !takenSlots.includes(slot));
 
-    return filteredSlots;
-  };
+    if (filteredSlots.length < 2) {
+        const nextDaySlots = [];
+        let nextDaySlotTime = new Date(now.getTime());
+        nextDaySlotTime.setDate(nextDaySlotTime.getDate() + 1);
+        nextDaySlotTime.setHours(openingHour, 0, 0, 0);
 
-  const createAgendaGridForTomorrow = (agendaConfig, doctor) => {
-    const now = new Date();
-    const { heureOuverture, heureFermeture, granularite } = agendaConfig;
-    const openingHour = parseInt(heureOuverture.split(":")[0], 10);
-    const closingHour = parseInt(heureFermeture.split(":")[0], 10);
-    const [granularityHours, granularityMinutes] = granularite.split(":").map(Number);
+        while (nextDaySlots.length < (2 - filteredSlots.length) && nextDaySlotTime.getHours() < closingHour) {
+            nextDaySlots.push(nextDaySlotTime.toTimeString().substring(0, 5));
+            nextDaySlotTime.setHours(nextDaySlotTime.getHours() + granularityHours);
+            nextDaySlotTime.setMinutes(nextDaySlotTime.getMinutes() + granularityMinutes);
+        }
 
-    const slots = [];
-    let slotTime = new Date(now);
-    slotTime.setDate(slotTime.getDate() + 1);
-    slotTime.setHours(openingHour, 0, 0, 0);
-
-    const endTime = new Date(slotTime);
-    endTime.setHours(closingHour, 0, 0, 0);
-
-    while (slotTime < endTime) {
-        slots.push(slotTime.toTimeString().substring(0, 5));
-        slotTime.setHours(slotTime.getHours() + granularityHours);
-        slotTime.setMinutes(slotTime.getMinutes() + granularityMinutes);
+        filteredSlots = filteredSlots.concat(nextDaySlots);
     }
 
-    // Filter out taken slots
-    const takenSlots = doctor.unavailable_times.map(time => time.currentStart.split(" ")[1].substring(0, 5));
-    return slots.filter(slot => !takenSlots.includes(slot));
+    return filteredSlots;
   };
 
   const handleSlotClick = async (doctor, doctorName, PcsID, slot) => {
@@ -243,6 +232,34 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     }
   };
 
+  const createAgendaGridForTomorrow = (agendaConfig, doctor) => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const { heureOuverture, heureFermeture, granularite } = agendaConfig;
+    const openingHour = parseInt(heureOuverture.split(":")[0], 10);
+    const closingHour = parseInt(heureFermeture.split(":")[0], 10);
+    const [granularityHours, granularityMinutes] = granularite.split(":").map(Number);
+
+    const slots = [];
+    let slotTime = new Date(tomorrow);
+    slotTime.setHours(openingHour, 0, 0, 0);
+
+    const endTime = new Date(tomorrow);
+    endTime.setHours(closingHour, 0, 0, 0);
+
+    while (slotTime < endTime) {
+      slots.push(slotTime.toTimeString().substring(0, 5));
+      slotTime.setHours(slotTime.getHours() + granularityHours);
+      slotTime.setMinutes(slotTime.getMinutes() + granularityMinutes);
+    }
+
+    // Filter out taken slots
+    const takenSlots = doctor.unavailable_times.map(time => time.currentStart.split(" ")[1].substring(0, 5));
+    const filteredSlots = slots.filter(slot => !takenSlots.includes(slot));
+
+    return filteredSlots;
+  };
+
   return (
     <div className="p-2">
       {loading && (
@@ -276,7 +293,7 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
           </div>
           <div className="embla">
             <span className="text-lg bold">
-              Available Slots for {isTomorrow ? "Tomorrow" : "Today"}:
+              Mawa3id li kaynin {isTomorrow ? "ghada" : "lyoum"}:
             </span>
             <div className="flex justify-between items-center mt-2">
               <FaChevronLeft
