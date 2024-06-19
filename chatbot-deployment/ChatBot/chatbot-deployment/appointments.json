@@ -240,6 +240,21 @@
                     "gpatientId": 704888
                 },
                 "motifId": 25
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Rkiba Zakaria",
+                    "PraticienCentreSoinID": 1906,
+                    "timeSlot": "2024-06-19T16:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "aya",
+                    "last_name": "bacharou",
+                    "phone_number": "0640155038",
+                    "patientId": 714409,
+                    "gpatientId": 704922
+                },
+                "motifId": 146
             }
         ]
     }

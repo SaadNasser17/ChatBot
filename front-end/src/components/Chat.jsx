@@ -17,14 +17,17 @@ import AniText from "./Anitext";
 import DOt from "./DOt";
 
 const arabicToLatinNumbers = (str) => {
-  const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-  const latinNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-  return str.replace(/[٠-٩]/g, (char) => latinNumbers[arabicNumbers.indexOf(char)]);
+  const arabicNumbers = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+  const latinNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  return str.replace(
+    /[٠-٩]/g,
+    (char) => latinNumbers[arabicNumbers.indexOf(char)]
+  );
 };
 
 const formatDateWithLatinNumbers = (date) => {
-  const options = { day: '2-digit', month: '2-digit' };
-  const formattedDate = date.toLocaleDateString('en-GB', options); // Use 'en-GB' for DD/MM/YYYY format
+  const options = { day: "2-digit", month: "2-digit" };
+  const formattedDate = date.toLocaleDateString("en-GB", options); // Use 'en-GB' for DD/MM/YYYY format
   return arabicToLatinNumbers(formattedDate);
 };
 
@@ -70,7 +73,14 @@ export default function Chat() {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [
+    messages,
+    isBotTyping,
+    showSpecialtiesDropdown,
+    showDoctors,
+    showMotifs,
+    waitingForConfirmation,
+  ]);
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
@@ -122,24 +132,79 @@ export default function Chat() {
 
   const isAppointmentRelated = (message) => {
     const appointmentKeywords = [
-      "bghyt nakhod maw3id", "bghyt nakhod maou3id", "bghyt ndowz", "bghyt nqabbel tabib", "kanqalbek 3la rdv","rendez-vous","rendez vous","rdv","موعد",
-      "wach mumkin ndowz", "bghyt nqabbel doktor", "bghyt n7jz", "kanqalbek 3la wqt", "bghit ndir rendez-vous",
-      "bghit ndir rdv", "bghit nakhod rendez vous", "bghit nakhod rendez-vous", "bghit nakhod rdv", "bghit nakhod maw3id",
-      "bghyt nakhod maou3id", "bghyt na7jez maw3id", "bghyt ne7jez maou3id", "momkin nji l clinic?", "rdv",
-      "bghit n3ayet l doctor", "bghit n3ayet l docteur", "bghit n3ayet l tbib", "kayn chi rdv disponible?", "bghit nchouf docteur",
-      "bghit nchouf tbib", "fin momkin nl9a rdv?", "fin momkin nakhod rdv?", "wach momkin nl9a rendez-vous lyoma?",
-      "bghit nreserve wa9t m3a tbib", "mnin ymkni ndir rendez-vous?", "kifach nqder ndir rendez-vous?", 
-      "momkin te3tini liste dyal tbibes disponibles.", "Kifach nakhod rendez-vous avec le médecin?", "consultation",
-      "بغيت ناخد موعد", "بغيت ندوز", "بغيت نقابل طبيب", "كنقلبك على rendez vous", "كنقلبك على موعد", "بغيت نقابل طبيب",
-      "واش ممكن ندوز", "بغيت نقابل دكتور", "بغيت نحجز", "بغيت نحجز موعد", "كنقلبك على وقت", "بغيت ندير rendez-vous",
-      "بغيت ندير rdv", "بغيت ناخد rendez vous", "بغيت ناخد rendez-vous", "بغيت ناخد rdv", "بغيت ناخد موعد", 
-      "بغيت نحجز موعد", "بغيت نشوف دكتور", "بغيت نشوف طبيب", "فين ممكن نلقى rendez vous?", "فين ممكن نلقى rendez vous?",
-      "فين ممكن نلقى موعد؟", "فين ممكن نلقى rendez vous؟", "واش ممكن نلقى موعد ليوما؟", "بغيت نريزرفي وقت مع طبيب",
-      "ممكن تعطيني ليست ديال طبيب متاحين؟", "موعد"
+      "bghyt nakhod maw3id",
+      "bghyt nakhod maou3id",
+      "bghyt ndowz",
+      "bghyt nqabbel tabib",
+      "kanqalbek 3la rdv",
+      "rendez-vous",
+      "rendez vous",
+      "rdv",
+      "موعد",
+      "wach mumkin ndowz",
+      "bghyt nqabbel doktor",
+      "bghyt n7jz",
+      "kanqalbek 3la wqt",
+      "bghit ndir rendez-vous",
+      "bghit ndir rdv",
+      "bghit nakhod rendez vous",
+      "bghit nakhod rendez-vous",
+      "bghit nakhod rdv",
+      "bghit nakhod maw3id",
+      "bghyt nakhod maou3id",
+      "bghyt na7jez maw3id",
+      "bghyt ne7jez maou3id",
+      "momkin nji l clinic?",
+      "rdv",
+      "bghit n3ayet l doctor",
+      "bghit n3ayet l docteur",
+      "bghit n3ayet l tbib",
+      "kayn chi rdv disponible?",
+      "bghit nchouf docteur",
+      "bghit nchouf tbib",
+      "fin momkin nl9a rdv?",
+      "fin momkin nakhod rdv?",
+      "wach momkin nl9a rendez-vous lyoma?",
+      "bghit nreserve wa9t m3a tbib",
+      "mnin ymkni ndir rendez-vous?",
+      "kifach nqder ndir rendez-vous?",
+      "momkin te3tini liste dyal tbibes disponibles.",
+      "Kifach nakhod rendez-vous avec le médecin?",
+      "consultation",
+      "بغيت ناخد موعد",
+      "بغيت ندوز",
+      "بغيت نقابل طبيب",
+      "كنقلبك على rendez vous",
+      "كنقلبك على موعد",
+      "بغيت نقابل طبيب",
+      "واش ممكن ندوز",
+      "بغيت نقابل دكتور",
+      "بغيت نحجز",
+      "بغيت نحجز موعد",
+      "كنقلبك على وقت",
+      "بغيت ندير rendez-vous",
+      "بغيت ندير rdv",
+      "بغيت ناخد rendez vous",
+      "بغيت ناخد rendez-vous",
+      "بغيت ناخد rdv",
+      "بغيت ناخد موعد",
+      "بغيت نحجز موعد",
+      "بغيت نشوف دكتور",
+      "بغيت نشوف طبيب",
+      "فين ممكن نلقى rendez vous?",
+      "فين ممكن نلقى rendez vous?",
+      "فين ممكن نلقى موعد؟",
+      "فين ممكن نلقى rendez vous؟",
+      "واش ممكن نلقى موعد ليوما؟",
+      "بغيت نريزرفي وقت مع طبيب",
+      "ممكن تعطيني ليست ديال طبيب متاحين؟",
+      "موعد",
     ];
 
     const lowerCaseMessage = message.toLowerCase();
-    return appointmentKeywords.some((keyword) => lowerCaseMessage.includes(keyword.toLowerCase()));
+    return appointmentKeywords.some((keyword) =>
+      lowerCaseMessage.includes(keyword.toLowerCase())
+    );
   };
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -148,26 +213,43 @@ export default function Chat() {
     try {
       switch (appointmentStep) {
         case 1:
-          setBookingDetails((prevDetails) => ({ ...prevDetails, first_name: response }));
-          displayBotMessage(useArabic ? "عافاك عطيني الإسم العائلي ديالك" : "Achno ism 3a2ili dyalk?");
+          setBookingDetails((prevDetails) => ({
+            ...prevDetails,
+            first_name: response,
+          }));
+          displayBotMessage(
+            useArabic
+              ? "عافاك عطيني الإسم العائلي ديالك"
+              : "Achno ism 3a2ili dyalk?"
+          );
           setAppointmentStep(2);
           break;
 
         case 2:
-          setBookingDetails((prevDetails) => ({ ...prevDetails, last_name: response }));
-          displayBotMessage(useArabic ? "عافاك عطيني رقم الهاتف ديالك" : "3tini ra9m lhatif dyalk?");
+          setBookingDetails((prevDetails) => ({
+            ...prevDetails,
+            last_name: response,
+          }));
+          displayBotMessage(
+            useArabic
+              ? "عافاك عطيني رقم الهاتف ديالك"
+              : "3tini ra9m lhatif dyalk?"
+          );
           setAppointmentStep(3);
           break;
 
         case 3:
-          setBookingDetails((prevDetails) => ({ ...prevDetails, phone_number: response }));
+          setBookingDetails((prevDetails) => ({
+            ...prevDetails,
+            phone_number: response,
+          }));
 
           const timePart = bookingDetails.timeSlot.substring(11, 16);
           const appointmentDate = new Date(bookingDetails.timeSlot);
           const dayPart = formatDateWithLatinNumbers(appointmentDate);
 
           const confirmationMessage = useArabic
-            ? `تأكد من المعلومات  ديالك.<br>${bookingDetails.first_name }: سميتك,<br>${bookingDetails.last_name}:الإسم العائلي ,<br>الهاتف: ${response},<br>${bookingDetails.doctorName}:الطبيب ,<br>الوقت: ${timePart},<br>اليوم: ${dayPart}`
+            ? `تأكد من المعلومات  ديالك.<br>${bookingDetails.first_name}: سميتك,<br>${bookingDetails.last_name}:الإسم العائلي ,<br>الهاتف: ${response},<br>${bookingDetails.doctorName}:الطبيب ,<br>الوقت: ${timePart},<br>اليوم: ${dayPart}`
             : `t2akad liya mn ma3lomat dyalk.<br>Smitek: ${bookingDetails.first_name},<br>Knitek: ${bookingDetails.last_name},<br>Ra9m dyalk: ${response},<br>Tbib: ${bookingDetails.doctorName},<br>lwe9t: ${timePart},<br>Nhar: ${dayPart}`;
 
           displayBotMessage(confirmationMessage);
@@ -182,12 +264,18 @@ export default function Chat() {
           break;
 
         default:
-          displayBotMessage(useArabic ? "مفهمتش عافاك عاود." : "Ma fhmtsh, 3afak 3awd ghi mra.");
+          displayBotMessage(
+            useArabic ? "مفهمتش عافاك عاود." : "Ma fhmtsh, 3afak 3awd ghi mra."
+          );
           break;
       }
     } catch (error) {
       console.error("Error processing user response:", error);
-      displayBotMessage(useArabic ? "وقع لنا مشكل، من فضلك أعد المحاولة من البداية." : "w9e3 lina mochkil, wakha t3awad mn lwl?");
+      displayBotMessage(
+        useArabic
+          ? "وقع لنا مشكل، من فضلك أعد المحاولة من البداية."
+          : "w9e3 lina mochkil, wakha t3awad mn lwl?"
+      );
     }
   };
 
@@ -196,7 +284,11 @@ export default function Chat() {
     if (confirmation === "نعم" || confirmation === "ah") {
       await finalizeAppointment();
     } else {
-      displayBotMessage(useArabic ? "حسناً، من فضلك أعد إعطائي اسمك الشخصي." : "wakha 3awd 3tini ism chakhsi dyalk");
+      displayBotMessage(
+        useArabic
+          ? "حسناً، من فضلك أعد إعطائي اسمك الشخصي."
+          : "wakha 3awd 3tini ism chakhsi dyalk"
+      );
       setBookingDetails((prevDetails) => ({
         ...prevDetails,
         first_name: "",
@@ -243,14 +335,26 @@ export default function Chat() {
 
       if (patientId && gpatientId) {
         console.log("Saving appointment with motif ID:", selectedMotif.motifId);
-        await saveAppointmentDetails(patientId, gpatientId, selectedMotif.motifId);
+        await saveAppointmentDetails(
+          patientId,
+          gpatientId,
+          selectedMotif.motifId
+        );
       } else {
         console.error("Patient ID or GPatient ID not found in the response.");
-        displayBotMessage(useArabic ? "وقع خطأ، المرجو إعادة المحاولة." : "An error occurred, please try again.");
+        displayBotMessage(
+          useArabic
+            ? "وقع خطأ، المرجو إعادة المحاولة."
+            : "An error occurred, please try again."
+        );
       }
     } catch (error) {
       console.error("Error finalizing appointment:", error);
-      displayBotMessage(useArabic ? "وقع خطأ، المرجو إعادة المحاولة." : "An error occurred, please try again.");
+      displayBotMessage(
+        useArabic
+          ? "وقع خطأ، المرجو إعادة المحاولة."
+          : "An error occurred, please try again."
+      );
     }
   };
 
@@ -290,44 +394,62 @@ export default function Chat() {
       setWaitingForSmsCode(true);
     } catch (error) {
       console.error("Error saving appointment details:", error);
-      displayBotMessage(useArabic ? "سمح لينا كاين شي مشكل" : "Smh lina kayn chi mochkil");
+      displayBotMessage(
+        useArabic ? "سمح لينا كاين شي مشكل" : "Smh lina kayn chi mochkil"
+      );
     }
   };
 
   const handleSmsCodeInput = async (code) => {
     try {
-      const response = await fetch("http://localhost:5000/confirm_appointment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          code,
-          ref: appointmentRef,
-        }),
-      });
-  
+      const response = await fetch(
+        "http://localhost:5000/confirm_appointment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            code,
+            ref: appointmentRef,
+          }),
+        }
+      );
+
       if (response.status === 404) {
         throw new Error("Invalid OTP");
       }
-  
-      if (!response.ok) throw new Error(useArabic ? "كان هناك خطأ، الموعد لم يتأكد!" : "Kayn chi mouchkil, lmaw3id mat2ekedch!");
-  
+
+      if (!response.ok)
+        throw new Error(
+          useArabic
+            ? "كان هناك خطأ، الموعد لم يتأكد!"
+            : "Kayn chi mouchkil, lmaw3id mat2ekedch!"
+        );
+
       // Display a success message
       displayBotMessage(useArabic ? "الموعد تأكد ليك!" : "lmaw3id t2eked lik!");
-  
+
       // Reset the appointment details and step
       resetAppointmentDetails();
       setAppointmentStep(0);
-  
+
       // Reset the waitingForSmsCode state to allow the chatbot to continue with /predict
       setWaitingForSmsCode(false);
     } catch (error) {
       console.error("Error confirming appointment:", error);
       if (error.message === "Invalid OTP") {
-        displayBotMessage(useArabic ? "رمز غير صحيح، من فضلك أدخل الرمز الصحيح الذي وصلك" : "ramz machi s7i7, afak dekhel ramz s7i7 li weslek ");
+        displayBotMessage(
+          useArabic
+            ? "رمز غير صحيح، من فضلك أدخل الرمز الصحيح الذي وصلك"
+            : "ramz machi s7i7, afak dekhel ramz s7i7 li weslek "
+        );
       } else {
-        displayBotMessage(useArabic ? "لم نستطع أخذ موعد لك، من فضلك حاول مرة أخرى!" : "Ma9dernach nakhdo lik maw3id, 7awel mera akhra afak!");
+        displayBotMessage(
+          useArabic
+            ? "لم نستطع أخذ موعد لك، من فضلك حاول مرة أخرى!"
+            : "Ma9dernach nakhdo lik maw3id, 7awel mera akhra afak!"
+        );
       }
     }
   };
@@ -355,7 +477,11 @@ export default function Chat() {
       })
       .catch((error) => {
         console.error("Error:", error);
-        displayBotMessage(useArabic ? "وقع خطأ، المرجو إعادة المحاولة." : "Une erreur s'est produite, veuillez réessayer.");
+        displayBotMessage(
+          useArabic
+            ? "وقع خطأ، المرجو إعادة المحاولة."
+            : "Une erreur s'est produite, veuillez réessayer."
+        );
         setIsBotTyping(false);
       });
   };
@@ -434,7 +560,9 @@ export default function Chat() {
     setSelectedMotif({ motifId, motifFamilleId });
     setShowMotifs(false);
     setAppointmentStep(1);
-    displayBotMessage(useArabic ? "عافاك عطيني الإسم الشخصي." : "3tini ism chakhsi dyalk 3afak.");
+    displayBotMessage(
+      useArabic ? "عافاك عطيني الإسم الشخصي." : "3tini ism chakhsi dyalk 3afak."
+    );
   };
 
   const resetChat = () => {
@@ -447,8 +575,8 @@ export default function Chat() {
     setShowDoctors(false);
     setAppointmentStep(0);
     resetAppointmentDetails();
-    setShowMotifs(false);  // Reset showMotifs state
-    setWaitingForConfirmation(false);  // Reset waitingForConfirmation state
+    setShowMotifs(false); // Reset showMotifs state
+    setWaitingForConfirmation(false); // Reset waitingForConfirmation state
   };
 
   const stopBotTyping = () => {
@@ -477,7 +605,7 @@ export default function Chat() {
         // header
         <div
           className={`bg-black-squeeze-50 ${
-            isExtended ? "w-96 h-[600px]" : "w-80 h-96"
+            isExtended ? "w-[30vw] h-[80vh] " : "w-80 h-96"
           } flex flex-col justify-between rounded-xl fixed bottom-20 right-18`}
         >
           <div
@@ -516,7 +644,9 @@ export default function Chat() {
           </div>
           {/*  chat */}
           <div
-            className="p-3 overflow-y-auto max-h-80 hide-scrollbar"
+            className={`${
+              isExtended ? "w-[30vw] h-[80vh]" : "w-80 h-96"
+            } p-3 overflow-y-auto max-h-96 hide-scrollbar`}
             style={{ minHeight: "300px" }}
           >
             {messages.map((msg, index) => (
@@ -583,7 +713,7 @@ export default function Chat() {
                   const timePart = slot.substring(11, 16);
                   const appointmentDate = new Date(slot);
                   const dayPart = formatDateWithLatinNumbers(appointmentDate);
-                  
+
                   setBookingDetails({ doctorName, PcsID, timeSlot: slot });
                   displayBotMessage(
                     useArabic
@@ -603,7 +733,9 @@ export default function Chat() {
                 {motifs.map((motif, index) => (
                   <button
                     key={index}
-                    onClick={() => handleMotifClick(motif.id, motif.motif.motifFamille.id)}
+                    onClick={() =>
+                      handleMotifClick(motif.id, motif.motif.motifFamille.id)
+                    }
                     className="bg-persian-green-500 hover:bg-teal-600 text-white text-xs p-2 m-1 rounded-lg w-[calc(50%-10px)]"
                   >
                     {motif.motif.libelle}
@@ -633,16 +765,22 @@ export default function Chat() {
           </div>
 
           {/* Input */}
-          <div className="flex items-center justify-end w-full rounded-full mb-5 bg-white shadow-sm border-t-2 px-4">
+          <div
+            className={`bg-white ${
+              isExtended ? "w-full h-[50px]" : "w-80 h-96"
+            }  flex items-center justify-end rounded-full mb-5  shadow-sm border-t-2 px-4`}
+          >
             <input
               type="text"
               placeholder="Type a message..."
-              className="p-2 pr-10 w-full bg-white rounded focus:border-none focus:outline-none"
+              className={`bg-white p-2  w-full rounded-full focus:border-none focus:outline-none ${
+                isExtended ? "h-[50px]" : "h-10"
+              }`}
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
               onKeyUp={(e) => e.key === "Enter" && handleUserInput()}
             />
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 mt-2">
               {showSendIcon ? (
                 <motion.button
                   whileHover={{ scale: 1.1 }}
