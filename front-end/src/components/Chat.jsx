@@ -594,12 +594,14 @@ export default function Chat() {
 
   return (
     <div className="fixed bottom-5 right-5 flex flex-col items-end">
-      <button
-        onClick={toggleChatBox}
-        className="bg-picton-blue-500 hover:bg-persian-green-600 text-white font-bold py-2 px-4 rounded-full"
-      >
-        <IoChatbubbles className="text-xl w-16 h-8" />
-      </button>
+      {!isOpen && (
+        <button
+          onClick={toggleChatBox}
+          className="bg-picton-blue-500 hover:bg-persian-green-600 text-white font-bold py-2 px-4 rounded-full"
+        >
+          <IoChatbubbles className="text-xl w-16 h-8" />
+        </button>
+      )}
 
       {isOpen && (
         // header
