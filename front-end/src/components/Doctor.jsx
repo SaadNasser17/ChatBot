@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { FaMapMarkerAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-function Doctor({ specialty, onSlotClick, fetchMotifs }) {
+function Doctor({ specialty, onSlotClick }) {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentSpecialty, setCurrentSpecialty] = useState("");
@@ -194,8 +194,6 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     const isoString = selectedDate.toISOString();
 
     onSlotClick(doctorName, PcsID, isoString);
-    await delay(6000); // Adjust this delay as needed
-    fetchMotifs(PcsID);
   };
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

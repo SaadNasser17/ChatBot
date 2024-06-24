@@ -255,6 +255,51 @@
                     "gpatientId": 704922
                 },
                 "motifId": 146
+            },
+            {
+                "praticien": {
+                    "name": "Dr. BENDAHMAN  Amina",
+                    "PraticienCentreSoinID": 107,
+                    "timeSlot": "2024-06-24T10:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nassereddine",
+                    "phone_number": "0648051951",
+                    "patientId": 714510,
+                    "gpatientId": 705023
+                },
+                "motifId": 824
+            },
+            {
+                "praticien": {
+                    "name": "Dr. BENDAHMAN  Amina",
+                    "PraticienCentreSoinID": 107,
+                    "timeSlot": "2024-06-24T11:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saaaad",
+                    "phone_number": "0648051951",
+                    "patientId": 714511,
+                    "gpatientId": 705024
+                },
+                "motifId": 824
+            },
+            {
+                "praticien": {
+                    "name": "Dr. BENDAHMAN  Amina",
+                    "PraticienCentreSoinID": 107,
+                    "timeSlot": "2024-06-24T11:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saaad",
+                    "phone_number": "0648051951",
+                    "patientId": 714512,
+                    "gpatientId": 705025
+                },
+                "motifId": 824
             }
         ]
     }
