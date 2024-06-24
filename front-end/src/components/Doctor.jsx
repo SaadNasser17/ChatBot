@@ -1,13 +1,18 @@
-// Doctor.jsx
 import React, { useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-function Doctor({ specialty, onSlotClick, fetchMotifs }) {
+function Doctor({ specialty, onSlotClick }) {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentSpecialty, setCurrentSpecialty] = useState("");
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  const [currentDoctorIndex, setCurrentDoctorIndex] = useState(0);
+  const [slotIndex, setSlotIndex] = useState(0);
+  const [slots, setSlots] = useState([]);
+  const [isTomorrow, setIsTomorrow] = useState(false);
+
+  const currentDoctor = doctors[currentDoctorIndex];
 
   useEffect(() => {
     if (specialty) {
@@ -21,9 +26,14 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     }
   }, [doctors, emblaApi]);
 
+  useEffect(() => {
+    if (currentDoctor) {
+      setSlots(createAgendaGrid(currentDoctor.agendaConfig, currentDoctor));
+    }
+  }, [currentDoctor]);
+
   const fetchDoctorsForSpecialty = async (specialtyName) => {
     setCurrentSpecialty(specialtyName);
-
     setLoading(true);
     try {
       const response = await fetch(
@@ -64,7 +74,7 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
           agendaConfig: doctor.praticienCentreSoins[0].agendaConfig,
           unavailable_times: []
         };
-        const response = await fetch(`https://apipreprod.nabady.ma/api/holidays/praticienCs/${doctorDetails.PcsID}/day/0/limit/1`);
+        const response = await fetch(`https://apipreprod.nabady.ma/api/holidays/praticienCs/${doctorDetails.PcsID}/day/0/limit/2`);
         const data = await response.json();
         doctorDetails.unavailable_times = data.rdv;
         return doctorDetails;
@@ -76,12 +86,21 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
 
   const hasAvailableSlots = (agendaConfig) => {
     const now = new Date();
-    const closingTime = new Date();
-    closingTime.setHours(
-      parseInt(agendaConfig.heureFermeture.split(":")[0], 10),
-      parseInt(agendaConfig.heureFermeture.split(":")[1], 10),
-      0
-    );
+    const { heureOuverture, heureFermeture } = agendaConfig;
+    const openingHour = parseInt(heureOuverture.split(":")[0], 10);
+    const closingHour = parseInt(heureFermeture.split(":")[0], 10);
+
+    let closingTime = new Date();
+    closingTime.setHours(closingHour, parseInt(heureFermeture.split(":")[1], 10), 0);
+
+    if (now >= closingTime) {
+      // If the current time is after the closing time, consider the next day's opening time
+      const nextDay = new Date(now.getTime());
+      nextDay.setDate(nextDay.getDate() + 1);
+      nextDay.setHours(openingHour, parseInt(heureOuverture.split(":")[1], 10), 0);
+      closingTime = nextDay;
+    }
+
     return now < closingTime;
   };
 
@@ -140,77 +159,166 @@ function Doctor({ specialty, onSlotClick, fetchMotifs }) {
     return filteredSlots;
   };
 
-  const handleSlotClick = async (doctorName, PcsID, slot) => {
-    const selectedDate = new Date(); // Replace with the actual date the slot is for
+  const handleSlotClick = async (doctor, doctorName, PcsID, slot) => {
     const [hours, minutes] = slot.split(":");
-    selectedDate.setHours(hours);
-    selectedDate.setMinutes(minutes);
-    selectedDate.setSeconds(0);
-    selectedDate.setMilliseconds(0);
+
+    const { heureOuverture, heureFermeture } = doctor.agendaConfig;
+    const openingHour = parseInt(heureOuverture.split(":")[0], 10);
+    const closingHour = parseInt(heureFermeture.split(":")[0], 10);
+
+    const now = new Date();
+    const slotTime = new Date(now.getTime());
+    slotTime.setHours(hours);
+    slotTime.setMinutes(minutes);
+    slotTime.setSeconds(0);
+    slotTime.setMilliseconds(0);
+
+    const isNextDay = slotTime.getHours() < openingHour || slotTime.getHours() >= closingHour;
+
+    let selectedDate;
+    if (isNextDay) {
+      selectedDate = new Date(now.getTime());
+      selectedDate.setDate(selectedDate.getDate() + 1);
+      selectedDate.setHours(hours);
+      selectedDate.setMinutes(minutes);
+      selectedDate.setSeconds(0);
+      selectedDate.setMilliseconds(0);
+    } else {
+      selectedDate = new Date(now.getTime());
+      selectedDate.setHours(hours);
+      selectedDate.setMinutes(minutes);
+      selectedDate.setSeconds(0);
+      selectedDate.setMilliseconds(0);
+    }
 
     const isoString = selectedDate.toISOString();
 
     onSlotClick(doctorName, PcsID, isoString);
-    await delay(6000); // Adjust this delay as needed
-    fetchMotifs(PcsID);
   };
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+  const showPreviousDoctor = () => {
+    if (currentDoctorIndex > 0) {
+      setCurrentDoctorIndex(currentDoctorIndex - 1);
+      setSlotIndex(0);
+      setIsTomorrow(false);
+    }
+  };
+
+  const showNextDoctor = () => {
+    if (currentDoctorIndex < doctors.length - 1) {
+      setCurrentDoctorIndex(currentDoctorIndex + 1);
+      setSlotIndex(0);
+      setIsTomorrow(false);
+    }
+  };
+
+  const showPreviousSlots = () => {
+    if (slotIndex > 0) {
+      setSlotIndex(slotIndex - 4);
+    }
+  };
+
+  const showNextSlots = () => {
+    if (slotIndex + 4 < slots.length) {
+      setSlotIndex(slotIndex + 4);
+    } else {
+      setIsTomorrow(true);
+      setSlots(createAgendaGridForTomorrow(currentDoctor.agendaConfig, currentDoctor));
+      setSlotIndex(0);
+    }
+  };
+
+  const createAgendaGridForTomorrow = (agendaConfig, doctor) => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const { heureOuverture, heureFermeture, granularite } = agendaConfig;
+    const openingHour = parseInt(heureOuverture.split(":")[0], 10);
+    const closingHour = parseInt(heureFermeture.split(":")[0], 10);
+    const [granularityHours, granularityMinutes] = granularite.split(":").map(Number);
+
+    const slots = [];
+    let slotTime = new Date(tomorrow);
+    slotTime.setHours(openingHour, 0, 0, 0);
+
+    const endTime = new Date(tomorrow);
+    endTime.setHours(closingHour, 0, 0, 0);
+
+    while (slotTime < endTime) {
+      slots.push(slotTime.toTimeString().substring(0, 5));
+      slotTime.setHours(slotTime.getHours() + granularityHours);
+      slotTime.setMinutes(slotTime.getMinutes() + granularityMinutes);
+    }
+
+    // Filter out taken slots
+    const takenSlots = doctor.unavailable_times.map(time => time.currentStart.split(" ")[1].substring(0, 5));
+    const filteredSlots = slots.filter(slot => !takenSlots.includes(slot));
+
+    return filteredSlots;
+  };
+
   return (
-    <div className="p-4">
+    <div className="p-2">
       {loading && (
-        <p className="text-picton-blue-500">hana kn9alab f {currentSpecialty}</p>
+        <p className="text-picton-blue-500">Loading {currentSpecialty}</p>
       )}
-      {doctors.map((doctor, index) => (
-        <div
-          key={index}
-          className="mb-4 p-4 border rounded-lg hover:bg-jordy-blue-50 shadow-sm"
-        >
-          <strong className="font-semibold text-lg text-jordy-blue-800 mb-2 block">{doctor.name}</strong>
-          <div className="mb-2 flex items-center">
-            <FaPhone className="mr-2 text-picton-blue-500 text-sm" />
-            <span className="text-gray-700 text-sm">{doctor.tel}</span>
+      {currentDoctor && (
+        <div className="mb-2 p-2 border rounded-md hover:bg-jordy-blue-50 shadow-sm">
+          <div className="flex justify-between items-center">
+            <FaChevronLeft
+              className="text-picton-blue-500 text-lg cursor-pointer"
+              onClick={showPreviousDoctor}
+            />
+            <div className="text-center">
+              <img
+                src="https://uat.nabady.ma/assets/images/avatars/medecin_homme.svg"
+                alt="Doctor"
+                className="w-12 h-12 mx-auto mb-2"
+              />
+              <strong className="font-semibold text-base text-jordy-blue-800 mb-1 block">
+                {currentDoctor.name}
+              </strong>
+              <div className="mb-1 flex items-center justify-center">
+                <FaMapMarkerAlt className="mr-2 text-picton-blue-500 text-sm" />
+                <span className="text-gray-700 text-sm">{currentDoctor.address}</span>
+              </div>
+            </div>
+            <FaChevronRight
+              className="text-picton-blue-500 text-lg cursor-pointer"
+              onClick={showNextDoctor}
+            />
           </div>
-          <div className="mb-2 flex items-center">
-            <FaEnvelope className="mr-2 text-picton-blue-500 text-sm" />
-            <span className="text-gray-700 text-sm">
-              <a
-                href={`mailto:${doctor.email}`}
-                className="text-blue-500 hover:text-blue-700 underline break-all"
-              >
-                {doctor.email}
-              </a>
+          <div className="embla">
+            <span className="text-lg bold">
+              Mawa3id li kaynin {isTomorrow ? "ghada" : "lyoum"}:
             </span>
-          </div>
-          <div className="mb-2 flex items-center">
-            <FaMapMarkerAlt className="mr-2 text-picton-blue-500 text-sm" />
-            <span className="text-gray-700 text-sm">{doctor.address}</span>
-          </div>
-          <div className="mb-2 flex items-center">
-            <FaCalendarAlt className="mr-2 text-picton-blue-500 text-sm" />
-            <span className="text-gray-700 text-sm">
-              {doctor.agendaConfig.heureOuverture} - {doctor.agendaConfig.heureFermeture}
-            </span>
-          </div>
-          <div className="embla" ref={emblaRef}>
-            <span className="text-lg bold">معاش بغيتي؟</span>
-            <div className="embla__container flex overflow-x-auto">
-              {createAgendaGrid(doctor.agendaConfig, doctor).map((slot, index) => (
-                <div className="embla__slide flex-none" key={index}>
-                  <button
-                    onClick={() => handleSlotClick(doctor.name, doctor.PcsID, slot)}
-                    className=" bg-picton-blue-300 rounded-lg text-sm my-2 mx-1"
-                    style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
-                  >
-                    {slot}
-                  </button>
-                </div>
-              ))}
+            <div className="flex justify-between items-center mt-2">
+              <FaChevronLeft
+                className="text-picton-blue-500 text-lg cursor-pointer"
+                onClick={showPreviousSlots}
+              />
+              <div className="embla__container flex justify-center overflow-hidden">
+                {slots.slice(slotIndex, slotIndex + 4).map((slot, index) => (
+                  <div className="embla__slide flex-none mx-1" key={index}>
+                    <button
+                      onClick={() => handleSlotClick(currentDoctor, currentDoctor.name, currentDoctor.PcsID, slot)}
+                      className="bg-picton-blue-300 rounded-lg text-sm my-1 mx-1"
+                      style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
+                    >
+                      {slot}
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <FaChevronRight
+                className="text-picton-blue-500 text-lg cursor-pointer"
+                onClick={showNextSlots}
+              />
             </div>
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 }

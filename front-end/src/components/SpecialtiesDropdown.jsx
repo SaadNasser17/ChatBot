@@ -56,12 +56,12 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
 
   return (
     <div className="p-3 bg-black-squeeze-50 rounded-b-xl overflow-hidden shadow-lg">
-      <div className="flex space-x-2">
+      <div className="flex flex-wrap justify-center">
         {orderedSpecialties.slice(currentIndex, currentIndex + 3).map((specialty) => (
           <button
             key={specialty.id}
             onClick={() => fetchDoctorsForSpecialty(specialty.name)}
-            className="text-white p-1 rounded-lg hover:bg-persian-green-500"
+            className="text-white p-1 rounded-lg hover:bg-persian-green-500 m-1"
             style={{
               backgroundColor: "#87CEEB", // Bleu ciel
               minWidth: "80px",
@@ -83,7 +83,7 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
       {currentIndex + 3 < orderedSpecialties.length && (
         <button
           onClick={handleShowMore}
-          className="bg-persian-green-500 hover:bg-teal-600 text-white p-1 rounded mt-2 text-xs"
+          className="bg-persian-green-500 hover:bg-teal-600 text-white p-1 rounded mt-2 text-xs mx-auto block"
         >
           بغيتي كتر؟
         </button>

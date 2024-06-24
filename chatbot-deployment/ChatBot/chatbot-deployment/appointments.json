@@ -60,6 +60,249 @@
                     "gpatientId": 691073
                 },
                 "motifId": 404
+<<<<<<< HEAD
+=======
+            },
+            {
+                "praticien": {
+                    "name": "Dr. BENDAHMAN  Amina",
+                    "PraticienCentreSoinID": 107,
+                    "timeSlot": "2024-06-06T16:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nasser",
+                    "phone_number": "0648051951",
+                    "patientId": 700569,
+                    "gpatientId": 691081
+                },
+                "motifId": 824
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Ettanji Adnane",
+                    "PraticienCentreSoinID": 1907,
+                    "timeSlot": "2024-06-06T16:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saaddd",
+                    "phone_number": "0648051951",
+                    "patientId": 700570,
+                    "gpatientId": 691082
+                },
+                "motifId": 148
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-12T12:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saad",
+                    "phone_number": "0648051951",
+                    "patientId": 700651,
+                    "gpatientId": 691163
+                },
+                "motifId": "403"
+            },
+            {
+                "praticien": {
+                    "name": "Dr. RHMARI TLEMCANI Fatima-Zahra",
+                    "PraticienCentreSoinID": 1904,
+                    "timeSlot": "2024-06-12T12:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saad",
+                    "phone_number": "0648051951",
+                    "patientId": 700652,
+                    "gpatientId": 691164
+                },
+                "motifId": 144
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-12T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ss",
+                    "last_name": "sss",
+                    "phone_number": "sasasa",
+                    "patientId": 700653,
+                    "gpatientId": 691165
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-13T11:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saad",
+                    "phone_number": "0648051951",
+                    "patientId": 714326,
+                    "gpatientId": 704839
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Bennouna rachid",
+                    "PraticienCentreSoinID": 151,
+                    "timeSlot": "2024-06-13T16:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saad",
+                    "phone_number": "0648051951",
+                    "patientId": 714340,
+                    "gpatientId": 704853
+                },
+                "motifId": 25
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Charif Khalifi Mohamed",
+                    "PraticienCentreSoinID": 2088,
+                    "timeSlot": "2024-06-13T17:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "nizar",
+                    "last_name": "belmahfoud",
+                    "phone_number": "0667964881",
+                    "patientId": 714342,
+                    "gpatientId": 704855
+                },
+                "motifId": 495
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Kadmiri Hicham",
+                    "PraticienCentreSoinID": 624,
+                    "timeSlot": "2024-06-14T03:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ss",
+                    "last_name": "dd",
+                    "phone_number": "0648051951",
+                    "patientId": 714353,
+                    "gpatientId": 704866
+                },
+                "motifId": 38
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-13T23:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saads",
+                    "last_name": "asasa",
+                    "phone_number": "064801657",
+                    "patientId": 714356,
+                    "gpatientId": 704869
+                },
+                "motifId": 404
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-06-13T23:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "sasasas",
+                    "phone_number": "1232123",
+                    "patientId": 714357,
+                    "gpatientId": 704870
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Bennouna rachid",
+                    "PraticienCentreSoinID": 151,
+                    "timeSlot": "2024-06-14T08:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ssa",
+                    "last_name": "sasasa",
+                    "phone_number": "0648051951",
+                    "patientId": 714375,
+                    "gpatientId": 704888
+                },
+                "motifId": 25
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Rkiba Zakaria",
+                    "PraticienCentreSoinID": 1906,
+                    "timeSlot": "2024-06-19T16:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "aya",
+                    "last_name": "bacharou",
+                    "phone_number": "0640155038",
+                    "patientId": 714409,
+                    "gpatientId": 704922
+                },
+                "motifId": 146
+            },
+            {
+                "praticien": {
+                    "name": "Dr. BENDAHMAN  Amina",
+                    "PraticienCentreSoinID": 107,
+                    "timeSlot": "2024-06-24T10:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nassereddine",
+                    "phone_number": "0648051951",
+                    "patientId": 714510,
+                    "gpatientId": 705023
+                },
+                "motifId": 824
+            },
+            {
+                "praticien": {
+                    "name": "Dr. BENDAHMAN  Amina",
+                    "PraticienCentreSoinID": 107,
+                    "timeSlot": "2024-06-24T11:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saaaad",
+                    "phone_number": "0648051951",
+                    "patientId": 714511,
+                    "gpatientId": 705024
+                },
+                "motifId": 824
+            },
+            {
+                "praticien": {
+                    "name": "Dr. BENDAHMAN  Amina",
+                    "PraticienCentreSoinID": 107,
+                    "timeSlot": "2024-06-24T11:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saaad",
+                    "phone_number": "0648051951",
+                    "patientId": 714512,
+                    "gpatientId": 705025
+                },
+                "motifId": 824
+>>>>>>> 0397d7cd88cc5ad43cb122894b607138ebcabf33
             }
         ]
     }

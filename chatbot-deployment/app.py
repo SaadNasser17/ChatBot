@@ -1,5 +1,3 @@
-# app.py
-
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import requests
@@ -10,7 +8,7 @@ import os
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 app.secret_key = '1234'
-JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MTc0MDg5MjYsImV4cCI6MTcyMDAwMDkyNiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImVtYWlsIjoicGF0MUB5b3BtYWlsLmNvbSJ9.d6LU67vvR9ErGCEZ5hqWWXd0Ax0-iQWtNEP58wp186uxFyZQeTIyRZ_femAr0S_-szuou_jYeAE56clo6qDcX1MBW_eaI4PIyqIYCf1mei5cAwMIp6DUu39ySsdlxJj-4Iv1fFkwae-buFDCzZwyq7J5MTUTcTptF0H_j7iEcV3ckAkiv1jbTVenAjFiP79KU_RaykZvn2z-4FIoWR_K0F1nulYM-bE0RdCzi3TQDJje6QlW4jdwabM7cLk5HkcBcUHIEGy2dOCiem3luz-R7P47h9lMKie3o4flxHUiVJahin5KaKYdqmQu5nNdrMygmkzveHABvEkZMdXwbjYvPQ"  # Replace this with your actual JWT token
+JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MTc0MDg5MjYsImV4cCI6MTcyMDAwMDkyNiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImVtYWlsIjoicGF0MUB5b3BtYWlsLmNvbSJ9.d6LU67vvR9ErGCEZ5hqWWXd0Ax0-iQWtNEP58wp186uxFyZQeTIyRZ_femAr0S_-szuou_jYeAE56clo6qDcX1MBW_eaI4PIyqIYCf1mei5cAwMIp6DUu39ySsdlxJj-4Iv1fFkwae-buFDCzZwyq7J5MTUTcTptF0H_j7iEcV3ckAkiv1jbTVenAjFiP79KU_RaykZvn2z-4FIoWR_K0F1nulYM-bE0RdCzi3TQDJje6QlW4jdwabM7cLk5HkcBcUHIEGy2dOCiem3luz-R7P47h9lMKie3o4flxHUiVJahin5KaKYdqmQu5nNdrMygmkzveHABvEkZMdXwbjYvPQ"
 
 intents_data = {}
 
@@ -68,7 +66,7 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         doctors = response.json()['praticien']['data']
         for doctor in doctors:
             pcs_id = doctor['PcsID']
-            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/1")
+            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/2")
             if appointments_response.ok:
                 unavailable_times = appointments_response.json()
                 doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)
@@ -116,7 +114,7 @@ def register_user():
     else:
         print(f"Error: {response.status_code} - {response.text}")
         return jsonify({'error': 'Failed to register user'}), response.status_code
-        
+
 @app.route("/get_doctors", methods=["POST"])
 def get_doctors():
     data = request.get_json()
@@ -145,7 +143,6 @@ def get_doctors_agenda():
         return jsonify({'error': 'Failed to fetch doctors'}), response.status_code
 
 def filter_available_slots(agendaConfig, unavailable_times):
-    # Implement your logic to filter available slots based on unavailable times
     available_slots = []
     opening_hour = int(agendaConfig['heureOuverture'].split(":")[0])
     closing_hour = int(agendaConfig['heureFermeture'].split(":")[0])
@@ -201,8 +198,6 @@ def process_response():
 @app.route('/save_appointment', methods=['POST'])
 def save_appointment():
     data = request.get_json()
-    motif_id = data["motifId"]
-    print(f"Received motifId: {motif_id}")
     directory = 'ChatBot/chatbot-deployment'
     filename = 'appointments.json'
     filepath = os.path.join(directory, filename)
@@ -219,9 +214,20 @@ def save_appointment():
             "phone_number": data.get("phone_number"),
             "patientId": data.get("patientId"),
             "gpatientId": data.get("gpatientId")
-        },
-        "motifId": data["motifId"]
+        }
     }
+
+    # Fetch the motif ID
+    motif_response = requests.get(f"https://apipreprod.nabady.ma/api/motif_praticiens?teamMember={appointment_details['praticien']['PraticienCentreSoinID']}")
+    if motif_response.ok:
+        motifs = motif_response.json()
+        if motifs and "hydra:member" in motifs and motifs["hydra:member"]:
+            motifId = motifs["hydra:member"][0]["id"]
+            appointment_details["motifId"] = motifId
+        else:
+            return jsonify({"error": "No motifs found for the doctor"}), 500
+    else:
+        return jsonify({"error": "Failed to fetch motifs"}), 500
 
     print(f"Saving appointment with details: {appointment_details}")
 
@@ -242,7 +248,6 @@ def save_appointment():
         return jsonify({"message": "Data saved successfully!", "ref": ref}), 200
     else:
         return jsonify({"error": "Failed to create appointment"}), 500
-
 
 def send_appointment_to_api(appointment_details, email):
     appointment_data = {
@@ -272,9 +277,6 @@ def send_appointment_to_api(appointment_details, email):
         print(f"Failed to create appointment. Status code: {response.status_code}, Response: {response.text}")
         return None
 
-
-
-
 @app.route('/confirm_appointment', methods=['POST'])
 def confirm_appointment():
     data = request.get_json()
@@ -298,23 +300,6 @@ def confirm_appointment():
         return jsonify({"message": "Appointment confirmed successfully!"}), 200
     else:
         return jsonify({"error": "Failed to confirm appointment."}), response.status_code
-
-
-@app.route('/get_motifs')
-def get_motifs():
-    PcsID = request.args.get('PcsID')
-    print(f"Fetching motifs for PcsID: {PcsID}")  # Log the PcsID
-
-    response = requests.get(f"https://apipreprod.nabady.ma/api/motif_praticiens?teamMember={PcsID}")
-    print(f"API response status: {response.status_code}")  # Log the response status
-    if response.ok:
-        motifs = response.json()
-        print("Motifs fetched:", motifs)  # Log the fetched motifs
-        return jsonify(motifs)
-    else:
-        print("Failed to fetch motifs")  # Log failure
-        return jsonify({'error': 'Failed to fetch motifs'}), response.status_code
-
 
 if __name__ == "__main__":
     app.run(debug=True)
