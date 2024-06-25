@@ -31,6 +31,19 @@ const formatDateWithLatinNumbers = (date) => {
   return arabicToLatinNumbers(formattedDate);
 };
 
+const languageChoices = {
+  "1": "darija",
+  "darija": "darija",
+  "2": "الدارجة",
+  "الدارجة": "الدارجة",
+  "3": "العربية",
+  "العربية": "العربية",
+  "4": "francais",
+  "francais": "francais",
+  "5": "english",
+  "english": "english",
+};
+
 export default function Chat() {
   const { bookingDetails, setBookingDetails } = useBooking();
   const [isOpen, setIsOpen] = useState(false);
@@ -51,17 +64,16 @@ export default function Chat() {
   const [appointmentRef, setAppointmentRef] = useState(null);
   const [showSendIcon, setShowSendIcon] = useState(true);
   const [isExtended, setIsExtended] = useState(false);
-  const [useArabic, setUseArabic] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
 
   useEffect(() => {
     if (!initialMessageSet) {
       displayBotMessage(
-        `Ana NabadyBot, Bach ne9der n3awnek?<br />أنا نابادي بوت، باش نقدر نعاونك؟`
+        `Ana NabadyBot, khtar logha dyalek. <br/> 1. Darija <br/> 2.الدارجة <br/> 3. العربية <br/> 4.Francais <br/> 5.English`
       );
       setInitialMessageSet(true);
     }
 
-    // Resetting the relevant states on component mount
     setWaitingForConfirmation(false);
   }, [initialMessageSet]);
 
@@ -86,34 +98,38 @@ export default function Chat() {
 
   const handleUserInput = async () => {
     if (userMessage.trim()) {
-      const msg = userMessage.trim();
-      const lowerCaseMsg = msg.toLowerCase(); // Convert to lowercase for consistency
+      const msg = userMessage.trim().toLowerCase();
       const currentTime = new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       });
-      displayUserMessage(msg, currentTime);
+      displayUserMessage(userMessage.trim(), currentTime);
       setUserMessage("");
 
-      // Determine the language
-      if (appointmentStep === 0 && isAppointmentRelated(lowerCaseMsg)) {
-        setUseArabic(isArabic(lowerCaseMsg));
-        displayBotMessage(
-          isArabic(lowerCaseMsg)
-            ? "هاهوما الإختصاصات لي كينين ، ختار لي بغيتي"
-            : "hahoma les specialités li kaynin khtar li bghit"
-        );
+      if (!selectedLanguage) {
+        if (languageChoices[msg]) {
+          setSelectedLanguage(languageChoices[msg]);
+          console.log("Selected language:", languageChoices[msg]);
+          displayBotMessage(getMessageForLanguage(languageChoices[msg], "welcome"));
+        } else {
+          displayBotMessage("Mafhemtch t9dr t3awd?");
+        }
+        return;
+      }
+
+      if (appointmentStep === 0 && isAppointmentRelated(msg)) {
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "select_specialty"));
         fetchSpecialties();
         setShowSpecialtiesDropdown(true);
       } else {
         if (waitingForSmsCode) {
-          handleSmsCodeInput(lowerCaseMsg);
+          handleSmsCodeInput(msg);
         } else if (waitingForConfirmation) {
-          handleConfirmation(lowerCaseMsg);
+          handleConfirmation(msg);
         } else if (appointmentStep > 0) {
-          await processUserResponse(lowerCaseMsg);
+          await processUserResponse(msg);
         } else {
-          callFlaskAPI(lowerCaseMsg, currentTime);
+          callFlaskAPI(msg, currentTime);
         }
       }
     }
@@ -161,11 +177,7 @@ export default function Chat() {
             ...prevDetails,
             first_name: response,
           }));
-          displayBotMessage(
-            useArabic
-              ? "عافاك عطيني الإسم العائلي ديالك"
-              : "Achno ism 3a2ili dyalk?"
-          );
+          displayBotMessage(getMessageForLanguage(selectedLanguage, "last_name"));
           setAppointmentStep(2);
           break;
 
@@ -174,11 +186,7 @@ export default function Chat() {
             ...prevDetails,
             last_name: response,
           }));
-          displayBotMessage(
-            useArabic
-              ? "عافاك عطيني رقم الهاتف ديالك"
-              : "3tini ra9m lhatif dyalk?"
-          );
+          displayBotMessage(getMessageForLanguage(selectedLanguage, "phone_number"));
           setAppointmentStep(3);
           break;
 
@@ -192,34 +200,28 @@ export default function Chat() {
           const appointmentDate = new Date(bookingDetails.timeSlot);
           const dayPart = formatDateWithLatinNumbers(appointmentDate);
 
-          const confirmationMessage = useArabic
-            ? `تأكد من المعلومات  ديالك.<br>${bookingDetails.first_name}: سميتك,<br>${bookingDetails.last_name}:الإسم العائلي ,<br>الهاتف: ${response},<br>${bookingDetails.doctorName}:الطبيب ,<br>الوقت: ${timePart},<br>اليوم: ${dayPart}`
-            : `t2akad liya mn ma3lomat dyalk.<br>Smitek: ${bookingDetails.first_name},<br>Knitek: ${bookingDetails.last_name},<br>Ra9m dyalk: ${response},<br>Tbib: ${bookingDetails.doctorName},<br>lwe9t: ${timePart},<br>Nhar: ${dayPart}`;
+          const confirmationMessage = getMessageForLanguage(selectedLanguage, "confirmation")
+            .replace("${first_name}", bookingDetails.first_name)
+            .replace("${last_name}", bookingDetails.last_name)
+            .replace("${phone_number}", response)
+            .replace("${doctorName}", bookingDetails.doctorName)
+            .replace("${timePart}", timePart)
+            .replace("${dayPart}", dayPart);
 
           displayBotMessage(confirmationMessage);
-          await delay(10500); // Delay before showing confirmation message
-          displayBotMessage(
-            useArabic
-              ? "إلا كانت المعلومات صحيحة اضغط على <button>نعم</button><br>إلا كانت المعلومات خاطئة اضغط على <button>لا</button>"
-              : "ila lma3lomat s7a7 dghat 3la <button>ah</button> <br>ila lma3lomat ghalat dghat 3la<button>la</button> ?"
-          );
-          await delay(4500); // Delay before displaying the buttons
+          await delay(10500);
+          displayBotMessage(getMessageForLanguage(selectedLanguage, "confirm"));
+          await delay(4500);
           setWaitingForConfirmation(true);
           break;
 
         default:
-          displayBotMessage(
-            useArabic ? "مفهمتش عافاك عاود." : "Ma fhmtsh, 3afak 3awd ghi mra."
-          );
+          displayBotMessage(getMessageForLanguage(selectedLanguage, "default"));
           break;
       }
     } catch (error) {
       console.error("Error processing user response:", error);
-      displayBotMessage(
-        useArabic
-          ? "وقع لنا مشكل، من فضلك أعد المحاولة من البداية."
-          : "w9e3 lina mochkil, wakha t3awad mn lwl?"
-      );
+      displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
     }
   };
 
@@ -228,11 +230,7 @@ export default function Chat() {
     if (confirmation === "نعم" || confirmation === "ah") {
       await finalizeAppointment();
     } else {
-      displayBotMessage(
-        useArabic
-          ? "حسناً، من فضلك أعد إعطائي اسمك الشخصي."
-          : "wakha 3awd 3tini ism chakhsi dyalk"
-      );
+      displayBotMessage(getMessageForLanguage(selectedLanguage, "retry_first_name"));
       setBookingDetails((prevDetails) => ({
         ...prevDetails,
         first_name: "",
@@ -281,19 +279,11 @@ export default function Chat() {
         await saveAppointmentDetails(patientId, gpatientId);
       } else {
         console.error("Patient ID or GPatient ID not found in the response.");
-        displayBotMessage(
-          useArabic
-            ? "وقع خطأ، المرجو إعادة المحاولة."
-            : "An error occurred, please try again."
-        );
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
       }
     } catch (error) {
       console.error("Error finalizing appointment:", error);
-      displayBotMessage(
-        useArabic
-          ? "وقع خطأ، المرجو إعادة المحاولة."
-          : "An error occurred, please try again."
-      );
+      displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
     }
   };
 
@@ -322,17 +312,11 @@ export default function Chat() {
 
       const data = await response.json();
       setAppointmentRef(data.ref);
-      displayBotMessage(
-        useArabic
-          ? "دابا غادي يوصلك واحد الرمز في SMS، عافاك أعطيه ليا باش نأكدوا الموعد"
-          : "daba ghadi iwaslek wahd ramz f sms , 3afak 3tih liya bach lmaw3id it2eked lik"
-      );
+      displayBotMessage(getMessageForLanguage(selectedLanguage, "sms_code"));
       setWaitingForSmsCode(true);
     } catch (error) {
       console.error("Error saving appointment details:", error);
-      displayBotMessage(
-        useArabic ? "سمح لينا كاين شي مشكل" : "Smh lina kayn chi mochkil"
-      );
+      displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
     }
   };
 
@@ -358,29 +342,19 @@ export default function Chat() {
 
       if (!response.ok)
         throw new Error(
-          useArabic
-            ? "كان هناك خطأ، الموعد لم يتأكد!"
-            : "Kayn chi mouchkil, lmaw3id mat2ekedch!"
+          getMessageForLanguage(selectedLanguage, "confirm_error")
         );
 
-      displayBotMessage(useArabic ? "الموعد تأكد ليك!" : "lmaw3id t2eked lik!");
+      displayBotMessage(getMessageForLanguage(selectedLanguage, "confirm_success"));
       resetAppointmentDetails();
       setAppointmentStep(0);
       setWaitingForSmsCode(false);
     } catch (error) {
       console.error("Error confirming appointment:", error);
       if (error.message === "Invalid OTP") {
-        displayBotMessage(
-          useArabic
-            ? "رمز غير صحيح، من فضلك أدخل الرمز الصحيح الذي وصلك"
-            : "ramz machi s7i7, afak dekhel ramz s7i7 li weslek "
-        );
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "invalid_code"));
       } else {
-        displayBotMessage(
-          useArabic
-            ? "لم نستطع أخذ موعد لك، من فضلك حاول مرة أخرى!"
-            : "Ma9dernach nakhdo lik maw3id, 7awel mera akhra afak!"
-        );
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "confirm_error"));
       }
     }
   };
@@ -408,11 +382,7 @@ export default function Chat() {
       })
       .catch((error) => {
         console.error("Error:", error);
-        displayBotMessage(
-          useArabic
-            ? "وقع خطأ، المرجو إعادة المحاولة."
-            : "Une erreur s'est produite, veuillez réessayer."
-        );
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
         setIsBotTyping(false);
       });
   };
@@ -478,6 +448,7 @@ export default function Chat() {
     setAppointmentStep(0);
     resetAppointmentDetails();
     setWaitingForConfirmation(false);
+    setSelectedLanguage(null);
   };
 
   const stopBotTyping = () => {
@@ -492,6 +463,110 @@ export default function Chat() {
       return () => clearTimeout(timer);
     }
   }, [forceStopTyping]);
+
+  const getMessageForLanguage = (language, key) => {
+    const messages = {
+      welcome: {
+        darija: "Ana NabadyBot, bach ne9der n3awnek?",
+        "الدارجة": "أنا نابادي بوت، باش نقدر نعاونك؟",
+        "العربية": "أنا نابادي بوت، كيف يمكنني مساعدتك؟",
+        francais: "Bonjour, je suis NabadyBot, comment puis-je vous aider?",
+        english: "Hello, I am NabadyBot, how can I assist you?",
+      },
+      select_specialty: {
+        darija: "hahoma les specialités li kaynin khtar li bghit",
+        "الدارجة": "هاهوما الإختصاصات لي كينين ، ختار لي بغيتي",
+        "العربية": "ها هي التخصصات المتاحة، اختر ما تريد.",
+        francais: "Voici les spécialités disponibles, veuillez choisir.",
+        english: "Here are the available specialties, please choose one.",
+      },
+      last_name: {
+        darija: "Achno ism 3a2ili dyalk?",
+        "الدارجة": "عافاك عطيني الإسم العائلي ديالك",
+        "العربية": "من فضلك، أعطني اسمك العائلي.",
+        francais: "Quel est votre nom de famille?",
+        english: "What is your last name?",
+      },
+      phone_number: {
+        darija: "3tini ra9m lhatif dyalk?",
+        "الدارجة": "عافاك عطيني رقم الهاتف ديالك",
+        "العربية": "من فضلك، أعطني رقم هاتفك.",
+        francais: "Quel est votre numéro de téléphone?",
+        english: "What is your phone number?",
+      },
+      confirmation: {
+        darija: "t2akad liya mn ma3lomat dyalk.<br>Smitek: ${first_name},<br>Knitek: ${last_name},<br>Ra9m dyalk: ${phone_number},<br>Tbib: ${doctorName},<br>lwe9t: ${timePart},<br>Nhar: ${dayPart}",
+        "الدارجة": "تأكد من المعلومات  ديالك.<br>${first_name}: سميتك,<br>${last_name}:الإسم العائلي ,<br>الهاتف: ${phone_number},<br>${doctorName}:الطبيب ,<br>الوقت: ${timePart},<br>اليوم: ${dayPart}",
+        "العربية": "تأكد من معلوماتك.<br>الاسم: ${first_name},<br>الاسم العائلي: ${last_name},<br>الهاتف: ${phone_number},<br>الطبيب: ${doctorName},<br>الوقت: ${timePart},<br>اليوم: ${dayPart}",
+        francais: "Veuillez vérifier vos informations.<br>Prénom: ${first_name},<br>Nom: ${last_name},<br>Téléphone: ${phone_number},<br>Médecin: ${doctorName},<br>Heure: ${timePart},<br>Jour: ${dayPart}",
+        english: "Please verify your information.<br>First Name: ${first_name},<br>Last Name: ${last_name},<br>Phone: ${phone_number},<br>Doctor: ${doctorName},<br>Time: ${timePart},<br>Day: ${dayPart}",
+      },
+      confirm_doctor: {
+        darija: "Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak 3tini ism chakhsi dyalk.",
+        "الدارجة": "شكراً حيث اخترتي <br>${doctorName} مع ${timePart}.<br>نهار: ${dayPart}.<br>عافاك عطيني الإسم الشخصي ديالك.",
+        "العربية": "شكراً لاختيارك <br>${doctorName} مع ${timePart}.<br>اليوم: ${dayPart}.<br>من فضلك أعطني اسمك الشخصي.",
+        francais: "Merci d'avoir choisi ${doctorName} à ${timePart}.<br>Jour: ${dayPart}.<br>Veuillez me donner votre prénom.",
+        english: "Thank you for choosing ${doctorName} at ${timePart}.<br>Day: ${dayPart}.<br>Please provide your first name.",
+      },
+      confirm: {
+        darija: "ila lma3lomat s7i7 dghat 3la <button>ah</button> <br>ila lma3lomat ghalat dghat 3la<button>la</button> ?",
+        "الدارجة": "إلا كانت المعلومات صحيحة اضغط على <button>نعم</button><br>إلا كانت المعلومات خاطئة اضغط على <button>لا</button>",
+        "العربية": "إذا كانت المعلومات صحيحة اضغط على <button>نعم</button><br>إذا كانت المعلومات خاطئة اضغط على <button>لا</button>",
+        francais: "Si les informations sont correctes, cliquez sur <button>oui</button><br>Si les informations sont incorrectes, cliquez sur <button>non</button>",
+        english: "If the information is correct, click <button>yes</button><br>If the information is incorrect, click <button>no</button>",
+      },
+      retry_first_name: {
+        darija: "wakha 3awd 3tini ism chakhsi dyalk",
+        "الدارجة": "حسناً، من فضلك أعد إعطائي اسمك الشخصي.",
+        "العربية": "حسناً، من فضلك أعد إعطائي اسمك الشخصي.",
+        francais: "D'accord, veuillez me redonner votre prénom.",
+        english: "Alright, please provide your first name again.",
+      },
+      sms_code: {
+        darija: "daba ghadi iwaslek wahd ramz f sms , 3afak 3tih liya bach lmaw3id it2eked lik",
+        "الدارجة": "دابا غادي يوصلك واحد الرمز في SMS، عافاك أعطيه ليا باش نأكدوا الموعد",
+        "العربية": "سيصلك رمز في رسالة نصية، من فضلك أعطني إياه لتأكيد الموعد.",
+        francais: "Vous allez recevoir un code par SMS, veuillez me le donner pour confirmer le rendez-vous.",
+        english: "You will receive a code via SMS, please provide it to confirm the appointment.",
+      },
+      confirm_success: {
+        darija: "lmaw3id t2eked lik!",
+        "الدارجة": "الموعد تأكد ليك!",
+        "العربية": "تم تأكيد موعدك!",
+        francais: "Votre rendez-vous a été confirmé!",
+        english: "Your appointment has been confirmed!",
+      },
+      invalid_code: {
+        darija: "ramz machi s7i7, afak dekhel ramz s7i7 li weslek",
+        "الدارجة": "رمز غير صحيح، من فضلك أدخل الرمز الصحيح الذي وصلك",
+        "العربية": "الرمز غير صحيح، من فضلك أدخل الرمز الصحيح.",
+        francais: "Code incorrect, veuillez entrer le code correct.",
+        english: "Invalid code, please enter the correct code.",
+      },
+      confirm_error: {
+        darija: "Kayn chi mouchkil, lmaw3id mat2ekedch!",
+        "الدارجة": "كان هناك خطأ، الموعد لم يتأكد!",
+        "العربية": "حدث خطأ، الموعد لم يتم تأكيده!",
+        francais: "Une erreur est survenue, le rendez-vous n'a pas été confirmé!",
+        english: "An error occurred, the appointment was not confirmed!",
+      },
+      error: {
+        darija: "An error occurred, please try again.",
+        "الدارجة": "وقع خطأ، المرجو إعادة المحاولة.",
+        "العربية": "وقع خطأ، المرجو إعادة المحاولة.",
+        francais: "Une erreur s'est produite, veuillez réessayer.",
+        english: "An error occurred, please try again.",
+      },
+      default: {
+        darija: "Ma fhmtsh, 3afak 3awd ghi mra.",
+        "الدارجة": "مفهمتش عافاك عاود.",
+        "العربية": "لم أفهم، من فضلك أعد المحاولة.",
+        francais: "Je n'ai pas compris, veuillez réessayer.",
+        english: "I didn't understand, please try again.",
+      },
+    };
+    return messages[key][language];
+  };
 
   return (
     <div className="fixed bottom-5 right-5 flex flex-col items-end">
@@ -617,9 +692,10 @@ export default function Chat() {
 
                   setBookingDetails({ doctorName, PcsID, timeSlot: slot });
                   displayBotMessage(
-                    useArabic
-                      ? `شكراً حيث اخترتي <br>${doctorName} مع ${timePart}.<br>نهار: ${dayPart}.<br>عافاك عطيني الإسم الشخصي ديالك.`
-                      : `Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak 3tini ism chakhsi dyalk.`
+                    getMessageForLanguage(selectedLanguage, "confirm_doctor")
+                      .replace("${doctorName}", doctorName)
+                      .replace("${timePart}", timePart)
+                      .replace("${dayPart}", dayPart)
                   );
                   setShowSpecialtiesDropdown(false);
                   setShowDoctors(false);
