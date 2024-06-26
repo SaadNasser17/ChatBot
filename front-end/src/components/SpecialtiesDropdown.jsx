@@ -1,46 +1,54 @@
 import React, { useState, useEffect } from 'react';
 
 const specialtiesTranslation = {
-    "anesthésie": "تخدير",
-    "diabétologie nutritionnelle": "التغذية وعلاج السكري",
-    "endocrinologie": "علم الغدد الصماء",
-    "pédiatrie": "طب الأطفال",
-    "allergologie": "طب الحساسية",
-    "nutrition": "تغذية",
-    "médecine générale": "الطب العام",
-    "médecine du sport": "طب الرياضة",
-    "urologie": "جراحة المسالك البولية",
-    "chirurgie cardio": "جراحة القلب",
-    "chirurgie vasculaire": "جراحة الأوعية الدموية",
-    "chirurgie général": "الجراحة العامة",
-    "chirurgie orthopédiste": "جراحة العظام",
-    "traumatologie": "طب الإصابات",
-    "orthopédie": "جراحة العظام",
-    "médecine du travail": "طب العمل",
-    "gynécologie obstétrique": "أمراض النساء والتوليد",
-    "dermatologie": "طب الجلدية",
-    "ophtalmologie": "طب العيون",
-    "pneumologie": "طب الرئة",
-    "cardiologie": "طب القلب",
-    "chirurgie cancérologique": "جراحة الأورام",
-    "néphrologie": "طب الكلى",
-    "médecine interne": "الطب الباطني",
-    "neuropsychiatrie": "الطب النفسي العصبي",
-    "psychiatrie": "طب النفس",
-    "oto-rhino-laryngologie": "طب الأنف والأذن والحنجرة",
-    "chirurgie plastique": "جراحة التجميل",
-    "gastroentérologie": "طب الجهاز الهضمي",
-    "médecine physique et de réadaptation": "الطب الفيزيائي وإعادة التأهيل"
+  "anesthésie": { "ar": "تخدير", "fr": "anesthésie", "en": "Anesthesia" },
+  "diabétologie nutritionnelle": { "ar": "التغذية وعلاج السكري", "fr": "diabétologie nutritionnelle", "en": "Diabetes Nutrition" },
+  "endocrinologie": { "ar": "علم الغدد الصماء", "fr": "endocrinologie", "en": "Endocrinology" },
+  "pédiatrie": { "ar": "طب الأطفال", "fr": "pédiatrie", "en": "Pediatrics" },
+  "allergologie": { "ar": "طب الحساسية", "fr": "allergologie", "en": "Allergology" },
+  "nutrition": { "ar": "تغذية", "fr": "nutrition", "en": "Nutrition" },
+  "médecine générale": { "ar": "الطب العام", "fr": "médecine générale", "en": "General Medicine" },
+  "médecine du sport": { "ar": "طب الرياضة", "fr": "médecine du sport", "en": "Sports Medicine" },
+  "urologie": { "ar": "جراحة المسالك البولية", "fr": "urologie", "en": "Urology" },
+  "chirurgie cardio": { "ar": "جراحة القلب", "fr": "chirurgie cardio", "en": "Cardiac Surgery" },
+  "chirurgie vasculaire": { "ar": "جراحة الأوعية الدموية", "fr": "chirurgie vasculaire", "en": "Vascular Surgery" },
+  "chirurgie général": { "ar": "الجراحة العامة", "fr": "chirurgie général", "en": "General Surgery" },
+  "chirurgie orthopédiste": { "ar": "جراحة العظام", "fr": "chirurgie orthopédiste", "en": "Orthopedic Surgery" },
+  "traumatologie": { "ar": "طب الإصابات", "fr": "traumatologie", "en": "Traumatology" },
+  "orthopédie": { "ar": "جراحة العظام", "fr": "orthopédie", "en": "Orthopedics" },
+  "médecine du travail": { "ar": "طب العمل", "fr": "médecine du travail", "en": "Occupational Medicine" },
+  "gynécologie obstétrique": { "ar": "أمراض النساء والتوليد", "fr": "gynécologie obstétrique", "en": "Gynecology Obstetrics" },
+  "dermatologie": { "ar": "طب الجلدية", "fr": "dermatologie", "en": "Dermatology" },
+  "ophtalmologie": { "ar": "طب العيون", "fr": "ophtalmologie", "en": "Ophthalmology" },
+  "pneumologie": { "ar": "طب الرئة", "fr": "pneumologie", "en": "Pulmonology" },
+  "cardiologie": { "ar": "طب القلب", "fr": "cardiologie", "en": "Cardiology" },
+  "chirurgie cancérologique": { "ar": "جراحة الأورام", "fr": "chirurgie cancérologique", "en": "Oncologic Surgery" },
+  "néphrologie": { "ar": "طب الكلى", "fr": "néphrologie", "en": "Nephrology" },
+  "médecine interne": { "ar": "الطب الباطني", "fr": "médecine interne", "en": "Internal Medicine" },
+  "neuropsychiatrie": { "ar": "الطب النفسي العصبي", "fr": "neuropsychiatrie", "en": "Neuropsychiatry" },
+  "psychiatrie": { "ar": "طب النفس", "fr": "psychiatrie", "en": "Psychiatry" },
+  "oto-rhino-laryngologie": { "ar": "طب الأنف والأذن والحنجرة", "fr": "oto-rhino-laryngologie", "en": "ENT" },
+  "chirurgie plastique": { "ar": "جراحة التجميل", "fr": "chirurgie plastique", "en": "Plastic Surgery" },
+  "gastroentérologie": { "ar": "طب الجهاز الهضمي", "fr": "gastroentérologie", "en": "Gastroenterology" },
+  "médecine physique et de réadaptation": { "ar": "الطب الفيزيائي وإعادة التأهيل", "fr": "médecine physique et de réadaptation", "en": "Physical Medicine and Rehabilitation" }
 };
 
 const customOrder = [
   "médecine générale", "pédiatrie", "gynécologie obstétrique", "cardiologie", "endocrinologie", "dermatologie", "ophtalmologie", "pneumologie", "psychiatrie", 
   "chirurgie orthopédiste", "traumatologie", "urologie", "gastroentérologie", "néphrologie", 
-  "neuropsychiatrie", "oto-rhino-laryngologie", "chirurgie plastique", "anesthésie", "chirurgie vasculaire", "chirurgie générale", "chirurgie cancérologique", "chirurgie cardio", "allergologie", "médecine du sport", 
+  "neuropsychiatrie", "oto-rhino-laryngologie", "chirurgie plastique", "anesthésie", "chirurgie vasculaire", "chirurgie général", "chirurgie cancérologique", "chirurgie cardio", "allergologie", "médecine du sport", 
   "diabétologie nutritionnelle", "nutrition", "médecine interne", "médecine physique et de réadaptation", "médecine du travail", "orthopédie"
 ];
 
-function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
+const buttonTranslations = {
+  darija: "بغيتي كتر؟",
+  "الدارجة": "بغيتي كتر؟",
+  "العربية": "هل تريد المزيد؟",
+  francais: "Voulez-vous plus?",
+  english: "Do you want more?",
+};
+
+function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty, selectedLanguage }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [orderedSpecialties, setOrderedSpecialties] = useState([]);
 
@@ -52,6 +60,18 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
 
   const handleShowMore = () => {
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 3, orderedSpecialties.length));
+  };
+
+  const getSpecialtyTranslation = (specialty) => {
+    if (selectedLanguage === 'darija' || selectedLanguage === 'francais') {
+      return specialty.name;
+    } else if (selectedLanguage === 'الدارجة' || selectedLanguage === 'العربية') {
+      return specialtiesTranslation[specialty.name]?.ar || specialty.name;
+    } else if (selectedLanguage === 'english') {
+      return specialtiesTranslation[specialty.name]?.en || specialty.name;
+    } else {
+      return specialty.name;
+    }
   };
 
   return (
@@ -76,7 +96,7 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
               textAlign: "center",  // Centrer le texte
             }}
           >
-            {specialtiesTranslation[specialty.name] || specialty.name}
+            {getSpecialtyTranslation(specialty)}
           </button>
         ))}
       </div>
@@ -85,7 +105,7 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty }) {
           onClick={handleShowMore}
           className="bg-persian-green-500 hover:bg-teal-600 text-white p-1 rounded mt-2 text-xs mx-auto block"
         >
-          بغيتي كتر؟
+          {buttonTranslations[selectedLanguage]}
         </button>
       )}
     </div>

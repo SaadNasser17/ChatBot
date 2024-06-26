@@ -300,6 +300,81 @@
                     "gpatientId": 705025
                 },
                 "motifId": 824
+            },
+            {
+                "praticien": {
+                    "name": "Dr. bakkal hind",
+                    "PraticienCentreSoinID": 1930,
+                    "timeSlot": "2024-06-26T11:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "reda",
+                    "last_name": "samoudi",
+                    "phone_number": "0648051951",
+                    "patientId": 714535,
+                    "gpatientId": 705048
+                },
+                "motifId": 193
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Bennouna rachid",
+                    "PraticienCentreSoinID": 151,
+                    "timeSlot": "2024-06-26T11:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nass",
+                    "phone_number": "0648051951",
+                    "patientId": 714547,
+                    "gpatientId": 705060
+                },
+                "motifId": 25
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Hamidi Basma",
+                    "PraticienCentreSoinID": 615,
+                    "timeSlot": "2024-06-26T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nasser",
+                    "phone_number": "0648190551",
+                    "patientId": 714565,
+                    "gpatientId": 705078
+                },
+                "motifId": 23
+            },
+            {
+                "praticien": {
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-06-26T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nasser",
+                    "phone_number": "0648051951",
+                    "patientId": 714566,
+                    "gpatientId": 705079
+                },
+                "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr. erraboun nahid",
+                    "PraticienCentreSoinID": 1875,
+                    "timeSlot": "2024-06-26T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "\u0633\u0639\u062f",
+                    "last_name": "\u0646\u0627\u0635\u0631\u0627\u0644\u062f\u064a\u0646",
+                    "phone_number": "0648051951",
+                    "patientId": 714567,
+                    "gpatientId": 705080
+                },
+                "motifId": 93
             }
         ]
     }
