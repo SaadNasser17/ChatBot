@@ -62,7 +62,7 @@ function Doctor({ specialty, onSlotClick, selectedLanguage }) {
             query: specialtyName,
             consultation: "undefined",
             page: 1,
-            result: 5,
+            result: 15,
             isIframe: false,
             referrer: "",
           }),
@@ -216,21 +216,14 @@ function Doctor({ specialty, onSlotClick, selectedLanguage }) {
     const isNextDay =
       slotTime.getHours() < openingHour || slotTime.getHours() >= closingHour;
 
-    let selectedDate;
-    if (isNextDay) {
-      selectedDate = new Date(now.getTime());
+    let selectedDate = new Date(now.getTime());
+    if (isNextDay || isTomorrow) {
       selectedDate.setDate(selectedDate.getDate() + 1);
-      selectedDate.setHours(hours);
-      selectedDate.setMinutes(minutes);
-      selectedDate.setSeconds(0);
-      selectedDate.setMilliseconds(0);
-    } else {
-      selectedDate = new Date(now.getTime());
-      selectedDate.setHours(hours);
-      selectedDate.setMinutes(minutes);
-      selectedDate.setSeconds(0);
-      selectedDate.setMilliseconds(0);
     }
+    selectedDate.setHours(hours);
+    selectedDate.setMinutes(minutes);
+    selectedDate.setSeconds(0);
+    selectedDate.setMilliseconds(0);
 
     const isoString = selectedDate.toISOString();
 
@@ -339,7 +332,7 @@ function Doctor({ specialty, onSlotClick, selectedLanguage }) {
             />
           </div>
           <div className="embla">
-            <span className="text-lg bold flex justify-center">
+            <span className="text-lg bold flex justify-center text-white bg-blue-600 py-1 px-3 rounded-md font-bold">
               {isTomorrow
                 ? labels.tomorrow[selectedLanguage]
                 : labels.today[selectedLanguage]}

@@ -3,15 +3,18 @@
     {
       "tag": "greeting1",
       "patterns": [
-        "Salam","Selam","cc","ach ka t3awd", "fin", "nharek mbrok", "kif lhal","fin chadha?",
-        "Ahlan","fen","slm",
-        "Marhaban"
+        "Salam", "Selam", "cc", "ach ka t3awd", "fin", "nharek mbrok", "kif lhal", "fin chadha?",
+        "Ahlan", "fen", "slm",
+        "Marhaban",
+        "Hello", "Hi", "Hey", "Good morning", "Good afternoon", "Good evening",
+        "Bonjour", "Salut", "Coucou"
       ],
       "responses": [
-        "Salam, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?" ]
-      
+        "Salam, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?",
+        "Hello, welcome to NabadyBot. I am here to help you book your appointments. How can I assist you?",
+        "Bonjour, bienvenue sur NabadyBot. Je suis là pour vous aider à prendre rendez-vous. Comment puis-je vous aider?"
+      ]
     },
-    
     {
       "tag": "greeting2",
       "patterns": [
@@ -20,494 +23,375 @@
         "Sbah lkhire",
         "Sbah lkher",
         "Sbah el full, kayn chi jdid?",
-        "sabaho"
+        "sabaho",
+        "Good morning",
+        "Good day",
+        "Bonjour",
+        "Bon matin"
       ],
       "responses": [
-        "Sbah nor, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?" ]
-      
+        "Sbah nor, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?",
+        "Good morning, welcome to NabadyBot. I am here to help you book your appointments. How can I assist you?",
+        "Bonjour, bienvenue sur NabadyBot. Je suis là pour vous aider à prendre rendez-vous. Comment puis-je vous aider?"
+      ]
     },
-
-    {
-      "tag": "2",
-      "patterns": [
-        "سلام"
-      ],
-      "responses": [
-        "سلام، مرحبا بكم في نابادي بوت. أنا هنا باش نساعدكم و نعاونكم تحجزو المواعيد ديالكم. كاين شي حاجة نعاونك فيها؟"
-      ]}
-    ,
-
-    {
-      "tag": "greeting3",
-      "patterns": [
-        "سلام","كوكو",
-        "السلام عليكم",
-        "كيف الحال؟","مرحبا","اش كتعاود؟","فين",
-        "كيف لحال؟","نهارك مبروك","فين شادها"
-
-      ],
-      "responses": [
-        "Salam, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?" ]
-        
-    },
-    {
-      "tag": "greeting4",
-      "patterns": [
-        "صباح الخير", "صباح النور", "صباح الفل","صباح الخيرات","صباحكم زين"
-      ],
-      "responses": [
-        "Salam, mrhba bikum fi NabadyBot. Ana hna bach nsa3dkum n3awonkum t7jzo lmawa3id dialkom. Kayn fach n3awnek?"      ]
-    },
-    
-    
     {
       "tag": "thanks1",
       "patterns": [
-        "Shukran","chokran lik","ka nchokrek","merci","barakallah fik","choukrane","shukran bzaf","merci beaucoup","tbarkallah 3lik",
-        "Choukran","mcharfin","tcharaft bik","tchareft bma3riftek",
-        "Choukran bzzaf!"
+        "Shukran", "chokran lik", "ka nchokrek", "merci", "barakallah fik", "choukrane", "shukran bzaf", "merci beaucoup", "tbarkallah 3lik",
+        "Choukran", "mcharfin", "tcharaft bik", "tchareft bma3riftek",
+        "Choukran bzzaf!",
+        "Thank you", "Thanks", "Much appreciated", "Thank you very much",
+        "Merci", "Merci beaucoup", "Je vous remercie"
       ],
       "responses": [
-        "bkol fara7, marhba"
+        "bkol fara7, marhba",
+        "You are welcome, happy to help",
+        "De rien, heureux de vous aider"
       ]
     },
     {
       "tag": "thanks2",
       "patterns": [
-        "شكرا","شكرا ليك","كنشكرك","تبارك الله","مشرفين","تشرفت بيك","تشرفت بمعرفتك",
-        "شكرا جزيلاً",
-        "شكرا بزاف","مشكور"
+        "شكرا", "شكرا ليك", "كنشكرك", "تبارك الله", "مشرفين", "تشرفت بيك", "تشرفت بمعرفتك",
+        "شكرا جزيلاً", "شكرا بزاف", "مشكور",
+        "Thank you", "Thanks", "Much appreciated", "Thank you very much",
+        "Merci", "Merci beaucoup", "Je vous remercie"
       ],
       "responses": [
-        "ماشي مشكل، مرحبا", "العفو، هذا واجبي"
+        "ماشي مشكل، مرحبا", "العفو، هذا واجبي",
+        "You are welcome, happy to help",
+        "De rien, heureux de vous aider"
       ]
     },
-
     {
       "tag": "iam",
       "patterns": [
-        "chkoun nta?","chkon nta","chkoun m3aya","ach smitek","3arefni b rasek","achno smitek","achno smiytek","achno ismek","chno ismek","chno hiya smitek","ach semak lah","chkon m3aya"
+        "chkoun nta?", "chkon nta", "chkoun m3aya", "ach smitek", "3arefni b rasek", "achno smitek", "achno smiytek", "achno ismek", "chno ismek", "chno hiya smitek", "ach semak lah", "chkon m3aya",
+        "Who are you?", "What is your name?", "Introduce yourself", "Who am I speaking with?",
+        "Qui êtes-vous?", "Quel est votre nom?", "Présentez-vous", "À qui ai-je affaire?"
       ],
       "responses": [
-        "ana smiyti NabadyBot, bot maghribi "
+        "ana smiyti NabadyBot, bot maghribi",
+        "I am NabadyBot, a Moroccan bot",
+        "Je suis NabadyBot, un bot marocain"
       ]
     },
-    {
-      "tag": "iam1",
-      "patterns": [
-        "شكون نتا؟","شكون معايا","اش سميتك","عرفني براسك","اشنو سميتك","اشنو اسمك","شنو اسمك","شنو هي سميتك","اش سماك الله","شكون معايا"
-      ],
-      "responses": [
-        "انا سميتي نابادي بوت، بوت مغربي"
-      ]
-    },
-
     {
       "tag": "help0",
       "patterns": [
-        "momkin nssewlek","bghit nsewlek ","nsewlek","nssawlek","3andi so2al ","momkin tjawbni","jawbni"
+        "momkin nssewlek", "bghit nsewlek", "nsewlek", "nssawlek", "3andi so2al", "momkin tjawbni", "jawbni",
+        "Can I ask you a question?", "I have a question", "Can you help me?",
+        "Puis-je vous poser une question?", "J'ai une question", "Pouvez-vous m'aider?"
       ],
       "responses": [
-        "Merhba, ila 9dert n3awnek"
+        "Merhba, ila 9dert n3awnek",
+        "Sure, how can I help you?",
+        "Bien sûr, comment puis-je vous aider?"
       ]
     },
-    {
-      "tag": "help01",
-      "patterns": [
-        "ممكن نسولك","بغيت نسولك","نسولك","عندي سؤال","ممكن تجاوب","جوبني"
-      ],
-      "responses": [
-        "مرحبا، الا قدرت نعاوك"
-      ]
-    },
-    {
-      "tag": "thanks4",
-      "patterns": [
-        "layr7am biha lwalidin", "baraka allah fik",
-        "allah yjazik bil khir"
-      ],
-      "responses": [
-        "Merhba, Walidina o walidik"
-      ]
-    },
-    
-    {
-      "tag": "thanks0",
-      "patterns": [
-        "الله ارحم لواليدين","الله ارحم بها لواليدين",
-        "بارك الله فيك","الله اجازيك بالخير","الله اجازيك بلخير"
-      ],
-      "responses": [
-        "مرحبا، واليدينا و واليديك "
-      ]
-    },
-    
     {
       "tag": "goodbye",
       "patterns": [
-        "Bslama","thala","ana ghadi", "ana mchit fhali","bye","by by","nhadro mn ba3d",
-        "Bslema", "ma3a salama"
+        "Bslama", "thala", "ana ghadi", "ana mchit fhali", "bye", "by by", "nhadro mn ba3d",
+        "Bslema", "ma3a salama",
+        "Goodbye", "See you later", "Talk to you later",
+        "Au revoir", "À bientôt", "À plus tard"
       ],
       "responses": [
         "Bslama, shukran 3la zyaratk",
-        "Bslama, shukran 7it ta9ti fina"
+        "Goodbye, thank you for visiting",
+        "Au revoir, merci pour votre visite",
+        "Bslama, shukran 7it ta9ti fina",
+        "Goodbye, thank you for your trust",
+        "Au revoir, merci pour votre confiance"
       ]
     },
-    {
-      "tag": "goodbye1",
-      "patterns": [
-        "بسلامة","فمان الله","تهلا","انا غادي","انا مشيت فحالي","باي","باي باي","نهدرو من بعد",
-        "إلى اللقاء","الله معاك"
-      ],
-      "responses": [
-        "بسلامة، شكرا على زيارتك",
-        "بسلامة، شكرا حتى تقتي فينا"
-      ]
-    },
-    
     {
       "tag": "help",
       "patterns": [
-        "ch7al dyal wa9t khassni ntsnna?","lweqt","lwa9t","taw9it","netsena","natsena","negles","ntader"
+        "ch7al dyal wa9t khassni ntsnna?", "lweqt", "lwa9t", "taw9it", "netsena", "natsena", "negles", "ntader",
+        "How long do I have to wait?", "Time", "What time?",
+        "Combien de temps dois-je attendre?", "Temps", "À quelle heure?"
       ],
       "responses": [
-        "Maymkench ne3ref, ela hasab koula tbib"
-      ]
-    },
-    {
-      "tag": "help1",
-      "patterns": [
-        "شحال ديال الوقت خاصني نتسنا"
-      ],
-      "responses": [
-        "ميمكنش نعرف، على حساب كل طبيب"
+        "Maymkench ne3ref, ela hasab koula tbib",
+        "I cannot know, it depends on each doctor",
+        "Je ne peux pas savoir, cela dépend de chaque médecin"
       ]
     },
     {
       "tag": "specialité",
       "patterns": [
-        "Wach kayn chi médecin spécialiste fi chi maladie?","Chno les spécialités li kaynin?","chhal kayna men specialités?","Spécialité","Takhasos"
+        "Wach kayn chi médecin spécialiste fi chi maladie?", "Chno les spécialités li kaynin?", "chhal kayna men specialités?", "Spécialité", "Takhasos",
+        "Is there any specialist doctor?", "What specialties do you have?", "How many specialties are there?",
+        "Y a-t-il un médecin spécialiste?", "Quelles spécialités avez-vous?", "Combien de spécialités avez-vous?"
       ],
       "responses": [
-        "Kola spécialité 3endha une liste des médecins, hhahoma les spécialités li moujoudin 3endna : Anestésie, diabétologie nutritionnelle, endocrinologie, pédiatrie, allergologie, nutrition, médecine générale, médecine du sport, urologie, chirurgie cardio, chirurgie vasculaire, chirurgie général, chirurgie orthopédiste, traumatologie, orthopédie, médecine du travail,gynécologie, dermatologie, ophtalmologie, pneumologie,cardiologie, chirurgie cancérologique, néphrologie, médecine interne, neuropsychiatrie, psychiatrie, oto-rhino-laryngologie(ORL), chirurgien esthétique, gastroentérologie, médecin physique et de réadaptation "
+        "Kola spécialité 3endha une liste des médecins, hhahoma les spécialités li moujoudin 3endna: Anestésie, diabétologie nutritionnelle, endocrinologie, pédiatrie, allergologie, nutrition, médecine générale, médecine du sport, urologie, chirurgie cardio, chirurgie vasculaire, chirurgie général, chirurgie orthopédiste, traumatologie, orthopédie, médecine du travail, gynécologie, dermatologie, ophtalmologie, pneumologie, cardiologie, chirurgie cancérologique, néphrologie, médecine interne, neuropsychiatry, psychiatry, otorhinolaryngology (ENT), aesthetic surgery, gastroenterology, physical and rehabilitation medicine",
+        "Each specialty has a list of doctors. Here are the specialties available: Anesthesia, Diabetology, Endocrinology, Pediatrics, Allergology, Nutrition, General Medicine, Sports Medicine, Urology, Cardiac Surgery, Vascular Surgery, General Surgery, Orthopedic Surgery, Traumatology, Orthopedics, Occupational Medicine, Gynecology, Dermatology, Ophthalmology, Pneumology, Cardiology, Oncological Surgery, Nephrology, Internal Medicine, Neuropsychiatry, Psychiatry, Otorhinolaryngology (ENT), Aesthetic Surgery, Gastroenterology, Physical and Rehabilitation Medicine",
+        "Chaque spécialité a une liste de médecins. Voici les spécialités disponibles: Anesthésie, Diabétologie, Endocrinologie, Pédiatrie, Allergologie, Nutrition, Médecine Générale, Médecine du Sport, Urologie, Chirurgie Cardiaque, Chirurgie Vasculaire, Chirurgie Générale, Chirurgie Orthopédique, Traumatologie, Orthopédie, Médecine du Travail, Gynécologie, Dermatologie, Ophtalmologie, Pneumologie, Cardiologie, Chirurgie Oncologique, Néphrologie, Médecine Interne, Neuropsychiatrie, Psychiatrie, Otorhinolaryngologie (ORL), Chirurgie Esthétique, Gastroentérologie, Médecine Physique et de Réadaptation"
       ]
     },
     {
-      "tag": "specialité1",
+      "tag": "tension",
       "patterns": [
-        "واش كاين شي طبيب مختص  فشي مرض؟","شنو الاختصاصات لي كاينين عندكم؟","شحال كاين من اختصاصات ؟","اختصاصات","تخصص"
+        "kifach ne3ref fiya tension?", "chno houma l2arad dial tension?", "tension",
+        "كيفاش نعرف واش عندي الضغط ديال الدم؟", "واش غاينعاني من الضغط ديال الدم؟", "شنو هي علامات الضغط ديال الدم؟", "الضغط ديال الدم",
+        "How do I know if I have high blood pressure?", "What are the symptoms of high blood pressure?", "Hypertension",
+        "Comment savoir si j'ai de l'hypertension?", "Quels sont les symptômes de l'hypertension?", "Tension artérielle"
       ],
       "responses": [
-        "كل تخصص عندو قائمة أطباء معينين، وهذه هي التخصصات المتاحة لدينا: تخدير، تغذية وأمراض السكري، غدد صماء، طب الأطفال، حساسية، تغذية، طب عام، طب الرياضة، مسالك بولية، جراحة القلب، جراحة الأوعية الدموية، جراحة عامة، جراحة العظام، جراحة الكسور، عظام، طب العمل، نساء وتوليد، جلدية، عيون، أمراض الرئة، قلب، جراحة الأورام، كلي، طب داخلي، عصب ونفساني، طب نفسي، أنف وحنجرة وأذن، جراحة تجميلية، جهاز هضمي، طب فيزيائي وتأهيل."      ]
-    },
-    {
-      "tag": "help2",
-      "patterns": [
-        "Wach kayn taw9it bach nakhod maw3id simana jaya?","wach kayn chi weqt mounassib bach nakhod rendez-vous had simana?"
-      ],
-      "responses": [
-        "Kaynin darouri walakin kan9der nakhod maw3id dial nefs nhar."
+        "daght dem awla la tension yemken itchekhes men taraf tbib, ghir houwa kayn chi 2a3rad o 3alamat yemken tbeyen lik bli 3endek daght dem tale3 men binhom: seda3 dial rass lktir, mouchkil f chouf awla ro2ya.Ila kenti kat3ani men had l2a3rad awla 3endek choukouk, kanes7ek temchi tzor tbib bach dir ta7alil o lfo7osat lmonasiba.",
+        "الضغط ديال الدم ممكن يتم تشخيصو من طرف الطبيب خلال زيارة طبية. فبعض العلامات لي ممكن تدل على وجود ضغط دم كيكونو ليكلفات زائدة ديال الراس، دوار، مشاكل في الرؤية، بغاو يكون غير واضح ديال الأعراض. منين تبان عليك علامات هاكا، غادي يكون عندك ضرورة تدير تحليل للضغط ديال دم عند الدكتور.",
+        "High blood pressure, or hypertension, can be diagnosed by a doctor. However, there are some symptoms that can indicate you might have high blood pressure, such as severe headaches, vision problems, and dizziness. If you experience these symptoms or have concerns, it's best to consult a doctor for proper testing and diagnosis.",
+        "L'hypertension artérielle peut être diagnostiquée par un médecin. Cependant, il existe des symptômes qui peuvent indiquer une hypertension artérielle, comme des maux de tête sévères, des problèmes de vision et des étourdissements. Si vous ressentez ces symptômes ou avez des inquiétudes, il est préférable de consulter un médecin pour un test et un diagnostic appropriés."
       ]
     },
     {
-      "tag": "help3",
+      "tag": "consultation_generale",
       "patterns": [
-        "واش كاين توقيت باش ناخد موعد سيمانا جايا؟","واش كاين شي وقت مناسب باش ناخد موعد هاد سيمانا؟"
+        "3endi 2alam fl batn", "ach andir?", "3endi alam fl batn", "3lach kerchi kaderni?", "3lach 3endi wje3 f kerchi?", "wje3 fl kerch", "lbatn",
+        "عندي ألم في البطن، ماذا أفعل؟", "علاش كرشي كدرني؟", "علاش عندي وجع فكرشي؟", "عندي وجع فكرشي، اش ندير؟", " وجع فكرشي", "الكرش", "البطن",
+        "I have a stomach ache, what should I do?", "Why does my stomach hurt?", "Stomach pain", "Abdomen",
+        "J'ai mal au ventre, que dois-je faire?", "Pourquoi ai-je mal au ventre?", "Douleur abdominale", "Estomac"
       ],
       "responses": [
-        "كاينين ضروري والكين كنقدر ناخد موعد ديال نفس نهار"
+        "Yemken ikoun alam f lbatn bsbab bzef dial lhwayj menhum: al 2ijhad, ghazat, o machakil hadmiya. L'afdal trtah w tchrab sawa2il w tzor tbib bache y3ref sabab.",
+        " يُمكن أن يكون الألم في البطن ناتجًا عن عدة أسباب بحال الإجهاد، الغازات، أو مشكلات هضمية. يُنصح بالراحة وشرب السوائل وزيارة الطبيب لتحديد السبب بدقة.",
+        "Stomach pain can have many causes, such as stress, gas, or digestive issues. It is recommended to rest, drink fluids, and visit a doctor to determine the exact cause.",
+        "La douleur abdominale peut avoir plusieurs causes, telles que le stress, les gaz ou des problèmes digestifs. Il est recommandé de se reposer, boire des liquides et consulter un médecin pour déterminer la cause exacte."
       ]
     },
-  {
-    "tag": "help6",
-    "patterns": [
-     "bghit n3ayet l doctor","bghit n3ayet l docteur","bghit n3ayet l tbib"
-    ],
-    "responses": [
-      "Merhba moumkin, walakin kassek takhod maw3id awla rendez vous houwa lewel f NabadyBot li kaysere3 3amaliat alhajz. Chokran"
-    ]
-  },
-  {
-    "tag": "help7",
-    "patterns": [
-      "ممكن نجي لل clinic؟",
-      "بغيت نعيط لدكتور",
-      "بغيت نعيط لطبيب",
-      "بغيت نعيط لطبي"],
-    "responses": [
-      "مرحبا ممكن، ولاكن خاسك تاخد موعد اولا ف نابادي بوت لكيسرع عملية الحجز. شكرا "
-    ]
-  },
-  {
-    "tag": "help8",
-    "patterns": [
-     "Wach neqder nji nchan la clinique",
-     "wach ne9der nji nichan la clinique", "wach ne9der nchouf bib bla maw3id","wach ne9der nchouf tbib bla rendez vous", 
-     "wach ne9der nchouf tbib bla rendez-vous","wach ne9der nchouf tbib bla rdv","bghyt nji la clinique" ],
-    "responses": [
-     "Te9der tji la clinique awla lmasa7a, walakin men l2a7san takhod maw3id awla rendez vous 9bel bach tfada tsena we9t twil. Chokran"    ]
-  },
-  {
-    "tag": "help9",
-    "patterns": [
-     "واش نقدر نجي نشوف الطبيب من غير موعد",
-     "واش نقدر نجي للعيادة", "واش نقدر نجي للعيادة من غير موعد","واش نقدر نشوف الدكتور من غير موعد", 
-     "واش نقدر نشوف الدكتور من غير موعد","بغيت نجي للعيادة","واش نقدر نجي للعيادة بلا موعد","واش نقدر نشوف الدكتور بلا موعد" ],
-    "responses": [
-     " تقدري تجي للعيادة أو المصحة، لكن من الأحسن تاخدي موعد قبل، لاش متسنايش  وقت طويل. شكراً "] 
-    } ,
-
-
     {
-      "tag": "help9",
+      "tag": "rhume",
       "patterns": [
-       "واش نقدر نجي نشوف الطبيب من غير موعد",
-       "واش نقدر نجي للعيادة", "واش نقدر نجي للعيادة من غير موعد","واش نقدر نشوف الدكتور من غير موعد", 
-       "واش نقدر نشوف الدكتور من غير موعد","بغيت نجي للعيادة","واش نقدر نجي للعيادة بلا موعد","واش نقدر نشوف الدكتور بلا موعد" ],
-      "responses": [
-       " تقدري تجي للعيادة أو المصحة، لكن من الأحسن تاخدي موعد قبل، لاش متسنايش  وقت طويل. شكراً "] 
-      },
-      {
-        "tag": "info",
-        "patterns": [
-         "Wach neqder nji nchan la clinique",
-         "wach ne9der nji nichan la clinique", "wach ne9der nchouf bib bla maw3id","wach ne9der nchouf tbib bla rendez vous", 
-         "wach ne9der nchouf tbib bla rendez-vous","wach ne9der nchouf tbib bla rdv","bghyt nji la clinique" ],
-        "responses": [
-         "Te9der tji la clinique awla lmasa7a, walakin men l2a7san takhod maw3id awla rendez vous 9bel bach tfada tsena we9t twil. Chokran"    ]
-      },
-      {
-        "tag": "tension",
-        "patterns": [
-          "kifach ne3ref fiya tension?","chno houma l2arad dial tension?","tension"
-        ],
-        "responses": [
-          "daght dem awla la tension yemken itchekhes men taraf tbib, ghir houwa kayn chi 2a3rad o 3alamat yemken tbeyen lik bli 3endek daght dem tale3 men binhom: seda3 dial rass lktir, mouchkil f chouf awla ro2ya.Ila kenti kat3ani men had l2a3rad awla 3endek choukouk, kanes7ek temchi tzor tbib bach dir ta7alil o lfo7osat lmonasiba. " 
-        ]
-      },
-      {
-        "tag": "tension1",
-        "patterns": [
-          "كيفاش نعرف واش عندي الضغط ديال الدم؟","واش غاينعاني من الضغط ديال الدم؟","شنو هي علامات الضغط ديال الدم؟","الضغط ديال الدم"
-        ],
-        "responses": [
-          "الضغط ديال الدم ممكن يتم تشخيصو من طرف الطبيب خلال زيارة طبية. فبعض العلامات لي ممكن تدل على وجود ضغط دم كيكونو ليكلفات زائدة ديال الراس، دوار، مشاكل في الرؤية، بغاو يكون غير واضح ديال الأعراض. منين تبان عليك علامات هاكا، غادي يكون عندك ضرورة تدير تحليل للضغط ديال دم عند الدكتور."
-        ]
-      },
-
-      {
-      "tag": "Consultation générale",
-      "patterns": [
-       "عندي ألم في البطن، ماذا أفعل؟"," علاش كرشي كدرني؟","علاش عندي وجع فكرشي؟","عندي وجع فكرشي، اش ندير؟"," وجع فكرشي","الكرش","البطن" 
+        "nifi ki sil", "sedri 3amer", "rwah", "rwa7", "Ma houwa 3ilaj lmonasib li zokam?", "kifach n3alej zokam?", "l3ats", "l3tis", "zoukam", "zokam", "drebni lberd",
+        "نيفي كي سيل", "سدري عامر", "رواح", "دربني لبرد", "ما هو العلاج المناسب للزكام؟", "كفاش نعالج العطيس؟", "العطسة", "العطسة",
+        "My nose is running", "My chest is congested", "I have a cold", "How to treat a cold?", "Cold treatment",
+        "Mon nez coule", "J'ai la poitrine encombrée", "J'ai un rhume", "Comment traiter un rhume?", "Traitement du rhume"
       ],
       "responses": [
-      " يُمكن أن يكون الألم في البطن ناتجًا عن عدة أسباب بحال الإجهاد، الغازات، أو مشكلات هضمية. يُنصح بالراحة وشرب السوائل وزيارة الطبيب لتحديد السبب بدقة."] 
-      },
-      {
-      "tag": "Consultation générale1",
+        "Ymken, ikoun zokam bsbab 3adwa b vayrousat katsib al jihaz tanafousi, li kay2ed l2iltihab fl 2aghchiya lmakhatiya w ifrazat fl nif o l7al9.Ymken tkhfif a3rad zokam b: chorb sawa2il li dafi2a, ra7a w isti3mal mosakinat l2alam. Ila tzadet awla b9at l7ala kif 9bel khasek tzor tbib 2akhisa2i.",
+        "يُمكن أن يكون الزكام بسبب العدوى بفيروسات تصيب الجهاز التنفسي، مما يؤدي إلى التهاب الأغشية المخاطية وإفرازات الأنف والحلق. يمكن تخفيف أعراض الزكام بشرب السوائل الدافئة، الراحة، واستخدام مسكنات الألم ومزيلات الاحتقان. إذا استمرت الأعراض أو تفاقمت، يُنصح بزيارة الطبيب للحصول على تقييم دقيق والعلاج المناسب.",
+        "A cold can be caused by viruses affecting the respiratory system, leading to inflammation of the mucous membranes and nasal and throat secretions. Symptoms can be relieved by drinking warm fluids, resting, and using pain relievers and decongestants. If symptoms persist or worsen, it is advisable to see a doctor for a proper evaluation and treatment.",
+        "Le rhume peut être causé par des virus affectant le système respiratoire, entraînant une inflammation des muqueuses et des sécrétions nasales et pharyngées. Les symptômes peuvent être soulagés en buvant des liquides chauds, en se reposant et en utilisant des analgésiques et des décongestionnants. Si les symptômes persistent ou s'aggravent, il est conseillé de consulter un médecin pour une évaluation et un traitement appropriés."
+      ]
+    },
+    {
+      "tag": "douleur",
       "patterns": [
-      "3endi 2alam fl batn", "ach andir?","3endi alam fl batn","3lach kerchi kaderni?","3lach 3endi wje3 f kerchi","wje3 fl kerch","lbatn"
+        "kifach nkhefef alam ra2s?", "waja3 ra2s", "ch9i9a", "waja3 ra2s", "derni rassi", "rassi", "rasi", "chqiqa",
+        "كيفاش نخفف الام الرأس؟", "وجع الرأس", "كيدرني راسي", "كيف يمكنني التخفيف من آلام الرأس؟", "درني راسي", "راسي",
+        "How to relieve headache?", "Headache", "Migraine", "My head hurts", "Head pain",
+        "Comment soulager un mal de tête?", "Mal de tête", "Migraine", "J'ai mal à la tête", "Douleur à la tête"
       ],
       "responses": [
-      "Yemken ikoun alam f lbatn bsbab bzef dial lhwayj menhum: al 2ijhad, ghazat, o machakil hadmiya. L'afdal trtah w tchrab sawa2il w tzor tbib bache y3ref sabab."] 
-      },
-      {
-        "tag": "rhume",
-        "patterns": [
-      "نيفي كي سيل", "سدري عامر","رواح","دربني لبرد","ما هو العلاج المناسب للزكام؟","كفاش نعالج العطيس ؟","العطسة","العطسة"],
-        "responses": [
-        "يُمكن أن يكون الزكام بسبب العدوى بفيروسات تصيب الجهاز التنفسي، مما يؤدي إلى التهاب الأغشية المخاطية وإفرازات الأنف والحلق. يمكن تخفيف أعراض الزكام بشرب السوائل الدافئة، الراحة، واستخدام مسكنات الألم ومزيلات الاحتقان. إذا استمرت الأعراض أو تفاقمت، يُنصح بزيارة الطبيب للحصول على تقييم دقيق والعلاج المناسب."   ]
-      },
-{
-        "tag": "rhume1",
-        "patterns": [
-        "nifi ki sil","sedri 3amer","rwah","rwa7","Ma houwa 3ilaj lmonasib li zokam?","kifach n3alej zokam?","l3ats","l3tis","zoukam","zokam","drebni lberd" ],
-        "responses": [
-         "Ymken, ikoun zokam bsbab 3adwa b vayrousat katsib al jihaz tanafousi, li kay2ed l2iltihab fl 2aghchiya lmakhatiya w ifrazat fl nif o l7al9.Ymken tkhfif a3rad zokam b: chorb sawa2il li dafi2a, ra7a w isti3mal mosakinat l2alam. Ila tzadet awla b9at l7ala kif 9bel khasek tzor tbib 2akhisa2i." ]
-      },
-      {
-        "tag": "douleur",
-        "patterns": [
-       "دوخة","شقيقة","كفاش نخفف الام الرأس","وجع الرأس","كيدرني راسي" ,"كيف يمكنني التخفيف من آلام الرأس؟","درني راسي","راسي"],
-        "responses": [
-          "العوامل لي كتسبب فالصداع كثرة الضغط النفسي، ونقص نعاس، صداع، تناول بعض الأطعمة المحفزة بحال الشكلاط والكافيين،وتوتر العضلات في الرقبة والكتفين. يُمكن تخفيف آلام الرأس بالراحة، وشرب الماء بزاف، واستخدام المسكنات الخفيفة او كينات من بعد ما تزور طبيب او يعطيه ليك ."   ]
-      },
-{
-        "tag": "douleur1",
-        "patterns": [
-        "kifach nkhefef alam ra2s?","waja3 ra2s","ch9i9a","waja3 ra2s","derni rassi","rassi","rasi","chqiqa"],
-        "responses": [
-          "Men bin 3awamil li katsebeb f alam ra2s katrat daght nafsi, naqs n3as, tanawol 2at3ima mohafiza bhal choklat o lkafein, w tawator l3adali f raqaba o katifayn. Ymken tkhfif alam ra2s aw chqiqa b ra7a, chorb lmaa bzef, w istikhdam mosakinat awla kinat men be3d ma tzor tbib o i3tih lik.  "   ]
-      },
-
-      {
-        "tag": "corona",
-        "patterns": [
-       "كوفيد 19","كوفيد","كورونا","ما هي الإجراءات الوقائية من فيروس كورونا؟,"],
-        "responses": [
-          ".هو فيروس يسبب مرضًا تنفسيًا خطيرًا. عندما يصاب الشخص بفيروس كورونا، قد يظهر عليه أعراض مثل الحمى، والسعال، وصعوبة في التنفس، وقد يتطور المرض إلى حالات خطيرة تستلزم العناية الطبية. عندو عدة عوامل بحال الاتصال المباشر بشخص مصاب بيه، والتجمعات لكبيرة في الأماكن المسدودة، واللامبالاة بارتداء الكمامة وعدم غسل اليدين بانتظام. يمكن الحد من انتشار فيروس كورونا باتباع إجراءات الوقاية بحال تجنب الأماكن المزدحمة، وارتداء الكمامة في الأماكن العامة، وغسل اليدين بانتظام بالماء والصابون 20 ثانية لفوق، واحترام مسافة آمنة مع الآخرين"   ]
-      },
-{
-        "tag": "corona1",
-        "patterns": [
-       "corona","covid-19"],
-        "responses": [
-         "Virus Corona awla Covid-19, houwa virus kaysebeb marad tanafousi khatir. Mnin kaytsab bih chakhs, kaybano elih 2a3rad bhal skhana, lkehba w so3obat tanafos, i9der itewer lhalata s3iba khass l3iyana tibiya. 3endo 3awamil awla asbab bhal al 2itisal lmoubachir b chakhs mosab bih, tajamo3at lkbira fl 2amakin lmsdouda,lamobalat brtida2 lkemama o 3adam ghasl lyadayn bntidam. Yemken l7ad men intichar Corona btiba3 2ijra2at wi9a2iya bhal tajanoub l2amakin lmozda7ima, 2irtida2 lkmama fl blays l3ama, ghasl lyadayn b intidam bl ma o saboun 20 taniya lfoq, ihtiram masafat l2aman m3a lakhrin."]
-      },
-      {
-        "tag": "stress",
-        "patterns": [
-       "التوتر","كيف يمكنني التعامل مع الضغط النفسي؟","ما هي الطرق للتخفيف من التوتر والقلق؟","القلق","الضغط النفسي"],
-        "responses": [
-         "الضغط النفسي هو رد فعل طبيعي للجسم تجاه الضغوطات أو الظروف الصعبة، ويمكن  ايكون ليه تأثيرات سلبية على الصحة العامة. من بين تأثيرات الضغط النفسي تقد تكون القلق، الاكتئاب، التوتر، الأرق، زيادة ضغط الدم، وتأثيرات سلبية على الجهاز المناعي. للتخفيف من الضغط النفسي، يُنصح بممارسة التمارين الرياضية بانتظام، التنفس العميق، الاسترخاء والتأمل، الابتعاد عن المواقف المحفوفة بالتوتر، ممارسة الهوايات لكتهدن الأعصاب بحال  الرسم أو القراءة، والتحدث مع مختص في الصحة النفسية عند الحاجة."  ]
-      },
-{
-        "tag": "stress1",
-        "patterns": [
-       "tawator","l9ala9","daght nafsi"],
-        "responses": [
-           "daght nafsi houwa rad fi3li tabi3i liljism tijah doghotat aw dorouf sa3ba, o yemken ikoun lih ta2tirat silbiya 3la si7a l3ama. Men bin te2tirat daght nafsi t9ed tkoun l9ala9, l2ikti2ab, tawator, l2araq, ziyadat daght dem w ta2tirat silbiya 3ala ljihaz lmana3i. li takhfif min daght nafsi, younsa7 b moumarasat tamarin riyadia b ntidam, tanafos l3amiq, l2istirkha2 w ta2amol lbo3d 3la lmawa9if lmach7ouna, moumarasat lhiwayat li kateheden l2a3sab bhal rassm aw l9ira2a, w lhedra m3a mokhtass f si7a nafsiya mnin te7tajo. "   ]
-      },
-      {
-        "tag": " allergies",
-        "patterns": [
-       "كيف يمكنني معرفة إذا كانت لدي حساسية؟","حساسية"],
-        "responses": [
-           "الحساسية هي رد فعل مناعي غير طبيعي تجاه مادة معينة كيتعرض ليه الجسم. يمكن تظهر الحساسية عادة على شكل حكة، احمرار، تورم، أو تهيج في الجلد، و تقد تصاحبها أعراض أخرى بحال احتقان الأنف، سيلان الأنف، وعسر الهضم. يُنصح بمراجعة الطبيب لإجراء الفحوصات اللازمة باش تحديد نوع الحساسية والمادة المسببة والعلاج المناسب. يمكن للأطباء استخدام اختبارات الحساسية بحال اختبار الجلد أو تحليل الدم باش تحدد الحساسية بدقة ووصف العلاج المناسب للمريض."  ]
-      },
-{
-        "tag": " allergies1",
-        "patterns": [
-       "hasasiya"],
-        "responses": [
-           "lhasasiya hiya rad fi3l mana3i ghayr tabi3i tijah mada mo3ayana kayt3ered lih ljism. Yemken tban lhasasiya 3adatan 3la chakl haka, ihmirar, tawaroum aw tahayouj fl jild, o t9ed tkoun m3aha 2a3rad akhra bhal ihti9an l2anf, sayalan l2anf w 3osr fl hadm. Younsa7 bi mouraja3at tabib li 2ijra2 lfo7osat lazima bach t7eded naw3 lhasasiya o lmada lmosabiba o l3ilaj lmonasib.   Yemken lil 2atiba2 istikhdam ikhtibarat l7asasiya bhal 2ikhtibar ljild aw ta7lil dam bach t7eded l7asasiya b di9a o wasf l3ilaj lmonasib l mrid. "  ]
-      },
-      {
-        "tag": "alimentation ",
-        "patterns": [
-       "الجسم","البدن","صحة ديالي","كيفاش نحافض على صحة ديالي؟"],
-        "responses": [ 
-       "غادي تاكلو الفواكه والخضراوات ديالك كل يوم، والحبوب الكاملة، ومصادر صحية للبروتين بحال لحم لي فيها نقص فالدهون، وتبعدو عن السكريات معالجة والأطعمة لي فيها  الدهون بزاف."
-           ]
-      },
-
-{
-        "tag": "alimentation1",
-        "patterns": [
-         "ljism","lbadan","se7a diali","sa7a diali","se7a","sa7a","saha","seha"],
-        "responses": [
-         "Ghadi taklo lfawakih o lkhodar dialek kola nhar, w lhobob lkamila, w masadir sihiya dial protein bhal l7em  li fiha naqs f dohoun, w tbe3do 3an soukariyat mo3alija w l2at3ima li fha douhoun bzef."
-           ]
-      },
-      {
-        "tag": "sommeil réparateur",
-        "patterns": [
-       "نوم","كيف يمكنني تحسين نومي؟","نعاس","نعس","منعستش"],
-        "responses": [
-         "عدم النوم الجيد اقد يكون  ناتجً عن بزاف ديال الأسباب، بحال القلق والتوتر، والاضطرابات النفسية بحال الاكتئاب، واضطرابات النوم بحال  الأرق والتسارع في النوم، وتناول الكافيين بكميات كبيرة، والألم الشديد أو الأمراض المزمنة، بالإضافة لعوامل البيئية بحال  صداع والإضاءة الزائدة في الغرفة. باش نحسنو النوم ديالنا ، يُنصح بتحديد موعد ثابت للنوم ولفياق، وخلق بيئة مريحة للنوم مفيهاش صداع والأضواء بزاف ، وتجنب تناول المنبهات بحال الكافيين قبل النوم."]
-      },
-{
-        "tag": "sommeil réparateur1",
-        "patterns": [
-       "N3as","nawm","naoum","n3es","man3estch"],
-        "responses": [
-          "3adam nawm i9ed ikoun natij 3anbzef dial l2asbab, bhal l9ala9 w tawator, 2idtirabat nafsiya bhal L2ikti2ab, 2idtirab nawm bhal l2araq w tasaro3 f nawm, tanawol lkafein bkimiyat kbira, 2alam chadid w l2amrad lmozmina, bl 2idafa l3awamil bi2iya bhal sda3 w l2ida2a zayda fl ghorfa. Bach n7esno men nawm dialna, younsa7 bta7did maw3id tabit linawm w lfya9, khalq bi2a mouri7a lnawm   mafihach sda3 w l2adwa2 bzef, o tajanoub tanawol monabihat bhal Caffein 9bel nawm. "
-           ]
-      },
-      {
-        "tag": "vaccinations",
-        "patterns": [
-       "هل اللقاحات ضرورية؟","اللقاح"],
-        "responses": [
-        "اللقاحات هي تقنية طبية كتستخدم باش تقدم حماية ضد الأمراض المعدية من خلال تعزيز جهاز المناعة. ينصح بشدة باتباع جدول التطعيم  والتحدث مع الطبيب باش تاخد  المعلومات اللازمة. يُمكن تعطى في مراكز الرعاية الصحية المختلفة، بحال المستشفيات، عيادات الطب العام، ومراكز التطعيم التابعة للحكومة. يُنصح بالتحدث مع الطبيب أو مقدم الرعاية الصحية باش تعرف فين دير التطعيمات  و الوقت لمناسب ليها."
-           ]
-      },
-
-{
-        "tag": "vaccinations1",
-        "patterns": [
-       "vaccin","tat3im","li9a7","liqah"],
-        "responses": [
-          "Li9a7at hiya ti9niya tibiya katestekhdem bach t9edem himaya ded l2amrad lmo3diya men khilal ta3ziz lmana3a. Younsa7 b 2itiba3 jadwal tat3im w takalom m3a tabib bach takhod lma3loumat lazima.Yemken te3ta f lmarakiz sihiya, bhal lmoustachfayat, 3iyada tabib 3am w marakiz tat3im tab3a l7omoka.    Younsa7 b takalom m3a tabib aw mo9adim ri3aya si7iya bach te3ref fin adir tat3imat o lwqt lmonasib liha."
-           ]
-      },
-
-      {
-        "tag": "coeur",
-        "patterns": [
-       "ما هي أفضل الطرق للوقاية من الأمراض القلبية؟","لقلب","الأمراض القلبية","الأمراض ديال القلب"],
-        "responses": [
-          "الأمراض القلبية هي مجموعة من الحالات لكتؤثر على القلب والأوعية الدموية المحيطة بيه.الأسباب للإصابة بأمراض القلب تتكون بسباب التدخين، التغذية غير الصحية والغنية بالدهون ، الوزن الزائد و لغلض، نقص التمارين الرياضية، وارتفاع ضغط الدم وارتفاع الكولسترول.العواقب الصحية لأمراض القلب كتشمل ارتفاع ضغط الدم، والتأثير على الأوعية الدموية لكيؤدي إلى الجلطات، وضعف القلب، وأمراض الشرايين بحال الذبحة الصدرية والتصلب اللويحي.لوقاية من أمراض القلب والأوعية الدموية، ينصح بممارسة التمارين الرياضية بانتظام بحال المشي السريع أو السباحة، الحفاظ على وزن صحي، تناول الأطعمة الغنية بالألياف بحال الفواكه والخضروات، تجنب التدخين، والحد من استهلاك الأطعمة الغنية بالدهون المشبعة"
-          
-           ]
-      },
-
-{
-        "tag": "coeur1",
-        "patterns": [
-      "l9elb","9albi","9elbi"],
-        "responses": [
-           "l2amrad lqalbiya hiya majmou3a men l7alat li kat2eter 3la lqelb o l2aw3iya damawiya lmohita bih.l2asbab lil 2isaba b 2amrad lqalb tatkoun bsbab tadkhin, taghdiya ghayr si7iya w lghaniya bdohoun, lghold, naqs tamarin riyadiya,irtifa3 daght dam w lcholestérol. l3awaqib si7iya l2amrad lqalb katchmel 2irtifa3 daght dem, ta2tir 3la l2aw3iya damawiya li kay2edi ljalatat, do3f lqalb, 2amrad charayin bhal dab7a sadriya w tasalob lowaiji. lil wi9aya min 2amrad lqalb w l2aw3iya damawiya, younsa7 bi moumarasat tamarin riyadiya b ntidam bhal lmachy sari3 o siba7a, l7ifad 3la wazn si7i, tanawol 2at3ima ghaniya b 2alyaf bhal lfawakih w lkhodrawat, be3ed 3la tadkhin, w l7ad mn 2istihlak l2at3ima lghaniya b dohoun lmouchba3a."
-           ]
-      },
-      {
-        "tag": "diabète",
-        "patterns": [
-      "مرض السكر", "السكر","كيف يمكن التحكم في مستوى السكر في الدم؟" ,"ما هي الإجراءات الوقائية لمنع ارتفاع مستوى السكر في الدم؟","السكري","الداء السكري"],
-        "responses": [
-       "مرض السكري هو اضطراب في النظام الغذائي والهضمي لكيؤدي إلى زيادة مستويات السكر في الدم، ويسببها عدة عوامل بحال التورث الوراثي والنمط الحياتي غير الصحي. يمكن  ايؤدي زيادة مستويات السكر في الدم لمشاكل صحية خطيرة بحال أمراض القلب والكلى، ويمكن لحد منها من خلال ممارسة التمارين الرياضية بانتظام، الحفاظ على وزن صحي، واتباع نظام غذائي متوازن.ضروري الالتزام بالعلاجات الموصوفة من قبل الطبيب ومراقبة مستويات السكر في الدم بانتظام للحفاظ على الصحة العامة.الا  كنت كتشعر بالعطش الشديد والتبول بزاف بشكل غير عادي، فقد يكون عندك مشكلة في مستوى السكر في الدم. من الأفضل  تزور الطبيب باش دير الفحوصات اللازمة  باش تأكد من وجود مرض السكري."
-    ]  },
-
-{
-      "tag": "diabete1",
+        "Men bin 3awamil li katsebeb f alam ra2s katrat daght nafsi, naqs n3as, tanawol 2at3ima mohafiza bhal choklat o lkafein, w tawator l3adali f raqaba o katifayn. Ymken tkhfif alam ra2s aw chqiqa b ra7a, chorb lmaa bzef, w istikhdam mosakinat awla kinat men be3d ma tzor tbib o i3tih lik.",
+        "العوامل لي كتسبب فالصداع كثرة الضغط النفسي، ونقص نعاس، صداع، تناول بعض الأطعمة المحفزة بحال الشكلاط والكافيين، وتوتر العضلات في الرقبة والكتفين. يُمكن تخفيف آلام الرأس بالراحة، وشرب الماء بزاف، واستخدام المسكنات الخفيفة او كينات من بعد ما تزور طبيب او يعطيه ليك.",
+        "Factors causing headaches include stress, lack of sleep, certain foods like chocolate and caffeine, and muscle tension in the neck and shoulders. Headache or migraine pain can be relieved by rest, drinking plenty of water, and using pain relievers or medications prescribed by a doctor.",
+        "Les facteurs causant des maux de tête incluent le stress, le manque de sommeil, certains aliments comme le chocolat et la caféine, et la tension musculaire dans le cou et les épaules. Les douleurs de tête ou les migraines peuvent être soulagées par le repos, en buvant beaucoup d'eau et en utilisant des analgésiques ou des médicaments prescrits par un médecin."
+      ]
+    },
+    {
+      "tag": "corona",
       "patterns": [
-        "soukar","soukari","marad soukari","da2 soukari"
+        "corona", "covid-19", "كوفيد 19", "كوفيد", "كورونا", "ما هي الإجراءات الوقائية من فيروس كورونا؟",
+        "What are the preventive measures for COVID-19?", "Coronavirus", "COVID-19 precautions",
+        "Quelles sont les mesures préventives contre le COVID-19?", "Coronavirus", "Précautions COVID-19"
       ],
       "responses": [
-       "marad soukari houwa 2idtirab f nidam lghida2i w lhadmi li kay2edi ila ziyadat moustawayat soukar f dem, men asbab had lmarad lwirata w namat lhayat ghayr si7i. Yemken 2i2edi ziyadat moustawa soukar f dem l machakil khatira bhal 2amrad lqalb w lkiliy, w yemken l7ad menha mn khilal moumarasat tamarin riyadia b intidam, l7ifad 3la lwazn si7i w 2itiba3 nidam ghida2i moutawazin. Darouri l 2iltizam bl 3ilajat lmawsoufa men 3end tbib w moura9abat moustawayat soukar f dem b 2intidam lil 7ifad 3la si7a l3ama. Ila kenti katch3er bl 3tech chadid w tabawol bzaf bchakl ghayr 3adi, fa 2i9ed ikoun 3endek mouchil f moustawa soukar f dem. Men l2a7san tzor tbib bach dir lfo7osat lazima bach t2eked men wojoud marad soukari."      ]
-      },
+        "Virus Corona awla Covid-19, houwa virus kaysebeb marad tanafousi khatir. Mnin kaytsab bih chakhs, kaybano elih 2a3rad bhal skhana, lkehba w so3obat tanafos, i9der itewer lhalata s3iba khass l3iyana tibiya. 3endo 3awamil awla asbab bhal al 2itisal lmoubachir b chakhs mosab bih, tajamo3at lkbira fl 2amakin lmsdouda, lamobalat brtida2 lkemama o 3adam ghasl lyadayn bntidam. Yemken l7ad men intichar Corona btiba3 2ijra2at wi9a2iya bhal tajanoub l2amakin lmozda7ima, 2irtida2 lkmama fl blays l3ama, ghasl lyadayn b intidam bl ma o saboun 20 taniya lfoq, ihtiram masafat l2aman m3a lakhrin.",
+        ".هو فيروس يسبب مرضًا تنفسيًا خطيرًا. عندما يصاب الشخص بفيروس كورونا، قد يظهر عليه أعراض مثل الحمى، والسعال، وصعوبة في التنفس، وقد يتطور المرض إلى حالات خطيرة تستلزم العناية الطبية. عندو عدة عوامل بحال الاتصال المباشر بشخص مصاب بيه، والتجمعات لكبيرة في الأماكن المسدودة، واللامبالاة بارتداء الكمامة وعدم غسل اليدين بانتظام. يمكن الحد من انتشار فيروس كورونا باتباع إجراءات الوقاية بحال تجنب الأماكن المزدحمة، وارتداء الكمامة في الأماكن العامة، وغسل اليدين بانتظام بالماء والصابون 20 ثانية لفوق، واحترام مسافة آمنة مع الآخرين.",
+        "Coronavirus or COVID-19 is a virus that causes serious respiratory illness. When a person is infected with the coronavirus, they may show symptoms such as fever, cough, and difficulty breathing. The illness can progress to severe conditions requiring medical attention. Preventive measures include avoiding crowded places, wearing masks in public areas, regularly washing hands with soap and water for at least 20 seconds, and maintaining safe distances from others.",
+        "Le coronavirus ou COVID-19 est un virus qui cause une maladie respiratoire grave. Lorsqu'une personne est infectée par le coronavirus, elle peut présenter des symptômes tels que la fièvre, la toux et des difficultés respiratoires. La maladie peut évoluer vers des conditions sévères nécessitant une attention médicale. Les mesures préventives incluent l'évitement des lieux bondés, le port de masques dans les espaces publics, le lavage régulier des mains avec du savon et de l'eau pendant au moins 20 secondes et le maintien de distances de sécurité avec les autres."
+      ]
+    },
+    {
+      "tag": "stress",
+      "patterns": [
+        "tawator", "l9ala9", "daght nafsi",
+        "التوتر", "كيف يمكنني التعامل مع الضغط النفسي؟", "ما هي الطرق للتخفيف من التوتر والقلق؟", "القلق", "الضغط النفسي",
+        "Stress", "How to handle stress?", "Ways to relieve stress and anxiety?", "Anxiety", "Mental pressure",
+        "Stress", "Comment gérer le stress?", "Façons de soulager le stress et l'anxiété?", "Anxiété", "Pression mentale"
+      ],
+      "responses": [
+        "daght nafsi houwa rad fi3li tabi3i liljism tijah doghotat aw dorouf sa3ba, o yemken ikoun lih ta2tirat silbiya 3la si7a l3ama. Men bin te2tirat daght nafsi t9ed tkoun l9ala9, l2ikti2ab, tawator, l2araq, ziyadat daght dem w ta2tirat silbiya 3ala ljihaz lmana3i. li takhfif min daght nafsi, younsa7 b moumarasat tamarin riyadia b ntidam, tanafos l3amiq, l2istirkha2 w ta2amol lbo3d 3la lmawa9if lmach7ouna, moumarasat lhiwayat li kateheden l2a3sab bhal rassm aw l9ira2a, w lhedra m3a mokhtass f si7a nafsiya mnin te7tajo.",
+        "الضغط النفسي هو رد فعل طبيعي للجسم تجاه الضغوطات أو الظروف الصعبة، ويمكن  ايكون ليه تأثيرات سلبية على الصحة العامة. من بين تأثيرات الضغط النفسي تقد تكون القلق، الاكتئاب، التوتر، الأرق، زيادة ضغط الدم، وتأثيرات سلبية على الجهاز المناعي. للتخفيف من الضغط النفسي، يُنصح بممارسة التمارين الرياضية بانتظام، التنفس العميق، الاسترخاء والتأمل، الابتعاد عن المواقف المحفوفة بالتوتر، ممارسة الهوايات لكتمنحك فرصة للاسترخاء، والبحث عن المساعدة المهنية عند الحاجة وتنمية مهارات تعامل مع التوتر وتعزيز التوازن بين مختلف جوانب الحياة اليومية.",
+        "Stress is a natural response of the body to pressures or difficult circumstances, and it can have negative effects on overall health. These effects can include anxiety, depression, tension, insomnia, increased blood pressure, and negative impacts on the immune system. To relieve stress, it is recommended to practice regular physical exercise, deep breathing, relaxation and meditation, avoiding stressful situations, engaging in hobbies that relax the nerves such as drawing or reading, and seeking professional help when needed.",
+        "Le stress est une réaction naturelle du corps aux pressions ou aux circonstances difficiles, et il peut avoir des effets négatifs sur la santé globale. Ces effets peuvent inclure l'anxiété, la dépression, la tension, l'insomnie, l'augmentation de la pression artérielle et des impacts négatifs sur le système immunitaire. Pour soulager le stress, il est recommandé de pratiquer régulièrement des exercices physiques, la respiration profonde, la relaxation et la méditation, d'éviter les situations stressantes, de s'engager dans des passe-temps qui détendent les nerfs comme le dessin ou la lecture, et de rechercher de l'aide professionnelle si nécessaire."
+      ]
+    },
+    {
+      "tag": "allergies",
+      "patterns": [
+        "كيف يمكنني معرفة إذا كانت لدي حساسية؟", "حساسية",
+        "How do I know if I have allergies?", "Allergies",
+        "Comment savoir si j'ai des allergies?", "Allergies"
+      ],
+      "responses": [
+        "lhasasiya hiya rad fi3l mana3i ghayr tabi3i tijah mada mo3ayana kayt3ered lih ljism. Yemken tban lhasasiya 3adatan 3la chakl haka, ihmirar, tawaroum aw tahayouj fl jild, o t9ed tkoun m3aha 2a3rad akhra bhal ihti9an l2anf, sayalan l2anf w 3osr fl hadm. Younsa7 bi mouraja3at tabib li 2ijra2 lfo7osat lazima bach t7eded naw3 lhasasiya o lmada lmosabiba o l3ilaj lmonasib. Yemken lil 2atiba2 istikhdam ikhtibarat l7asasiya bhal 2ikhtibar ljild aw ta7lil dam bach t7eded l7asasiya b di9a o wasf l3ilaj lmonasib l mrid.",
+        "الحساسية هي رد فعل مناعي غير طبيعي تجاه مادة معينة كيتعرض ليه الجسم. يمكن تظهر الحساسية عادة على شكل حكة، احمرار، تورم، أو تهيج في الجلد، و تقد تصاحبها أعراض أخرى بحال احتقان الأنف، سيلان الأنف، وعسر الهضم. يُنصح بمراجعة الطبيب لإجراء الفحوصات اللازمة باش تحديد نوع الحساسية والمادة المسببة والعلاج المناسب. يمكن للأطباء استخدام اختبارات الحساسية بحال اختبار الجلد أو تحليل الدم باش تحدد الحساسية بدقة ووصف العلاج المناسب للمريض.",
+        "Allergies are an abnormal immune response to a particular substance that the body is exposed to. Allergies usually appear as itching, redness, swelling, or irritation of the skin, and they may be accompanied by other symptoms such as nasal congestion, runny nose, and indigestion. It is recommended to consult a doctor for necessary tests to determine the type of allergy and the allergen causing it, and to get the appropriate treatment. Doctors may use allergy tests such as skin tests or blood tests to accurately determine the allergy and prescribe the appropriate treatment for the patient.",
+        "Les allergies sont une réponse immunitaire anormale à une substance particulière à laquelle le corps est exposé. Les allergies apparaissent généralement sous forme de démangeaisons, rougeurs, gonflements ou irritations de la peau, et peuvent être accompagnées d'autres symptômes comme la congestion nasale, l'écoulement nasal et l'indigestion. Il est recommandé de consulter un médecin pour les tests nécessaires afin de déterminer le type d'allergie et l'allergène qui en est la cause, et d'obtenir le traitement approprié. Les médecins peuvent utiliser des tests d'allergie tels que des tests cutanés ou des analyses de sang pour déterminer avec précision l'allergie et prescrire le traitement approprié pour le patient."
+      ]
+    },
+    {
+      "tag": "alimentation",
+      "patterns": [
+        "ljism", "lbadan", "se7a diali", "sa7a diali", "se7a", "sa7a", "saha", "seha",
+        "الجسم", "البدن", "صحة ديالي", "كيفاش نحافض على صحة ديالي؟",
+        "Body", "Health", "How to maintain my health?", "Healthy living",
+        "Corps", "Santé", "Comment maintenir ma santé?", "Vie saine"
+      ],
+      "responses": [
+        "Ghadi taklo lfawakih o lkhodar dialek kola nhar, w lhobob lkamila, w masadir sihiya dial protein bhal l7em li fiha naqs f dohoun, w tbe3do 3an soukariyat mo3alija w l2at3ima li fha douhoun bzef.",
+        "غادي تاكلو الفواكه والخضراوات ديالك كل يوم، والحبوب الكاملة، ومصادر صحية للبروتين بحال لحم لي فيها نقص فالدهون، وتبعدو عن السكريات معالجة والأطعمة لي فيها الدهون بزاف.",
+        "You should eat fruits and vegetables every day, whole grains, and healthy sources of protein like lean meats, and avoid processed sugars and foods high in fats.",
+        "Vous devriez manger des fruits et des légumes tous les jours, des céréales complètes et des sources de protéines saines comme les viandes maigres, et éviter les sucres transformés et les aliments riches en graisses."
+      ]
+    },
+    {
+      "tag": "sommeil_reparateur",
+      "patterns": [
+        "N3as", "nawm", "naoum", "n3es", "man3estch",
+        "نوم", "كيف يمكنني تحسين نومي؟", "نعاس", "نعس", "منعستش",
+        "Sleep", "How can I improve my sleep?", "Insomnia", "Restless sleep",
+        "Sommeil", "Comment puis-je améliorer mon sommeil?", "Insomnie", "Sommeil agité"
+      ],
+      "responses": [
+        "3adam nawm i9ed ikoun natij 3anbzef dial l2asbab, bhal l9ala9 w tawator, 2idtirabat nafsiya bhal L2ikti2ab, 2idtirab nawm bhal l2araq w tasaro3 f nawm, tanawol lkafein bkimiyat kbira, 2alam chadid w l2amrad lmozmina, bl 2idafa l3awamil bi2iya bhal sda3 w l2ida2a zayda fl ghorfa. Bach n7esno men nawm dialna, younsa7 bta7did maw3id tabit linawm w lfya9, khalq bi2a mouri7a lnawm mafihach sda3 w l2adwa2 bzef, o tajanoub tanawol monabihat bhal Caffein 9bel nawm.",
+        "عدم النوم الجيد اقد يكون ناتجً عن بزاف ديال الأسباب، بحال القلق والتوتر، والاضطرابات النفسية بحال الاكتئاب، واضطرابات النوم بحال الأرق والتسارع في النوم، وتناول الكافيين بكميات كبيرة، والألم الشديد أو الأمراض المزمنة، بالإضافة لعوامل البيئية بحال صداع والإضاءة الزائدة في الغرفة. باش نحسنو النوم ديالنا، يُنصح بتحديد موعد ثابت للنوم ولفياق، وخلق بيئة مريحة للنوم مفيهاش صداع والأضواء بزاف، وتجنب تناول المنبهات بحال الكافيين قبل النوم.",
+        "Poor sleep can be caused by many factors, such as anxiety, stress, psychological disorders like depression, sleep disorders like insomnia and rapid eye movement, consuming large amounts of caffeine, severe pain, or chronic illnesses, as well as environmental factors such as noise and excessive lighting in the room. To improve sleep, it is recommended to set a fixed time for sleep and waking up, create a comfortable sleep environment free from noise and excessive lighting, and avoid consuming stimulants like caffeine before bed.",
+        "Le mauvais sommeil peut être causé par de nombreux facteurs, comme l'anxiété, le stress, les troubles psychologiques comme la dépression, les troubles du sommeil comme l'insomnie et les mouvements oculaires rapides, la consommation de grandes quantités de caféine, la douleur intense ou les maladies chroniques, ainsi que les facteurs environnementaux tels que le bruit et l'éclairage excessif dans la pièce. Pour améliorer le sommeil, il est recommandé de fixer une heure de coucher et de réveil, de créer un environnement de sommeil confortable sans bruit ni éclairage excessif et d'éviter de consommer des stimulants comme la caféine avant de se coucher."
+      ]
+    },
+    {
+      "tag": "vaccinations",
+      "patterns": [
+        "هل اللقاحات ضرورية؟", "اللقاح",
+        "Are vaccines necessary?", "Vaccination",
+        "Les vaccins sont-ils nécessaires?", "Vaccination"
+      ],
+      "responses": [
+        "Li9a7at hiya ti9niya tibiya katestekhdem bach t9edem himaya ded l2amrad lmo3diya men khilal ta3ziz lmana3a. Younsa7 b 2itiba3 jadwal tat3im w takalom m3a tabib bach takhod lma3loumat lazima. Yemken te3ta f lmarakiz sihiya, bhal lmoustachfayat, 3iyada tabib 3am w marakiz tat3im tab3a l7omoka. Younsa7 b takalom m3a tabib aw mo9adim ri3aya si7iya bach te3ref fin adir tat3imat o lwqt lmonasib liha.",
+        "اللقاحات هي تقنية طبية كتستخدم باش تقدم حماية ضد الأمراض المعدية من خلال تعزيز جهاز المناعة. ينصح بشدة باتباع جدول التطعيم والتحدث مع الطبيب باش تاخد المعلومات اللازمة. يُمكن تعطى في مراكز الرعاية الصحية المختلفة، بحال المستشفيات، عيادات الطب العام، ومراكز التطعيم التابعة للحكومة. يُنصح بالتحدث مع الطبيب أو مقدم الرعاية الصحية باش تعرف فين دير التطعيمات والوقت لمناسب ليها.",
+        "Vaccines are a medical technique used to provide protection against infectious diseases by boosting the immune system. It is strongly recommended to follow the vaccination schedule and talk to a doctor to get the necessary information. Vaccinations can be given at various healthcare centers, such as hospitals, general practitioner clinics, and government vaccination centers. It is recommended to talk to a doctor or healthcare provider to find out where and when to get vaccinated.",
+        "Les vaccins sont une technique médicale utilisée pour fournir une protection contre les maladies infectieuses en renforçant le système immunitaire. Il est fortement recommandé de suivre le calendrier de vaccination et de parler à un médecin pour obtenir les informations nécessaires. Les vaccinations peuvent être administrées dans divers centres de soins de santé, tels que les hôpitaux, les cliniques de médecins généralistes et les centres de vaccination gouvernementaux. Il est recommandé de parler à un médecin ou à un prestataire de soins de santé pour savoir où et quand se faire vacciner."
+      ]
+    },
 
-      {
-        "tag": "os",
-        "patterns": [
-       "كيف يمكن تقوية العظام والوقاية من الهشاشة؟" ,"ما هي الإرشادات للحفاظ على صحة العظام والمفاصل؟","الهشاشة","العظام","المفاصل","هشاشة العظام"],
-        "responses": [
-            "هشاشة العظام هي حالة طبية تتميز بضعف ونقص في كثافة العظام، لكيجعلها أكثر هشاشة وتعرضها للكسور بسهولة أكثر من المعتاد. كتحدث هذه الحالة عادةً نتيجة لفقدان العظام للمعادن الهامة بحال الكالسيوم والفوسفور،  عدم ممارسة التمارين الرياضية بشكل منتظم، التدخين وتناول الكحول بكثرة. هذه العوامل يمكن  تؤدي إلى انخفاض كثافة العظام وزيادة خطر الكسور.لتجنب ضعف العظام، يُنصح بتناول كميات كافية من الكالسيوم وفيتامين د، وممارسة التمارين الرياضية لكتعزز قوة العظام بحال المشي ورفع الأثقال، والابتعاد عن التدخين والكحول، والحفاظ على وزن صحي. للحد من ضعف العظام، من المهم اتباع نظام غذائي متوازن لكيحتوي على الكالسيوم وفيتامين د، وممارسة الرياضة بانتظام لتقوية العظام، وتجنب السلوكيات التي تؤثر سلباً على صحة العظام بحال التدخين وتناول الكحول بكثرة، والتوجه لطبيب العظام في حالة وجود أي مشاكل أو استفسارات تتعلق بصحة العظام."
-           ]
-      },
+        {
+          "tag": "coeur",
+          "patterns": [
+            "ما هي أفضل الطرق للوقاية من الأمراض القلبية؟", "لقلب", "الأمراض القلبية", "الأمراض ديال القلب",
+            "What are the best ways to prevent heart diseases?", "Heart diseases", "Heart health",
+            "Quelles sont les meilleures façons de prévenir les maladies cardiaques?", "Maladies cardiaques", "Santé cardiaque"
+          ],
+          "responses": [
+            "الأمراض القلبية هي مجموعة من الحالات لكتؤثر على القلب والأوعية الدموية المحيطة بيه.الأسباب للإصابة بأمراض القلب تتكون بسباب التدخين، التغذية غير الصحية والغنية بالدهون ، الوزن الزائد و لغلض، نقص التمارين الرياضية، وارتفاع ضغط الدم وارتفاع الكولسترول.العواقب الصحية لأمراض القلب كتشمل ارتفاع ضغط الدم، والتأثير على الأوعية الدموية لكيؤدي إلى الجلطات، وضعف القلب، وأمراض الشرايين بحال الذبحة الصدرية والتصلب اللويحي.لوقاية من أمراض القلب والأوعية الدموية، ينصح بممارسة التمارين الرياضية بانتظام بحال المشي السريع أو السباحة، الحفاظ على وزن صحي، تناول الأطعمة الغنية بالألياف بحال الفواكه والخضروات، تجنب التدخين، والحد من استهلاك الأطعمة الغنية بالدهون المشبعة.",
+            "Heart diseases are a group of conditions that affect the heart and surrounding blood vessels. The causes of heart diseases include smoking, unhealthy diets high in fats, excess weight, lack of physical exercise, high blood pressure, and high cholesterol. The health consequences of heart diseases include high blood pressure, effects on blood vessels leading to clots, weakened heart, and arterial diseases such as angina and atherosclerosis. To prevent heart and vascular diseases, it is advised to regularly exercise, such as brisk walking or swimming, maintain a healthy weight, eat fiber-rich foods like fruits and vegetables, avoid smoking, and limit the consumption of foods high in saturated fats.",
+            "Les maladies cardiaques sont un groupe de conditions qui affectent le cœur et les vaisseaux sanguins environnants. Les causes des maladies cardiaques incluent le tabagisme, une alimentation malsaine riche en graisses, un excès de poids, un manque d'exercice physique, l'hypertension artérielle et un taux de cholestérol élevé. Les conséquences sanitaires des maladies cardiaques comprennent l'hypertension artérielle, les effets sur les vaisseaux sanguins entraînant des caillots, un affaiblissement du cœur et des maladies artérielles telles que l'angine de poitrine et l'athérosclérose. Pour prévenir les maladies cardiaques et vasculaires, il est conseillé de faire de l'exercice régulièrement, comme la marche rapide ou la natation, de maintenir un poids sain, de consommer des aliments riches en fibres comme les fruits et légumes, d'éviter de fumer et de limiter la consommation d'aliments riches en graisses saturées."
+          ]
+        },
+        {
+          "tag": "coeur1",
+          "patterns": [
+            "l9elb", "9albi", "9elbi"
+          ],
+          "responses": [
+            "l2amrad lqalbiya hiya majmou3a men l7alat li kat2eter 3la lqelb o l2aw3iya damawiya lmohita bih.l2asbab lil 2isaba b 2amrad lqalb tatkoun bsbab tadkhin, taghdiya ghayr si7iya w lghaniya bdohoun, lghold, naqs tamarin riyadiya, irtifa3 daght dam w lcholestérol. l3awaqib si7iya l2amrad lqalb katchmel 2irtifa3 daght dem, ta2tir 3la l2aw3iya damawiya li kay2edi ljalatat, do3f lqalb, 2amrad charayin bhal dab7a sadriya w tasalob lowaiji. lil wi9aya min 2amrad lqalb w l2aw3iya damawiya, younsa7 bi moumarasat tamarin riyadiya b ntidam bhal lmachy sari3 o siba7a, l7ifad 3la wazn si7i, tanawol 2at3ima ghaniya b 2alyaf bhal lfawakih w lkhodrawat, be3ed 3la tadkhin, w l7ad mn 2istihlak l2at3ima lghaniya b dohoun lmouchba3a.",
+            "Heart diseases are a group of conditions that affect the heart and surrounding blood vessels. The causes of heart diseases include smoking, unhealthy diets high in fats, excess weight, lack of physical exercise, high blood pressure, and high cholesterol. The health consequences of heart diseases include high blood pressure, effects on blood vessels leading to clots, weakened heart, and arterial diseases such as angina and atherosclerosis. To prevent heart and vascular diseases, it is advised to regularly exercise, such as brisk walking or swimming, maintain a healthy weight, eat fiber-rich foods like fruits and vegetables, avoid smoking, and limit the consumption of foods high in saturated fats.",
+            "Les maladies cardiaques sont un groupe de conditions qui affectent le cœur et les vaisseaux sanguins environnants. Les causes des maladies cardiaques incluent le tabagisme, une alimentation malsaine riche en graisses, un excès de poids, un manque d'exercice physique, l'hypertension artérielle et un taux de cholestérol élevé. Les conséquences sanitaires des maladies cardiaques comprennent l'hypertension artérielle, les effets sur les vaisseaux sanguins entraînant des caillots, un affaiblissement du cœur et des maladies artérielles telles que l'angine de poitrine et l'athérosclérose. Pour prévenir les maladies cardiaques et vasculaires, il est conseillé de faire de l'exercice régulièrement, comme la marche rapide ou la natation, de maintenir un poids sain, de consommer des aliments riches en fibres comme les fruits et légumes, d'éviter de fumer et de limiter la consommation d'aliments riches en graisses saturées."
+          ]
+        },
+        {
+          "tag": "diabète",
+          "patterns": [
+            "مرض السكر", "السكر", "كيف يمكن التحكم في مستوى السكر في الدم؟", "ما هي الإجراءات الوقائية لمنع ارتفاع مستوى السكر في الدم؟", "السكري", "الداء السكري",
+            "How to control blood sugar levels?", "Preventing high blood sugar", "Diabetes management", "Diabetes",
+            "Comment contrôler les niveaux de sucre dans le sang?", "Prévenir l'hyperglycémie", "Gestion du diabète", "Diabète"
+          ],
+          "responses": [
+            "مرض السكري هو اضطراب في النظام الغذائي والهضمي لكيؤدي إلى زيادة مستويات السكر في الدم، ويسببها عدة عوامل بحال التورث الوراثي والنمط الحياتي غير الصحي. يمكن  ايؤدي زيادة مستويات السكر في الدم لمشاكل صحية خطيرة بحال أمراض القلب والكلى، ويمكن لحد منها من خلال ممارسة التمارين الرياضية بانتظام، الحفاظ على وزن صحي، واتباع نظام غذائي متوازن.ضروري الالتزام بالعلاجات الموصوفة من قبل الطبيب ومراقبة مستويات السكر في الدم بانتظام للحفاظ على الصحة العامة.الا  كنت كتشعر بالعطش الشديد والتبول بزاف بشكل غير عادي، فقد يكون عندك مشكلة في مستوى السكر في الدم. من الأفضل  تزور الطبيب باش دير الفحوصات اللازمة  باش تأكد من وجود مرض السكري.",
+            "Diabetes is a disorder in the dietary and digestive system that leads to increased blood sugar levels, caused by factors such as hereditary traits and unhealthy lifestyle. High blood sugar levels can cause serious health problems like heart disease and kidney disease. This can be prevented by regular exercise, maintaining a healthy weight, and following a balanced diet. It is essential to adhere to prescribed treatments by the doctor and regularly monitor blood sugar levels to maintain overall health. If you feel excessive thirst and frequent urination unusually, you might have an issue with your blood sugar level. It is best to visit a doctor for the necessary tests to confirm the presence of diabetes.",
+            "Le diabète est un trouble du système alimentaire et digestif qui entraîne une augmentation des niveaux de sucre dans le sang, causé par des facteurs tels que les traits héréditaires et un mode de vie malsain. Des niveaux élevés de sucre dans le sang peuvent causer des problèmes de santé graves tels que les maladies cardiaques et rénales. Cela peut être évité par l'exercice régulier, le maintien d'un poids sain et le suivi d'une alimentation équilibrée. Il est essentiel de suivre les traitements prescrits par le médecin et de surveiller régulièrement les niveaux de sucre dans le sang pour maintenir une bonne santé générale. Si vous ressentez une soif excessive et une miction fréquente de manière inhabituelle, vous pourriez avoir un problème de taux de sucre dans le sang. Il est préférable de consulter un médecin pour les tests nécessaires afin de confirmer la présence de diabète."
+          ]
+        },
+        {
+          "tag": "diabete1",
+          "patterns": [
+            "soukar", "soukari", "marad soukari", "da2 soukari"
+          ],
+          "responses": [
+            "marad soukari houwa 2idtirab f nidam lghida2i w lhadmi li kay2edi ila ziyadat moustawayat soukar f dem, men asbab had lmarad lwirata w namat lhayat ghayr si7i. Yemken 2i2edi ziyadat moustawa soukar f dem l machakil khatira bhal 2amrad lqalb w lkiliy, w yemken l7ad menha mn khilal moumarasat tamarin riyadia b intidam, l7ifad 3la lwazn si7i w 2itiba3 nidam ghida2i moutawazin. Darouri l 2iltizam bl 3ilajat lmawsoufa men 3end tbib w moura9abat moustawayat soukar f dem b 2intidam lil 7ifad 3la si7a l3ama. Ila kenti katch3er bl 3tech chadid w tabawol bzaf bchakl ghayr 3adi, fa 2i9ed ikoun 3endek mouchil f moustawa soukar f dem. Men l2a7san tzor tbib bach dir lfo7osat lazima bach t2eked men wojoud marad soukari.",
+            "Diabetes is a disorder in the dietary and digestive system that leads to increased blood sugar levels, caused by factors such as hereditary traits and unhealthy lifestyle. High blood sugar levels can cause serious health problems like heart disease and kidney disease. This can be prevented by regular exercise, maintaining a healthy weight, and following a balanced diet. It is essential to adhere to prescribed treatments by the doctor and regularly monitor blood sugar levels to maintain overall health. If you feel excessive thirst and frequent urination unusually, you might have an issue with your blood sugar level. It is best to visit a doctor for the necessary tests to confirm the presence of diabetes.",
+            "Le diabète est un trouble du système alimentaire et digestif qui entraîne une augmentation des niveaux de sucre dans le sang, causé par des facteurs tels que les traits héréditaires et un mode de vie malsain. Des niveaux élevés de sucre dans le sang peuvent causer des problèmes de santé graves tels que les maladies cardiaques et rénales. Cela peut être évité par l'exercice régulier, le maintien d'un poids sain et le suivi d'une alimentation équilibrée. Il est essentiel de suivre les traitements prescrits par le médecin et de surveiller régulièrement les niveaux de sucre dans le sang pour maintenir une bonne santé générale. Si vous ressentez une soif excessive et une miction fréquente de manière inhabituelle, vous pourriez avoir un problème de taux de sucre dans le sang. Il est préférable de consulter un médecin pour les tests nécessaires afin de confirmer la présence de diabète."
+          ]
+        },
+        {
+          "tag": "os",
+          "patterns": [
+            "كيف يمكن تقوية العظام والوقاية من الهشاشة؟", "ما هي الإرشادات للحفاظ على صحة العظام والمفاصل؟", "الهشاشة", "العظام", "المفاصل", "هشاشة العظام",
+            "How to strengthen bones and prevent osteoporosis?", "Bone health", "Joint health", "Osteoporosis",
+            "Comment renforcer les os et prévenir l'ostéoporose?", "Santé des os", "Santé des articulations", "Ostéoporose"
+          ],
+          "responses": [
+            "هشاشة العظام هي حالة طبية تتميز بضعف ونقص في كثافة العظام، لكيجعلها أكثر هشاشة وتعرضها للكسور بسهولة أكثر من المعتاد. كتحدث هذه الحالة عادةً نتيجة لفقدان العظام للمعادن الهامة بحال الكالسيوم والفوسفور،  عدم ممارسة التمارين الرياضية بشكل منتظم، التدخين وتناول الكحول بكثرة. هذه العوامل يمكن  تؤدي إلى انخفاض كثافة العظام وزيادة خطر الكسور.لتجنب ضعف العظام، يُنصح بتناول كميات كافية من الكالسيوم وفيتامين د، وممارسة التمارين الرياضية لكتعزز قوة العظام بحال المشي ورفع الأثقال، والابتعاد عن التدخين والكحول، والحفاظ على وزن صحي. للحد من ضعف العظام، من المهم اتباع نظام غذائي متوازن لكيحتوي على الكالسيوم وفيتامين د، وممارسة الرياضة بانتظام لتقوية العظام، وتجنب السلوكيات التي تؤثر سلباً على صحة العظام بحال التدخين وتناول الكحول بكثرة، والتوجه لطبيب العظام في حالة وجود أي مشاكل أو استفسارات تتعلق بصحة العظام.",
+            "Osteoporosis is a medical condition characterized by weakening and loss of bone density, making them more fragile and prone to fractures more easily than usual. This condition usually occurs due to the loss of important minerals like calcium and phosphorus, lack of regular exercise, smoking, and excessive alcohol consumption. These factors can lead to decreased bone density and increased risk of fractures. To avoid weak bones, it is recommended to consume adequate amounts of calcium and vitamin D, engage in regular exercise that strengthens bones like walking and weightlifting, avoid smoking and excessive alcohol, and maintain a healthy weight. To prevent weak bones, it is important to follow a balanced diet that includes calcium and vitamin D, regularly exercise to strengthen bones, avoid behaviors that negatively impact bone health such as smoking and excessive alcohol consumption, and consult a bone specialist in case of any problems or concerns regarding bone health.",
+            "L'ostéoporose est une condition médicale caractérisée par un affaiblissement et une perte de densité osseuse, rendant les os plus fragiles et plus susceptibles de se fracturer plus facilement que d'habitude. Cette condition survient généralement en raison de la perte de minéraux importants comme le calcium et le phosphore, du manque d'exercice régulier, du tabagisme et de la consommation excessive d'alcool. Ces facteurs peuvent entraîner une diminution de la densité osseuse et un risque accru de fractures. Pour éviter les os faibles, il est recommandé de consommer des quantités adéquates de calcium et de vitamine D, de pratiquer régulièrement des exercices qui renforcent les os comme la marche et la musculation, d'éviter de fumer et de consommer de l'alcool de manière excessive, et de maintenir un poids sain. Pour prévenir les os faibles, il est important de suivre un régime alimentaire équilibré contenant du calcium et de la vitamine D, de pratiquer régulièrement des exercices pour renforcer les os, d'éviter les comportements qui nuisent à la santé des os comme le tabagisme et la consommation excessive d'alcool, et de consulter un spécialiste des os en cas de problèmes ou de préoccupations concernant la santé des os."
+          ]
+        },
+        {
+          "tag": "os1",
+          "patterns": [
+            "hachachat l3idam", "lhachacha", "l3idam", "lmawasil", "rkabi"
+          ],
+          "responses": [
+            "hachachat l3idam hiya hala tibiya tatmeyez b do3f o noqs fkatafat l3idam, li kayj3elha aktar hachacha o ta3arod lil kosor b sohola kter. kat7det had l7ala 3adatan natija lfo9dan l3idam l ma3adin lmohima bhal Calcium o lphosphore, 3adam moumarasat tamarin riyadia b chakl mountadim, tadkhin w tanawol lko7ol b katra. Had L3awamil yemken t2edi l 2inkhifad katafat l3idam o ziyadat khatar l kosor. li tajanoub do3f l3idam, younsa7 bi tanawol kimiyat kafiya men Calcium o vitamine C, w momarasat riyada li kat3ezez qowat l3idam bhal lmachy w raf3 l2at9al, w l2ibti3ad 3an tadkhin w lko7ol w l7ifad 3ala wazn si7i. Lil 7ad men do3f l3idam, men lmohim 2itiba3 nidam ghida2i moutawazin li kay7tawi 3la l Calcium o vitamine D, w momarasat riyada b intidam li ta9wiyat l3idam, o tajanob souloukiyat li kat2eter silbiyan 3la si7at l3idam bhal tadkhin w tanawol lko7ol b ketra, w tawajoh ltabib l3idam f 7alat wojoud ay machakil aw istifsarat tat3ele9 b si7at l3idam.",
+            "Osteoporosis is a medical condition characterized by weakening and loss of bone density, making them more fragile and prone to fractures more easily than usual. This condition usually occurs due to the loss of important minerals like calcium and phosphorus, lack of regular exercise, smoking, and excessive alcohol consumption. These factors can lead to decreased bone density and increased risk of fractures. To avoid weak bones, it is recommended to consume adequate amounts of calcium and vitamin D, engage in regular exercise that strengthens bones like walking and weightlifting, avoid smoking and excessive alcohol, and maintain a healthy weight. To prevent weak bones, it is important to follow a balanced diet that includes calcium and vitamin D, regularly exercise to strengthen bones, avoid behaviors that negatively impact bone health such as smoking and excessive alcohol consumption, and consult a bone specialist in case of any problems or concerns regarding bone health.",
+            "L'ostéoporose est une condition médicale caractérisée par un affaiblissement et une perte de densité osseuse, rendant les os plus fragiles et plus susceptibles de se fracturer plus facilement que d'habitude. Cette condition survient généralement en raison de la perte de minéraux importants comme le calcium et le phosphore, du manque d'exercice régulier, du tabagisme et de la consommation excessive d'alcool. Ces facteurs peuvent entraîner une diminution de la densité osseuse et un risque accru de fractures. Pour éviter les os faibles, il est recommandé de consommer des quantités adéquates de calcium et de vitamine D, de pratiquer régulièrement des exercices qui renforcent les os comme la marche et la musculation, d'éviter de fumer et de consommer de l'alcool de manière excessive, et de maintenir un poids sain. Pour prévenir les os faibles, il est important de suivre un régime alimentaire équilibré contenant du calcium et de la vitamine D, de pratiquer régulièrement des exercices pour renforcer les os, d'éviter les comportements qui nuisent à la santé des os comme le tabagisme et la consommation excessive d'alcool, et de consulter un spécialiste des os en cas de problèmes ou de préoccupations concernant la santé des os."
+          ]
+        },
+        {
+          "tag": "santé mentale",
+          "patterns": [
+            "العقل", "كيف يمكنني الحفاظ على صحة عقلية جيدة؟", "كيف يمكن تعزيز الصحة العقلية؟", "صحة عقلية", "البال", "راحة البال",
+            "Mental health", "How to maintain good mental health?", "Improving mental health", "Mental well-being",
+            "Santé mentale", "Comment maintenir une bonne santé mentale?", "Améliorer la santé mentale", "Bien-être mental"
+          ],
+          "responses": [
+            "الصحة النفسية هي الحالة ديال الراحة العاطفية والنفسية والاجتماعية لشخص. باش تحميها، يتعين اتباع عادات حياتية صحية، وتعزيز العلاقات الاجتماعية الإيجابية،تواصل مع الأصدقاء والعائلة، ممارسة التقنيات الاسترخائية بحال التأمل واليوغا الألغاز والألعاب الذهنية، ممارسة الهوايات لكتمنحك فرصة للاسترخاء، والبحث عن المساعدة المهنية عند الحاجة وتنمية مهارات تعامل مع التوتر وتعزيز التوازن بين مختلف جوانب الحياة اليومية. تترتب على الصحة النفسية السيئة عواقب سلبية تشمل المشاكل الصحية الجسدية، وتدهور العلاقات الشخصية، واضطرابات المزاج. دكشي علاش، كينبغي التعامل مع الصحة النفسية بجدية وطلب المساعدة عند الحاجة من خلال اللجوء إلى المتخصصين في مجال الصحة النفسية.",
+            "Mental health refers to the state of emotional, psychological, and social well-being. To protect it, it is important to adopt healthy lifestyle habits, enhance positive social relationships, connect with friends and family, practice relaxation techniques like meditation and yoga, engage in hobbies that provide relaxation, and seek professional help when needed. Poor mental health can lead to negative consequences including physical health problems, deteriorating personal relationships, and mood disorders. Therefore, it is essential to take mental health seriously and seek help when necessary by consulting mental health professionals.",
+            "La santé mentale fait référence à l'état de bien-être émotionnel, psychologique et social. Pour la protéger, il est important d'adopter des habitudes de vie saines, de renforcer les relations sociales positives, de se connecter avec des amis et de la famille, de pratiquer des techniques de relaxation comme la méditation et le yoga, de s'engager dans des passe-temps qui procurent de la détente et de demander de l'aide professionnelle lorsque nécessaire. Une mauvaise santé mentale peut entraîner des conséquences négatives, notamment des problèmes de santé physique, la détérioration des relations personnelles et des troubles de l'humeur. Il est donc essentiel de prendre la santé mentale au sérieux et de demander de l'aide lorsque nécessaire en consultant des professionnels de la santé mentale."
+          ]
+        },
+        {
+          "tag": "santé mentale1",
+          "patterns": [
+            "se7a nafsiya", "nafs", "se7a l3a9liya", "lbal", "ra7at lbal"
+          ],
+          "responses": [
+            "si7a nafsiya hiya halat dial ra7a l3atifiya w nafsiya w l2ijtima3iya lchakhs. Bach te7miha, kayt3eyen 2itiba3 3adat hayatiya si7iya, ta3ziz l3ala9at l2ijtima3iya l2ijabiya, tawasol m3a l2asdi9a2 w l3a2ila, moumarasat tiqniyat istirkha2iya bhal ta2amol, yoga, l2al3ab dihniya, momarasat hiwayat li katmen7ek forsat l2istirkha2, tanmiyat maharat ta3amol m3a tawator o ta3ziz tawazoun bayn mokhtalaf jawanib lhayat lyawmiya. katreteb 3la se7a nafsiya sayi2a 3awa9ib silbiya katchmel machakil f se7a ljasadiya, tadahwor l3ala9at chakhsiya w 2idtirabat lmizaj. Dakchi elach, kaynbaghi ta3amoul m3a se7a nafsiya b jidiya w talab lmosa3ada 3end lhaja men khilal loujou2 lmokhtassin f majal se7a nafsiya.",
+            "Mental health refers to the state of emotional, psychological, and social well-being. To protect it, it is important to adopt healthy lifestyle habits, enhance positive social relationships, connect with friends and family, practice relaxation techniques like meditation and yoga, engage in hobbies that provide relaxation, and seek professional help when needed. Poor mental health can lead to negative consequences including physical health problems, deteriorating personal relationships, and mood disorders. Therefore, it is essential to take mental health seriously and seek help when necessary by consulting mental health professionals.",
+            "La santé mentale fait référence à l'état de bien-être émotionnel, psychologique et social. Pour la protéger, il est important d'adopter des habitudes de vie saines, de renforcer les relations sociales positives, de se connecter avec des amis et de la famille, de pratiquer des techniques de relaxation comme la méditation et le yoga, de s'engager dans des passe-temps qui procurent de la détente et de demander de l'aide professionnelle lorsque nécessaire. Une mauvaise santé mentale peut entraîner des conséquences négatives, notamment des problèmes de santé physique, la détérioration des relations personnelles et des troubles de l'humeur. Il est donc essentiel de prendre la santé mentale au sérieux et de demander de l'aide lorsque nécessaire en consultant des professionnels de la santé mentale."
+          ]
+        },
+        {
+          "tag": "poids",
+          "patterns": [
+            "تقل", "كيف يؤثر الوزن على ضغط الدم؟", "الوزن", "لغلض", "غليض", "غليضة",
+            "Weight", "How does weight affect blood pressure?", "Body weight", "Overweight",
+            "Poids", "Comment le poids affecte-t-il la pression artérielle?", "Poids corporel", "Surpoids"
+          ],
+          "responses": [
+            "الوزن عندو تأثير كبير على الصحة العامة، اقدر  يؤثر على بزاف ديال الجوانب المختلفة للصحة. منين كيكون الوزن زائد، يمكن  يزيد من خطر الإصابة ببزاف  الأمراض المزمنة بحال أمراض القلب والأوعية الدموية، السكري، ارتفاع ضغط الدم، أمراض الكبد، التهاب المفاصل، وحتى بعض أنواع ديال السرطان.  يمكن  يؤثر الوزن الزائد على جودة الحياة، لكيزيد من المشاكل اليومية  بحال صعوبة التنقل والتنفس و نعاس. باش نعتني بالوزن ونحافض على الصحة، خصني نتبع نمط حياة صحي كيتضمن تناول وجبات متوازنة وغنية بالفواكه والخضروات والألياف، ممارسة التمارين الرياضية بانتظام،  نبعد على الأطعمة غير الصحية الغنية بالدهون والسكريات والملح، والحفاظ على نوم جيد وكافٍ. ضروري ادارو فحوصات طبية منتظمة ومتابعة صحة الوزن بانتظام، والتحدث مع الطبيب الا كان  أي مشاكل صحية تتعلق بالوزن أو لا  إدارة الوزن.",
+            "Weight has a significant impact on overall health, and it can affect various aspects of health. When weight is excessive, it can increase the risk of many chronic diseases such as heart and vascular diseases, diabetes, high blood pressure, liver diseases, arthritis, and even some types of cancer. Excess weight can also affect quality of life, leading to daily problems such as difficulty moving, breathing, and sleeping. To take care of weight and maintain health, it is necessary to follow a healthy lifestyle that includes eating balanced meals rich in fruits, vegetables, and fibers, regular physical exercise, avoiding unhealthy foods high in fats, sugars, and salt, and ensuring good and sufficient sleep. Regular medical check-ups and monitoring of weight health are essential, and consulting a doctor is important if there are any health problems related to weight or weight management.",
+            "Le poids a un impact significatif sur la santé globale et peut affecter divers aspects de la santé. Lorsque le poids est excessif, il peut augmenter le risque de nombreuses maladies chroniques telles que les maladies cardiaques et vasculaires, le diabète, l'hypertension artérielle, les maladies du foie, l'arthrite et même certains types de cancer. L'excès de poids peut également affecter la qualité de vie, entraînant des problèmes quotidiens tels que des difficultés à bouger, à respirer et à dormir. Pour prendre soin du poids et maintenir la santé, il est nécessaire de suivre un mode de vie sain qui comprend la consommation de repas équilibrés riches en fruits, légumes et fibres, un exercice physique régulier, l'évitement des aliments malsains riches en graisses, en sucres et en sel, et un sommeil de bonne qualité et suffisant. Les examens médicaux réguliers et la surveillance de la santé pondérale sont essentiels, et consulter un médecin est important en cas de problèmes de santé liés au poids ou à la gestion du poids."
+          ]
+        },
 
-{
-        "tag": "os1",
-        "patterns": [
-       "hachachat l3idam","lhachacha","l3idam","lmawasil","rkabi"],
-        "responses": [
-             "hachachat l3idam hiya hala tibiya tatmeyez b do3f o noqs fkatafat l3idam, li kayj3elha aktar hachacha o ta3arod lil kosor b sohola kter. kat7det had l7ala 3adatan natija lfo9dan l3idam l ma3adin lmohima bhal Calcium o lphosphore, 3adam moumarasat tamarin riyadia b chakl mountadim, tadkhin w tanawol lko7ol b katra. Had L3awamil yemken t2edi l 2inkhifad katafat l3idam o ziyadat khatar l kosor. li tajanoub do3f l3idam, younsa7 bi tanawol kimiyat kafiya men Calcium o vitamine C, w momarasat riyada li kat3ezez qowat l3idam bhal lmachy w raf3 l2at9al, w l2ibti3ad 3an tadkhin w lko7ol w l7ifad 3ala wazn si7i. Lil 7ad men do3f l3idam, men lmohim 2itiba3 nidam ghida2i moutawazin li kay7tawi 3la l Calcium o vitamine D, w momarasat riyada b intidam li ta9wiyat l3idam, o tajanob souloukiyat li kat2eter silbiyan 3la si7at l3idam bhal tadkhin w tanawol lko7ol b ketra, w tawajoh ltabib l3idam f 7alat wojoud ay machakil aw istifsarat tat3ele9 b si7at l3idam.  "
-           ]
-      },
-
-      {
-        "tag": "santé mentale",
-        "patterns": [
-       "العقل","كيف يمكنني الحفاظ على صحة عقلية جيدة؟","كيف يمكن تعزيز الصحة العقلية؟","صحة عقلية","البال","راحة البال"],
-        "responses": [
-              "الصحة النفسية هي الحالة ديال الراحة العاطفية والنفسية والاجتماعية لشخص. باش تحميها، يتعين اتباع عادات حياتية صحية، وتعزيز العلاقات الاجتماعية الإيجابية،تواصل مع الأصدقاء والعائلة، ممارسة التقنيات الاسترخائية بحال التأمل واليوغا الألغاز والألعاب الذهنية، ممارسة الهوايات لكتمنحك فرصة للاسترخاء، والبحث عن المساعدة المهنية عند الحاجة وتنمية مهارات تعامل مع التوتر وتعزيز التوازن بين مختلف جوانب الحياة اليومية. تترتب على الصحة النفسية السيئة عواقب سلبية تشمل المشاكل الصحية الجسدية، وتدهور العلاقات الشخصية، واضطرابات المزاج. دكشي علاش، كينبغي التعامل مع الصحة النفسية بجدية وطلب المساعدة عند الحاجة من خلال اللجوء إلى المتخصصين في مجال الصحة النفسية."
-           ]
-      },
-{
-        "tag": "santé mentale1",
-        "patterns": [
-       "se7a nafsiya","nafs","se7a l3a9liya","lbal","ra7at lbal"],
-        "responses": [
-                "si7a nafsiya hiya halat dial ra7a l3atifiya w nafsiya w l2ijtima3iya lchakhs. Bach te7miha, kayt3eyen 2itiba3 3adat hayatiya si7iya, ta3ziz l3ala9at l2ijtima3iya l2ijabiya, tawasol m3a l2asdi9a2 w l3a2ila, moumarasat tiqniyat istirkha2iya bhal ta2amol, yoga, l2al3ab dihniya,momarasat hiwayat li katmen7ek forsat l2istirkha2, tanmiyat maharat ta3amol m3a tawator o ta3ziz tawazoun bayn mokhtalaf jawanib lhayat lyawmiya. katreteb 3la se7a nafsiya sayi2a 3awa9ib silbiya katchmel machakil f se7a ljasadiya, tadahwor l3ala9at chakhsiya w 2idtirabat lmizaj.Dakchi elach, kaynbaghi ta3amoul m3a se7a nafsiya b jidiya w talab lmosa3ada 3end lhaja men khilal loujou2 lmokhtassin f majal se7a nafsiya. "]
-      },
-      {
-        "tag": "poids",
-        "patterns": [
-       "تقل","كيف يؤثر الوزن على ضغط الدم؟","الوزن","لغلض","غليض","غليضة"],
-        "responses": [
-               "الوزن عندو تأثير كبير على الصحة العامة، اقدر  يؤثر على بزاف ديال الجوانب المختلفة للصحة. منين كيكون الوزن زائد، يمكن  يزيد من خطر الإصابة ببزاف  الأمراض المزمنة بحال أمراض القلب والأوعية الدموية، السكري، ارتفاع ضغط الدم، أمراض الكبد، التهاب المفاصل، وحتى بعض أنواع ديال السرطان.  يمكن  يؤثر الوزن الزائد على جودة الحياة، لكيزيد من المشاكل اليومية  بحال صعوبة التنقل والتنفس و نعاس. باش نعتني بالوزن ونحافض على الصحة، خصني نتبع نمط حياة صحي كيتضمن تناول وجبات متوازنة وغنية بالفواكه والخضروات والألياف، ممارسة التمارين الرياضية بانتظام،  نبعد على الأطعمة غير الصحية الغنية بالدهون والسكريات والملح، والحفاظ على نوم جيد وكافٍ. ضروري ادارو فحوصات طبية منتظمة ومتابعة صحة الوزن بانتظام، والتحدث مع الطبيب الا كان  أي مشاكل صحية تتعلق بالوزن أو لا  إدارة الوزن."
-           ]
-      },
+    
 
 {
         "tag": "poids1",
