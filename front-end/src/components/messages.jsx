@@ -40,7 +40,7 @@ const messages = {
       darija: "Chokran 7it khtariti ${doctorName} m3a ${timePart}.<br>Nhar: ${dayPart}.<br>3afak 3tini ism chakhsi dyalk.",
       "الدارجة": "شكراً حيث اخترتي <br>${doctorName} مع ${timePart}.<br>نهار: ${dayPart}.<br>عافاك عطيني الإسم الشخصي ديالك.",
       "العربية": "شكراً لاختيارك <br>${doctorName} مع ${timePart}.<br>اليوم: ${dayPart}.<br>من فضلك أعطني اسمك الشخصي.",
-      francais: "Merci d'avoir choisi ${doctorName} à ${timePart}.<br>Jour: ${dayPart}.<br>Veuillez me donner votre prénom.",
+      francais: "Merci d'avoir choisi ${doctorName} à ${timePart}.<br>Jour: ${dayPart}.<br>Veuillez saisir votre prénom.",
       english: "Thank you for choosing ${doctorName} at ${timePart}.<br>Day: ${dayPart}.<br>Please provide your first name.",
     },
     confirm: {

@@ -155,6 +155,16 @@ export default function Chat() {
       "appointment",
       "booking",
       "schedule",
+      "doctor",
+      "physician",
+      "clinic",
+      "hospital",
+      "medical",
+      "checkup",
+      "consultation",
+      "tbib",
+      "doktor",
+      "docteur"
     ];
     const actionWords = [
       "make",
@@ -275,7 +285,7 @@ export default function Chat() {
 
   const handleConfirmation = async (confirmation) => {
     setWaitingForConfirmation(false);
-
+  
     const confirmYes = {
       darija: "ah",
       "الدارجة": "نعم",
@@ -283,8 +293,8 @@ export default function Chat() {
       francais: "oui",
       english: "yes",
     };
-
-    if (confirmation.toLowerCase() === confirmYes[selectedLanguage]) {
+  
+    if (confirmation.trim().toLowerCase() === confirmYes[selectedLanguage]) {
       await finalizeAppointment();
     } else {
       displayBotMessage(
@@ -672,41 +682,41 @@ export default function Chat() {
               />
             )}
 
-            {waitingForConfirmation && (
-              <div className="flex justify-center my-2">
-                <button
-                  onClick={() => handleConfirmation(
-                    selectedLanguage === "darija" ? "ah" :
-                    selectedLanguage === "francais" ? "oui" :
-                    "نعم"
-                  )}
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2"
-                >
-                  {selectedLanguage === "darija"
-                    ? "Ah"
-                    : selectedLanguage === "francais"
-                    ? "Oui"
-                    : selectedLanguage === "english"
-                    ? "Yes"
-                    : "نعم"}
-                </button>
-                <button
-                  onClick={() => handleConfirmation(
-                    selectedLanguage === "darija" ? "la" :
-                    selectedLanguage === "francais" ? "non" :
-                    "لا"
-                  )}
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2"
-                >
-                  {selectedLanguage === "darija"
-                    ? "La"
-                    : selectedLanguage === "francais"
-                    ? "Non"
-                    : selectedLanguage === "english"
-                    ? "No"
-                    : "لا"}
-                </button>
-              </div>
+                {waitingForConfirmation && (
+                  <div className="flex justify-center my-2">
+                    <button
+                      onClick={() => handleConfirmation(
+                        selectedLanguage === "darija" ? "ah" :
+                        selectedLanguage === "francais" ? "oui" :
+                        selectedLanguage === "english" ? "yes" : "نعم"
+                      )}
+                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2"
+                    >
+                      {selectedLanguage === "darija"
+                        ? "Ah"
+                        : selectedLanguage === "francais"
+                        ? "Oui"
+                        : selectedLanguage === "english"
+                        ? "Yes"
+                        : "نعم"}
+                    </button>
+                    <button
+                      onClick={() => handleConfirmation(
+                        selectedLanguage === "darija" ? "la" :
+                        selectedLanguage === "francais" ? "non" :
+                        selectedLanguage === "english" ? "no" : "لا"
+                      )}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2"
+                    >
+                      {selectedLanguage === "darija"
+                        ? "La"
+                        : selectedLanguage === "francais"
+                        ? "Non"
+                        : selectedLanguage === "english"
+                        ? "No"
+                        : "لا"}
+                    </button>
+                  </div>
             )}
 
             <div ref={messagesEndRef} />
