@@ -275,7 +275,16 @@ export default function Chat() {
 
   const handleConfirmation = async (confirmation) => {
     setWaitingForConfirmation(false);
-    if (confirmation === "نعم" || confirmation === "ah") {
+
+    const confirmYes = {
+      darija: "ah",
+      "الدارجة": "نعم",
+      "العربية": "نعم",
+      francais: "oui",
+      english: "yes",
+    };
+
+    if (confirmation.toLowerCase() === confirmYes[selectedLanguage]) {
       await finalizeAppointment();
     } else {
       displayBotMessage(
@@ -504,7 +513,12 @@ export default function Chat() {
     setAppointmentStep(0);
     resetAppointmentDetails();
     setWaitingForConfirmation(false);
-    setSelectedLanguage(null);
+    setWaitingForSmsCode(false); // Reset waitingForSmsCode
+    setAppointmentRef(null); // Reset appointmentRef
+    setSelectedLanguage(null); // Reset selectedLanguage
+    setIsBotTyping(false); // Reset isBotTyping
+    setForceStopTyping(false); // Reset forceStopTyping
+    setShowSendIcon(true); // Reset showSendIcon
   };
 
   const stopBotTyping = () => {
@@ -661,16 +675,36 @@ export default function Chat() {
             {waitingForConfirmation && (
               <div className="flex justify-center my-2">
                 <button
-                  onClick={() => handleConfirmation("نعم")}
+                  onClick={() => handleConfirmation(
+                    selectedLanguage === "darija" ? "ah" :
+                    selectedLanguage === "francais" ? "oui" :
+                    "نعم"
+                  )}
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2"
                 >
-                  نعم
+                  {selectedLanguage === "darija"
+                    ? "Ah"
+                    : selectedLanguage === "francais"
+                    ? "Oui"
+                    : selectedLanguage === "english"
+                    ? "Yes"
+                    : "نعم"}
                 </button>
                 <button
-                  onClick={() => handleConfirmation("لا")}
+                  onClick={() => handleConfirmation(
+                    selectedLanguage === "darija" ? "la" :
+                    selectedLanguage === "francais" ? "non" :
+                    "لا"
+                  )}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2"
                 >
-                  لا
+                  {selectedLanguage === "darija"
+                    ? "La"
+                    : selectedLanguage === "francais"
+                    ? "Non"
+                    : selectedLanguage === "english"
+                    ? "No"
+                    : "لا"}
                 </button>
               </div>
             )}

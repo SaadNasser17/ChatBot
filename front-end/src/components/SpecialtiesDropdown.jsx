@@ -41,7 +41,7 @@ const customOrder = [
 ];
 
 const buttonTranslations = {
-  darija: "بغيتي كتر؟",
+  darija: "Bghiti kter? ",
   "الدارجة": "بغيتي كتر؟",
   "العربية": "هل تريد المزيد؟",
   francais: "Voulez-vous plus?",

@@ -375,6 +375,36 @@
                     "gpatientId": 705080
                 },
                 "motifId": 93
+            },
+            {
+                "praticien": {
+                    "name": "Dr. BENDAHMAN  Amina",
+                    "PraticienCentreSoinID": 107,
+                    "timeSlot": "2024-06-27T08:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "ss",
+                    "phone_number": "0648051951",
+                    "patientId": 714580,
+                    "gpatientId": 705093
+                },
+                "motifId": 824
+            },
+            {
+                "praticien": {
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-06-28T08:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "sad",
+                    "last_name": "saaad",
+                    "phone_number": "0648051951",
+                    "patientId": 714581,
+                    "gpatientId": 705094
+                },
+                "motifId": 839
             }
         ]
     }
