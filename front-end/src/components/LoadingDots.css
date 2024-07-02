@@ -1,0 +1,16 @@
+@keyframes typing {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-8px);
+    }
+  }
+  
+  .typing-dot {
+    display: inline-block;
+    animation: typing 1s infinite;
+  }
+  

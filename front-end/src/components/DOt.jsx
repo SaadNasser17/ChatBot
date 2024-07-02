@@ -14,7 +14,6 @@ export default function DOt() {
           margin: "0 2px",
           backgroundColor: "#333",
           borderRadius: "50%",
-          animation: "typing 1s infinite",
         }}
       ></div>
       <div
@@ -25,7 +24,7 @@ export default function DOt() {
           margin: "0 2px",
           backgroundColor: "#333",
           borderRadius: "50%",
-          animation: "typing 1s infinite 0.2s",
+          animationDelay: "0.2s",
         }}
       ></div>
       <div
@@ -36,7 +35,7 @@ export default function DOt() {
           margin: "0 2px",
           backgroundColor: "#333",
           borderRadius: "50%",
-          animation: "typing 1s infinite 0.4s",
+          animationDelay: "0.4s",
         }}
       ></div>
     </div>

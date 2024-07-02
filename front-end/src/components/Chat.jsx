@@ -558,7 +558,7 @@ export default function Chat() {
       {isOpen && (
         <div
           className={`bg-black-squeeze-50 ${
-            isExtended ? "w-[30vw] h-[80vh] " : "w-80 h-96"
+            isExtended ? "w-[32vw] h-[82vh] " : "w-[24vw] h-[58vh]"
           } flex flex-col justify-between rounded-xl fixed bottom-20 right-18`}
         >
           <div
@@ -597,7 +597,7 @@ export default function Chat() {
           </div>
           <div
             className={`${
-              isExtended ? "w-[30vw] h-[80vh]" : "w-80 h-96"
+              isExtended ? "w-[32vw] h-[82vh]" : "w-[24vw] h-[58vh]"
             } p-3 overflow-y-auto max-h-96 hide-scrollbar`}
             style={{ minHeight: "300px" }}
           >
@@ -682,49 +682,12 @@ export default function Chat() {
               />
             )}
 
-                {waitingForConfirmation && (
-                  <div className="flex justify-center my-2">
-                    <button
-                      onClick={() => handleConfirmation(
-                        selectedLanguage === "darija" ? "ah" :
-                        selectedLanguage === "francais" ? "oui" :
-                        selectedLanguage === "english" ? "yes" : "نعم"
-                      )}
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2"
-                    >
-                      {selectedLanguage === "darija"
-                        ? "Ah"
-                        : selectedLanguage === "francais"
-                        ? "Oui"
-                        : selectedLanguage === "english"
-                        ? "Yes"
-                        : "نعم"}
-                    </button>
-                    <button
-                      onClick={() => handleConfirmation(
-                        selectedLanguage === "darija" ? "la" :
-                        selectedLanguage === "francais" ? "non" :
-                        selectedLanguage === "english" ? "no" : "لا"
-                      )}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2"
-                    >
-                      {selectedLanguage === "darija"
-                        ? "La"
-                        : selectedLanguage === "francais"
-                        ? "Non"
-                        : selectedLanguage === "english"
-                        ? "No"
-                        : "لا"}
-                    </button>
-                  </div>
-            )}
-
             <div ref={messagesEndRef} />
           </div>
 
           <div
             className={`bg-white ${
-              isExtended ? "w-full h-[50px]" : "w-80 h-96"
+              isExtended ? "w-full h-[50px]" : "w-[24vw] h-[58vh]"
             }  flex items-center justify-end rounded-full mb-5  shadow-sm border-t-2 px-4`}
           >
             <input

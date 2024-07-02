@@ -405,6 +405,141 @@
                     "gpatientId": 705094
                 },
                 "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr. laaroussi laila",
+                    "PraticienCentreSoinID": 1873,
+                    "timeSlot": "2024-06-29T10:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nasser",
+                    "phone_number": "0648051951",
+                    "patientId": 714591,
+                    "gpatientId": 705104
+                },
+                "motifId": 89
+            },
+            {
+                "praticien": {
+                    "name": "Dr. laaroussi laila",
+                    "PraticienCentreSoinID": 1873,
+                    "timeSlot": "2024-06-29T09:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "\u0633\u0639\u062f",
+                    "last_name": "\u0646\u0627\u0635\u0631 \u0627\u0644\u062f\u064a\u0646",
+                    "phone_number": "0648051951",
+                    "patientId": 714592,
+                    "gpatientId": 705105
+                },
+                "motifId": 89
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Benmoussa Khadija",
+                    "PraticienCentreSoinID": 129,
+                    "timeSlot": "2024-06-28T16:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "\u0633\u0639\u062f",
+                    "last_name": "\u0646\u0627\u0635\u0631 \u0627\u0644\u062f\u064a\u0646",
+                    "phone_number": "0648051951",
+                    "patientId": 714593,
+                    "gpatientId": 705106
+                },
+                "motifId": 286
+            },
+            {
+                "praticien": {
+                    "name": "Dr. berrada asmaa",
+                    "PraticienCentreSoinID": 609,
+                    "timeSlot": "2024-06-28T16:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nasser",
+                    "phone_number": "0648051951",
+                    "patientId": 714595,
+                    "gpatientId": 705108
+                },
+                "motifId": 13
+            },
+            {
+                "praticien": {
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-06-28T16:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ssas",
+                    "last_name": "asassa",
+                    "phone_number": "0648051951",
+                    "patientId": 714598,
+                    "gpatientId": 705111
+                },
+                "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Bennouna rachid",
+                    "PraticienCentreSoinID": 151,
+                    "timeSlot": "2024-06-28T16:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "sasas",
+                    "phone_number": "0648051951",
+                    "patientId": 714600,
+                    "gpatientId": 705113
+                },
+                "motifId": 25
+            },
+            {
+                "praticien": {
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-06-28T16:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "mibtech",
+                    "phone_number": "0648051951",
+                    "patientId": 714601,
+                    "gpatientId": 705114
+                },
+                "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-07-02T08:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "sasad",
+                    "phone_number": "0648051951",
+                    "patientId": 714623,
+                    "gpatientId": 705136
+                },
+                "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr. LFERDE  ELHASSANE ",
+                    "PraticienCentreSoinID": 418,
+                    "timeSlot": "2024-07-02T10:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "nassereddine",
+                    "phone_number": "0648051951",
+                    "patientId": 714628,
+                    "gpatientId": 705141
+                },
+                "motifId": 1554
             }
         ]
     }
