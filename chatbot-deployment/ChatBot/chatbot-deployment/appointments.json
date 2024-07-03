@@ -540,6 +540,36 @@
                     "gpatientId": 705141
                 },
                 "motifId": 1554
+            },
+            {
+                "praticien": {
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-07-03T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saad",
+                    "phone_number": "0648051951",
+                    "patientId": 714642,
+                    "gpatientId": 705155
+                },
+                "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-07-03T13:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "saad",
+                    "last_name": "saaad",
+                    "phone_number": "0648051951",
+                    "patientId": 714643,
+                    "gpatientId": 705156
+                },
+                "motifId": 839
             }
         ]
     }
