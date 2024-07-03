@@ -250,13 +250,13 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
 
   const showPreviousSlots = () => {
     if (slotIndex > 0) {
-      setSlotIndex(slotIndex - (isExtended ? 5 : 2));
+      setSlotIndex(slotIndex - 5);
     }
   };
-
+  
   const showNextSlots = () => {
-    if (slotIndex + (isExtended ? 5 : 2) < slots.length) {
-      setSlotIndex(slotIndex + (isExtended ? 5 : 2));
+    if (slotIndex + 5 < slots.length) {
+      setSlotIndex(slotIndex + 5);
     } else {
       setIsTomorrow(true);
       setSlots(
@@ -304,77 +304,74 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
         <p className="text-picton-blue-500">Loading {currentSpecialty}</p>
       )}
       {currentDoctor && (
-        <div className="flex justify-center">
+        <div className="relative" style={{ width: "330px", margin: "0 auto" }}>
+          <FaChevronLeft
+            className="text-teal-600 text-2xl cursor-pointer absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2"
+            onClick={showPreviousDoctor}
+          />
           <div
-            className="mb-2 p-2 border rounded-md hover:bg-jordy-blue-50 shadow-sm relative"
-            style={{ width: "315px" }}
+            className="mb-2 p-3 border rounded-md hover:bg-jordy-blue-50 shadow-sm mx-auto"
+            style={{ width: "300px" }}
           >
-            <FaChevronLeft
-              className="text-teal-600 text-2xl cursor-pointer absolute left-[-25px] top-1/2 transform -translate-y-1/2"
-              onClick={showPreviousDoctor}
-            />
-            <div className="text-center">
+            <div className="flex items-start mb-2">
               <img
                 src="https://uat.nabady.ma/assets/images/avatars/medecin_homme.svg"
                 alt="Doctor"
-                className="w-12 h-12 mx-auto mb-2"
+                className="w-12 h-12 mr-3"
               />
-              <strong className="font-semibold text-base text-jordy-blue-800 mb-1 block">
-                {currentDoctor.name}
-              </strong>
-              <div className="mb-1 flex items-center justify-center">
-                <FaMapMarkerAlt className="mr-2 text-picton-blue-500 text-sm" />
-                <span className="text-gray-700 text-sm">
-                  {currentDoctor.address}
-                </span>
+              <div className="flex-grow">
+                <strong className="font-semibold text-sm text-jordy-blue-800 block mb-1">
+                  {currentDoctor.name}
+                </strong>
+                <div className="bg-gray-50 p-1 rounded">
+                  <div className="flex items-start text-xs">
+                    <FaMapMarkerAlt className="mr-1 text-picton-blue-500 flex-shrink-0 mt-1" />
+                    <span className="text-gray-700 line-clamp-2">
+                      {currentDoctor.address}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-            <FaChevronRight
-              className="text-teal-600 text-2xl cursor-pointer absolute right-[-25px] top-1/2 transform -translate-y-1/2"
-              onClick={showNextDoctor}
-            />
-            <div className="embla mt-2">
-              <span className="flex justify-center text-gray-700 bg-gray-200 py-1 px-3 rounded-md font-normal">
-                {isTomorrow
-                  ? labels.tomorrow[selectedLanguage]
-                  : labels.today[selectedLanguage]}
+            <div className="text-center mb-2">
+              <span className="text-gray-700 text-sm font-medium">
+                {isTomorrow ? labels.tomorrow[selectedLanguage] : labels.today[selectedLanguage]}
               </span>
-              <hr className="my-2 border-gray-300" />
-              <div className="flex justify-between items-center">
-                <FaChevronLeft
-                  className="text-picton-blue-500 text-lg cursor-pointer"
-                  onClick={showPreviousSlots}
-                />
-                <div className="embla__container flex justify-center overflow-hidden">
-                  {slots
-                    .slice(slotIndex, slotIndex + (isExtended ? 5 : 2))
-                    .map((slot, index) => (
-                      <div className="embla__slide flex-none mx-1" key={index}>
-                        <button
-                          onClick={() =>
-                            handleSlotClick(
-                              currentDoctor,
-                              currentDoctor.name,
-                              currentDoctor.PcsID,
-                              slot
-                            )
-                          }
-                          className="bg-picton-blue-300 rounded-lg text-sm my-1 mx-1"
-                          style={{ minWidth: "50px", padding: "0.25rem 0.5rem" }}
-                        >
-                          {slot}
-                        </button>
-                      </div>
-                    ))}
-                </div>
-                <FaChevronRight
-                  className="text-picton-blue-500 text-lg cursor-pointer"
-                  onClick={showNextSlots}
-                />
+            </div>
+            <div className="flex justify-between items-center">
+              <FaChevronLeft
+                className="text-picton-blue-500 text-lg cursor-pointer"
+                onClick={showPreviousSlots}
+              />
+              <div className="flex justify-center overflow-hidden">
+                {slots.slice(slotIndex, slotIndex + 5).map((slot, index) => (
+                  <button
+                    key={index}
+                    onClick={() =>
+                      handleSlotClick(
+                        currentDoctor,
+                        currentDoctor.name,
+                        currentDoctor.PcsID,
+                        slot
+                      )
+                    }
+                    className="bg-picton-blue-300 rounded-lg text-xs mx-1"
+                    style={{ minWidth: "45px", padding: "0.25rem" }}
+                  >
+                    {slot}
+                  </button>
+                ))}
               </div>
-              <hr className="my-2 border-gray-300" />
+              <FaChevronRight
+                className="text-picton-blue-500 text-lg cursor-pointer"
+                onClick={showNextSlots}
+              />
             </div>
           </div>
+          <FaChevronRight
+            className="text-teal-600 text-2xl cursor-pointer absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2"
+            onClick={showNextDoctor}
+          />
         </div>
       )}
     </div>
