@@ -301,32 +301,34 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
   return (
     <div className="p-2">
       {loading && (
-        <p className="text-picton-blue-500">Loading {currentSpecialty}</p>
+        <p className="text-primary">Loading {currentSpecialty}</p>
       )}
       {currentDoctor && (
-        <div className="relative" style={{ width: "330px", margin: "0 auto" }}>
+        <div className="position-relative" style={{ width: "330px", margin: "0 auto" }}>
           <FaChevronLeft
-            className="text-teal-600 text-2xl cursor-pointer absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2"
+            className="text-success cursor-pointer position-absolute"
+            style={{ top: "50%", left: 0, transform: "translate(-50%, -50%)" }}
             onClick={showPreviousDoctor}
           />
           <div
-            className="mb-2 p-3 border rounded-md hover:bg-jordy-blue-50 shadow-sm mx-auto"
+            className="mb-2 p-3 border rounded shadow-sm mx-auto"
             style={{ width: "300px" }}
           >
-            <div className="flex items-start mb-2">
+            <div className="d-flex align-items-start mb-2">
               <img
                 src="https://uat.nabady.ma/assets/images/avatars/medecin_homme.svg"
                 alt="Doctor"
-                className="w-12 h-12 mr-3"
+                className="mr-3"
+                style={{ width: '48px', height: '48px' }}
               />
-              <div className="flex-grow">
-                <strong className="font-semibold text-sm text-jordy-blue-800 block mb-1">
+              <div className="flex-grow-1">
+                <strong className="d-block mb-1" style={{ fontSize: '0.875rem', color: '#2A80B9' }}>
                   {currentDoctor.name}
                 </strong>
-                <div className="bg-gray-50 p-1 rounded">
-                  <div className="flex items-start text-xs">
-                    <FaMapMarkerAlt className="mr-1 text-picton-blue-500 flex-shrink-0 mt-1" />
-                    <span className="text-gray-700 line-clamp-2">
+                <div className="bg-light p-1 rounded">
+                  <div className="d-flex align-items-start" style={{ fontSize: '0.75rem' }}>
+                    <FaMapMarkerAlt className="mr-1 text-primary flex-shrink-0 mt-1" />
+                    <span className="text-dark">
                       {currentDoctor.address}
                     </span>
                   </div>
@@ -334,16 +336,16 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
               </div>
             </div>
             <div className="text-center mb-2">
-              <span className="text-gray-700 text-sm font-medium">
+              <span className="text-muted" style={{ fontSize: '0.875rem', fontWeight: '500' }}>
                 {isTomorrow ? labels.tomorrow[selectedLanguage] : labels.today[selectedLanguage]}
               </span>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="d-flex justify-content-between align-items-center">
               <FaChevronLeft
-                className="text-picton-blue-500 text-lg cursor-pointer"
+                className="text-primary cursor-pointer"
                 onClick={showPreviousSlots}
               />
-              <div className="flex justify-center overflow-hidden">
+              <div className="d-flex justify-content-center overflow-hidden">
                 {slots.slice(slotIndex, slotIndex + 5).map((slot, index) => (
                   <button
                     key={index}
@@ -355,7 +357,7 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
                         slot
                       )
                     }
-                    className="bg-picton-blue-300 rounded-lg text-xs mx-1"
+                    className="btn btn-info mx-1"
                     style={{ minWidth: "45px", padding: "0.25rem" }}
                   >
                     {slot}
@@ -363,19 +365,21 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
                 ))}
               </div>
               <FaChevronRight
-                className="text-picton-blue-500 text-lg cursor-pointer"
+                className="text-primary cursor-pointer"
                 onClick={showNextSlots}
               />
             </div>
           </div>
           <FaChevronRight
-            className="text-teal-600 text-2xl cursor-pointer absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2"
+            className="text-success cursor-pointer position-absolute"
+            style={{ top: "50%", right: 0, transform: "translate(50%, -50%)" }}
             onClick={showNextDoctor}
           />
         </div>
       )}
     </div>
   );
+  
 }
 
 export default Doctor;

@@ -10,7 +10,7 @@ import {
   IoExpand,
 } from "react-icons/io5";
 import SpecialtiesDropdown from "./SpecialtiesDropdown";
-import { getMessageForLanguage } from "./messages"; 
+import { getMessageForLanguage } from "./messages";
 import Doctor from "./Doctor";
 import { motion } from "framer-motion";
 import { useBooking } from "./BookingContext";
@@ -543,224 +543,210 @@ export default function Chat() {
       return () => clearTimeout(timer);
     }
   }, [forceStopTyping]);
-
   return (
-    <div className="fixed bottom-5 right-5 flex flex-col items-end">
+    <div className="position-fixed bottom-0 end-0 mb-3 me-3 d-flex flex-column align-items-end">
       {!isOpen && (
         <button
           onClick={toggleChatBox}
-          className="bg-picton-blue-500 hover:bg-persian-green-600 text-white font-bold py-2 px-4 rounded-full"
+          className="btn btn-primary rounded-circle p-2"
+          style={{ width: '3rem', height: '3rem', backgroundColor: '#00AEEF' }}
         >
-          <IoChatbubbles className="text-xl w-16 h-8" />
+          <IoChatbubbles className="text-white" style={{ width: "1.5rem", height: "1.5rem" }} />
         </button>
       )}
-
-      {isOpen && (
-        <div
-          className={`bg-black-squeeze-50 ${
-            isExtended ? "w-[30vw] h-[80vh] " : "w-80 h-96"
-          } flex flex-col justify-between rounded-xl fixed bottom-20 right-18`}
-        >
-          <div
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, #00AEEF, #00ABC6, #00AAB1, #00A99D)",
-            }}
-            className="min-h-12 w-full rounded-t-xl flex justify-between items-center py-4 px-4"
+  {isOpen && (
+    <div
+      className={`bg-light d-flex flex-column justify-content-between rounded shadow`}
+      style={{
+        width: isExtended ? '35vw' : '390px',
+        height: isExtended ? '75vh' : '480px',
+        position: 'fixed',
+        bottom: '5rem',
+        right: '5rem',
+        transition: 'all 0.3s ease-in-out'
+      }}
+    >
+      <div
+        style={{
+          backgroundImage: "linear-gradient(to right, #00AEEF, #00ABC6, #00AAB1, #00A99D)",
+        }}
+        className="d-flex justify-content-between align-items-center py-2 px-3 rounded-top"
+      >
+        <button className="btn btn-link p-0">
+          <img src="logo.png" alt="logo" style={{ height: "1.5rem", width: "5rem" }} />
+        </button>
+        <div className="d-flex align-items-center">
+          <button
+            onClick={toggleChatSize}
+            className="btn btn-link p-2"
+            title={isExtended ? "Minimize Chat" : "Extend Chat"}
           >
-            <button className="h-6 w-24">
-              <img src="logo.png" alt="logo" />
-            </button>
-            <div className="flex items-center">
-              <button
-                onClick={toggleChatSize}
-                className="bg-transparent p-2"
-                title={isExtended ? "Minimize Chat" : "Extend Chat"}
-              >
-                {isExtended ? (
-                  <IoContract className="text-xl text-white hover:text-gray-300" />
-                ) : (
-                  <IoExpand className="text-xl text-white hover:text-gray-300" />
-                )}
-              </button>
-              <button
-                onClick={resetChat}
-                className="bg-transparent p-2"
-                title="Rafraîchir le chat"
-              >
-                <IoRefresh className="text-xl text-white hover:text-gray-300" />
-              </button>
-              <button onClick={toggleChatBox}>
-                <IoCloseOutline className="text-white h-8 w-8" />
-              </button>
-            </div>
-          </div>
-          <div
-            className={`${
-              isExtended ? "w-[30vw] h-[80vh]" : "w-80 h-96"
-            } p-3 overflow-y-auto max-h-96 hide-scrollbar`}
-            style={{ minHeight: "300px" }}
+            {isExtended ? (
+              <IoContract className="text-white" style={{ fontSize: "1.5rem" }} />
+            ) : (
+              <IoExpand className="text-white" style={{ fontSize: "1.5rem" }} />
+            )}
+          </button>
+          <button
+            onClick={resetChat}
+            className="btn btn-link p-2"
+            title="Rafraîchir le chat"
           >
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`chat ${
-                  msg.type === "user" ? "chat-end" : "chat-start"
-                } my-1`}
-              >
-                <div className="chat-image avatar">
-                  <div className="w-8 h-8 rounded-full overflow-hidden">
-                    <img src="avatar.png" alt="User Avatar" />
-                  </div>
-                </div>
-                <div className="chat-header">{msg.name}</div>
-                <div
-                  className="chat-bubble text-sm p-2 text-black"
-                  style={{
-                    backgroundColor:
-                      msg.type === "user" ? "#CBF8F5" : "#CEF0FC",
-                    maxWidth: "75%",
-                  }}
-                >
-                  {msg.type === "bot" ? (
-                    <AniText msg={msg.text} forceStopTyping={forceStopTyping} />
-                  ) : (
-                    msg.text
-                  )}
-                </div>
-                <div className="chat-footer text-xs opacity-50">
-                  {msg.type === "user"
-                    ? `Seen at ${msg.time}`
-                    : `Delivered ${msg.time}`}
-                </div>
-              </div>
-            ))}
-
-            {isBotTyping && !forceStopTyping && (
-              <div className="chat chat-start my-1">
-                <div className="chat-image avatar">
-                  <div className="w-8 h-8 rounded-full overflow-hidden">
-                    <img src="bot-avatar.png" alt="Bot Avatar" />
-                  </div>
-                </div>
-                <div
-                  className="chat-bubble text-sm p-2 text-black"
-                  style={{ backgroundColor: "#CEF0FC", maxWidth: "75%" }}
-                >
-                  <DOt />
-                </div>
-              </div>
-            )}
-
-            {showSpecialtiesDropdown && (
-              <SpecialtiesDropdown
-                specialties={specialties}
-                fetchDoctorsForSpecialty={fetchDoctorsForSpecialty}
-                selectedLanguage={selectedLanguage} // Pass the selectedLanguage prop
-              />
-            )}
-            {showDoctors && selectedSpecialty && (
-              <Doctor
-                specialty={selectedSpecialty.name}
-                selectedLanguage={selectedLanguage} // Pass the selectedLanguage prop
-                onSlotClick={(doctorName, PcsID, slot) => {
-                  const timePart = slot.substring(11, 16);
-                  const appointmentDate = new Date(slot);
-                  const dayPart = formatDateWithLatinNumbers(appointmentDate);
-
-                  setBookingDetails({ doctorName, PcsID, timeSlot: slot });
-                  displayBotMessage(
-                    getMessageForLanguage(selectedLanguage, "confirm_doctor")
-                      .replace("${doctorName}", doctorName)
-                      .replace("${timePart}", timePart)
-                      .replace("${dayPart}", dayPart)
-                  );
-                  setShowSpecialtiesDropdown(false);
-                  setShowDoctors(false);
-                  setAppointmentStep(1);
-                }}
-              />
-            )}
-
-                {waitingForConfirmation && (
-                  <div className="flex justify-center my-2">
-                    <button
-                      onClick={() => handleConfirmation(
-                        selectedLanguage === "darija" ? "ah" :
-                        selectedLanguage === "francais" ? "oui" :
-                        selectedLanguage === "english" ? "yes" : "نعم"
-                      )}
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2"
-                    >
-                      {selectedLanguage === "darija"
-                        ? "Ah"
-                        : selectedLanguage === "francais"
-                        ? "Oui"
-                        : selectedLanguage === "english"
-                        ? "Yes"
-                        : "نعم"}
-                    </button>
-                    <button
-                      onClick={() => handleConfirmation(
-                        selectedLanguage === "darija" ? "la" :
-                        selectedLanguage === "francais" ? "non" :
-                        selectedLanguage === "english" ? "no" : "لا"
-                      )}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2"
-                    >
-                      {selectedLanguage === "darija"
-                        ? "La"
-                        : selectedLanguage === "francais"
-                        ? "Non"
-                        : selectedLanguage === "english"
-                        ? "No"
-                        : "لا"}
-                    </button>
-                  </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div
-            className={`bg-white ${
-              isExtended ? "w-full h-[50px]" : "w-80 h-96"
-            }  flex items-center justify-end rounded-full mb-5  shadow-sm border-t-2 px-4`}
-          >
-            <input
-              type="text"
-              placeholder="Type a message..."
-              className={`bg-white p-2  w-full rounded-full focus:border-none focus:outline-none ${
-                isExtended ? "h-[50px]" : "h-10"
-              }`}
-              value={userMessage}
-              onChange={(e) => setUserMessage(e.target.value)}
-              onKeyUp={(e) => e.key === "Enter" && handleUserInput()}
-            />
-            <div className="flex items-center gap-1 mt-2">
-              {showSendIcon ? (
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleUserInput}
-                  className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 flex items-center justify-center gap-1 focus:outline-none focus:border-picton-blue-500 focus:border-2"
-                >
-                  <IoSend className="text-xs" />
-                </motion.button>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={stopBotTyping}
-                  className="bg-persian-green-500 hover:bg-teal-600 text-white text-m rounded-full p-2 flex focus:outline-none focus:border-picton-blue-500 focus:border-2"
-                >
-                  <IoSquare className="text-xs" />
-                </motion.button>
-              )}
-            </div>
-          </div>
+            <IoRefresh className="text-white" style={{ fontSize: "1.5rem" }} />
+          </button>
+          <button onClick={toggleChatBox} className="btn btn-link p-2">
+            <IoCloseOutline className="text-white" style={{ fontSize: "1.5rem" }} />
+          </button>
         </div>
-      )}
+      </div>
+      <div
+        className="overflow-auto p-3"
+        style={{ 
+          height: 'calc(100% - 6rem)',
+          maxHeight: isExtended ? 'calc(75vh - 6rem)' : '380px'
+        }}
+      >
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`d-flex ${msg.type === "user" ? "flex-row-reverse" : ""} my-1`}
+          >
+            <div className="d-flex flex-column align-items-center">
+              <div className="rounded-circle overflow-hidden" style={{ width: '2rem', height: '2rem' }}>
+                <img src={msg.type === "user" ? "avatar.png" : "avatar.png"} alt={`${msg.type} Avatar`} className="w-100 h-100" />
+              </div>
+            </div>
+            <div className={msg.type === "user" ? "me-2" : "ms-2"}>
+              <div className="p-2 rounded" style={{ backgroundColor: msg.type === "user" ? "#CBF8F5" : "#CEF0FC", maxWidth: '75%' }}>
+                {msg.type === "bot" ? (
+                  <AniText msg={msg.text} forceStopTyping={forceStopTyping} />
+                ) : (
+                  msg.text
+                )}
+              </div>
+              <div className="small text-muted mt-1">
+                {msg.type === "user"
+                  ? `Seen at ${msg.time}`
+                  : `Delivered ${msg.time}`}
+              </div>
+            </div>
+          </div>
+        ))}
+  
+        {isBotTyping && !forceStopTyping && (
+          <div className="d-flex my-1">
+            <div className="d-flex flex-column align-items-center">
+              <div className="rounded-circle overflow-hidden" style={{ width: '2rem', height: '2rem' }}>
+                <img src="bot-avatar.png" alt="Bot Avatar" className="w-100 h-100" />
+              </div>
+            </div>
+            <div className="ms-2 p-2 rounded" style={{ backgroundColor: "#CEF0FC", maxWidth: '75%' }}>
+              <DOt />
+            </div>
+          </div>
+        )}
+  
+        {showSpecialtiesDropdown && (
+          <SpecialtiesDropdown
+            specialties={specialties}
+            fetchDoctorsForSpecialty={fetchDoctorsForSpecialty}
+            selectedLanguage={selectedLanguage}
+          />
+        )}
+  
+        {showDoctors && selectedSpecialty && (
+          <Doctor
+            specialty={selectedSpecialty.name}
+            selectedLanguage={selectedLanguage}
+            onSlotClick={(doctorName, PcsID, slot) => {
+              const timePart = slot.substring(11, 16);
+              const appointmentDate = new Date(slot);
+              const dayPart = formatDateWithLatinNumbers(appointmentDate);
+  
+              setBookingDetails({ doctorName, PcsID, timeSlot: slot });
+              displayBotMessage(
+                getMessageForLanguage(selectedLanguage, "confirm_doctor")
+                  .replace("${doctorName}", doctorName)
+                  .replace("${timePart}", timePart)
+                  .replace("${dayPart}", dayPart)
+              );
+              setShowSpecialtiesDropdown(false);
+              setShowDoctors(false);
+              setAppointmentStep(1);
+            }}
+          />
+        )}
+  
+        {waitingForConfirmation && (
+          <div className="d-flex justify-content-center my-2">
+            <button
+              onClick={() => handleConfirmation(
+                selectedLanguage === "darija" ? "ah" :
+                selectedLanguage === "francais" ? "oui" :
+                selectedLanguage === "english" ? "yes" : "نعم"
+              )}
+              className="btn btn-success mx-2"
+            >
+              {selectedLanguage === "darija"
+                ? "Ah"
+                : selectedLanguage === "francais"
+                ? "Oui"
+                : selectedLanguage === "english"
+                ? "Yes"
+                : "نعم"}
+            </button>
+            <button
+              onClick={() => handleConfirmation(
+                selectedLanguage === "darija" ? "la" :
+                selectedLanguage === "francais" ? "non" :
+                selectedLanguage === "english" ? "no" : "لا"
+              )}
+              className="btn btn-danger mx-2"
+            >
+              {selectedLanguage === "darija"
+                ? "La"
+                : selectedLanguage === "francais"
+                ? "Non"
+                : selectedLanguage === "english"
+                ? "No"
+                : "لا"}
+            </button>
+          </div>
+        )}
+  
+        <div ref={messagesEndRef} />
+      </div>
+  
+      <div className="bg-white d-flex align-items-center justify-content-between rounded-bottom border-top p-2">
+        <input
+          type="text"
+          placeholder="Type a message..."
+          className="form-control border-0 me-2"
+          value={userMessage}
+          onChange={(e) => setUserMessage(e.target.value)}
+          onKeyUp={(e) => e.key === "Enter" && handleUserInput()}
+        />
+        <div>
+          {showSendIcon ? (
+            <button
+              onClick={handleUserInput}
+              className="btn btn-primary rounded-circle p-2 d-flex align-items-center justify-content-center"
+              style={{ width: '2.5rem', height: '2.5rem', backgroundColor: '#00A99D' }}
+            >
+              <IoSend className="text-white" style={{ fontSize: "1rem" }} />
+            </button>
+          ) : (
+            <button
+              onClick={stopBotTyping}
+              className="btn btn-primary rounded-circle p-2 d-flex align-items-center justify-content-center"
+              style={{ width: '2.5rem', height: '2.5rem', backgroundColor: '#00A99D' }}
+            >
+              <IoSquare className="text-white" style={{ fontSize: "1rem" }} />
+            </button>
+          )}
+        </div>
+      </div>
     </div>
-  );
-}
+  )}
+    </div>
+  );}

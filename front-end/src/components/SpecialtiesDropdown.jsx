@@ -75,25 +75,24 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty, selectedLa
   };
 
   return (
-    <div className="p-3 bg-black-squeeze-50 rounded-b-xl overflow-hidden shadow-lg">
-      <div className="flex flex-wrap justify-center">
+    <div className="p-3 bg-light rounded-bottom overflow-hidden shadow-lg">
+      <div className="d-flex flex-wrap justify-content-center">
         {orderedSpecialties.slice(currentIndex, currentIndex + 3).map((specialty) => (
           <button
             key={specialty.id}
             onClick={() => fetchDoctorsForSpecialty(specialty.name)}
-            className="text-white p-1 rounded-lg hover:bg-persian-green-500 m-1"
+            className="btn btn-info text-white m-1"
             style={{
-              backgroundColor: "#87CEEB", // Bleu ciel
               minWidth: "80px",
               maxWidth: "80px",
               whiteSpace: "normal",
               overflow: "hidden",
               textOverflow: "ellipsis",
               padding: "0.25rem 0.5rem",
-              fontSize: "0.65rem",  // Petite taille de police
-              lineHeight: "0.85rem",  // Hauteur de ligne pour ajuster l'espacement
-              height: "2.5rem",  // Hauteur fixe pour uniformité
-              textAlign: "center",  // Centrer le texte
+              fontSize: "0.65rem",
+              lineHeight: "0.85rem",
+              height: "2.5rem",
+              textAlign: "center",
             }}
           >
             {getSpecialtyTranslation(specialty)}
@@ -103,13 +102,14 @@ function SpecialtiesDropdown({ specialties, fetchDoctorsForSpecialty, selectedLa
       {currentIndex + 3 < orderedSpecialties.length && (
         <button
           onClick={handleShowMore}
-          className="bg-persian-green-500 hover:bg-teal-600 text-white p-1 rounded mt-2 text-xs mx-auto block"
+          className="btn btn-success mt-2 text-xs mx-auto d-block"
         >
           {buttonTranslations[selectedLanguage]}
         </button>
       )}
     </div>
   );
+  
 }
 
 export default SpecialtiesDropdown;
