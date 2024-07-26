@@ -323,7 +323,7 @@ export default function Chat() {
 
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      const response = await fetch("http://localhost:5000/register_user", {
+      const response = await fetch("api/register_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -358,7 +358,7 @@ export default function Chat() {
 
   const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
-      const response = await fetch("http://localhost:5000/save_appointment", {
+      const response = await fetch("api/save_appointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -392,7 +392,7 @@ export default function Chat() {
   const handleSmsCodeInput = async (code) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/confirm_appointment",
+        "api/confirm_appointment",
         {
           method: "POST",
           headers: {
@@ -442,7 +442,7 @@ export default function Chat() {
 
   const callFlaskAPI = (userMessage, time) => {
     setIsBotTyping(true);
-    fetch("http://localhost:5000/predict", {
+    fetch("api/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: userMessage, time }),
@@ -502,7 +502,7 @@ export default function Chat() {
   };
 
   const fetchSpecialties = () => {
-    fetch("http://localhost:5000/get_specialties")
+    fetch("api/get_specialties")
       .then((response) => response.json())
       .then((data) => {
         setSpecialties(data["hydra:member"]);
@@ -562,7 +562,7 @@ export default function Chat() {
         height: isExtended ? '75vh' : '480px',
         position: 'fixed',
         bottom: '5rem',
-        right: '5rem',
+        right: '1rem',
         transition: 'all 0.3s ease-in-out'
       }}
     >
