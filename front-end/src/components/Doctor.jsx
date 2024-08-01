@@ -1,23 +1,9 @@
 import React, { useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { FaMapMarkerAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { labels } from "../utils/doctor";
 
-const labels = {
-  today: {
-    darija: "Lyouma ",
-    "الدارجة": " اليوم",
-    "العربية": " اليوم",
-    francais: "Aujourd'hui ",
-    english: "Today ",
-  },
-  tomorrow: {
-    darija: "Ghada ",
-    "الدارجة": " الغد",
-    "العربية": " الغد",
-    francais: "Demain ",
-    english: "Tomorrow ",
-  },
-};
+labels;
 
 function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
   const [doctors, setDoctors] = useState([]);
@@ -253,7 +239,7 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
       setSlotIndex(slotIndex - 5);
     }
   };
-  
+
   const showNextSlots = () => {
     if (slotIndex + 5 < slots.length) {
       setSlotIndex(slotIndex + 5);
@@ -379,7 +365,7 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
       )}
     </div>
   );
-  
+
 }
 
 export default Doctor;

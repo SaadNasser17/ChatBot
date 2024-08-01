@@ -1,7 +1,6 @@
 import React from 'react';
-import Chat from './components/Chat';
 import { BookingProvider } from './components/BookingContext';
-
+import Chat from './page/Chat';
 export default function App() {
   return (
     <BookingProvider>

@@ -570,6 +570,66 @@
                     "gpatientId": 705156
                 },
                 "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-08-01T13:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ss",
+                    "last_name": "ss",
+                    "phone_number": "0648051951",
+                    "patientId": 816213,
+                    "gpatientId": 806155
+                },
+                "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr.  EZZAHIRI  Naima",
+                    "PraticienCentreSoinID": 291,
+                    "timeSlot": "2024-08-01T12:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ss",
+                    "last_name": "ss",
+                    "phone_number": "0648051957",
+                    "patientId": 816214,
+                    "gpatientId": 806156
+                },
+                "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-08-01T07:00:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ss",
+                    "last_name": "dd",
+                    "phone_number": "0640155038",
+                    "patientId": 816218,
+                    "gpatientId": 806160
+                },
+                "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-08-02T11:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "hh",
+                    "last_name": "pp\u00a3",
+                    "phone_number": "0640155038",
+                    "patientId": 816220,
+                    "gpatientId": 806162
+                },
+                "motifId": 403
             }
         ]
     }

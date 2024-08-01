@@ -2,48 +2,28 @@ import React, { useState, useEffect, useRef } from "react";
 import "../index.css";
 import {
   IoChatbubbles,
-  IoCloseOutline,
-  IoSend,
-  IoRefresh,
-  IoSquare,
-  IoContract,
-  IoExpand,
 } from "react-icons/io5";
-import SpecialtiesDropdown from "./SpecialtiesDropdown";
-import { getMessageForLanguage } from "./messages";
-import Doctor from "./Doctor";
-import { motion } from "framer-motion";
-import { useBooking } from "./BookingContext";
-import AniText from "./Anitext";
-import DOt from "./DOt";
+import { getMessageForLanguage } from "../utils/messages.js";
+import { useBooking } from "../components/BookingContext";
 
-const arabicToLatinNumbers = (str) => {
-  const arabicNumbers = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-  const latinNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  return str.replace(
-    /[٠-٩]/g,
-    (char) => latinNumbers[arabicNumbers.indexOf(char)]
-  );
-};
+import ChatHeader from "../components/ChatHeader";
+import MessagesList from "../components/MessagesList ";
+import ChatFooter from "../components/ChatFooter";
+import {
+  medicalWords,
+  languageChoices,
+  generateRandomEmail,
+  formatDateWithLatinNumbers,
+  confirmYes,
+  BookingDetailsData,
+  arabicToLatinNumbers,
+  actionWords,
+  appointmentKeywords,
+} from "../utils/ChatFunction";
 
-const formatDateWithLatinNumbers = (date) => {
-  const options = { day: "2-digit", month: "2-digit" };
-  const formattedDate = date.toLocaleDateString("en-GB", options); // Use 'en-GB' for DD/MM/YYYY format
-  return arabicToLatinNumbers(formattedDate);
-};
-
-const languageChoices = {
-  "1": "darija",
-  darija: "darija",
-  "2": "الدارجة",
-  "الدارجة": "الدارجة",
-  "3": "العربية",
-  "العربية": "العربية",
-  "4": "francais",
-  francais: "francais",
-  "5": "english",
-  english: "english",
-};
+arabicToLatinNumbers;
+formatDateWithLatinNumbers;
+languageChoices;
 
 export default function Chat() {
   const { bookingDetails, setBookingDetails } = useBooking();
@@ -78,17 +58,6 @@ export default function Chat() {
     setWaitingForConfirmation(false);
   }, [initialMessageSet]);
 
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [
-    messages,
-    isBotTyping,
-    showSpecialtiesDropdown,
-    showDoctors,
-    waitingForConfirmation,
-  ]);
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
@@ -141,56 +110,10 @@ export default function Chat() {
     setShowSendIcon(false);
   };
 
-  const isArabic = (message) => {
-    const arabicRegex = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
-    return arabicRegex.test(message);
-  };
-
   const isAppointmentRelated = (message) => {
-    const appointmentKeywords = [
-      "rdv",
-      "rendez",
-      "vous",
-      "موعد",
-      "appointment",
-      "booking",
-      "schedule",
-      "doctor",
-      "physician",
-      "clinic",
-      "hospital",
-      "medical",
-      "checkup",
-      "consultation",
-      "tbib",
-      "doktor",
-      "docteur"
-    ];
-    const actionWords = [
-      "make",
-      "book",
-      "schedule",
-      "set",
-      "get",
-      "need",
-      "want",
-      "take",
-      "nakhod",
-      "ndir",
-      "bghit",
-      "bghyt",
-    ];
-    const medicalWords = [
-      "doctor",
-      "physician",
-      "clinic",
-      "hospital",
-      "medical",
-      "checkup",
-      "consultation",
-      "tbib",
-      "doktor",
-    ];
+    appointmentKeywords;
+    actionWords;
+    medicalWords;
 
     const processedMessage = message
       .toLowerCase()
@@ -285,15 +208,8 @@ export default function Chat() {
 
   const handleConfirmation = async (confirmation) => {
     setWaitingForConfirmation(false);
-  
-    const confirmYes = {
-      darija: "ah",
-      "الدارجة": "نعم",
-      "العربية": "نعم",
-      francais: "oui",
-      english: "yes",
-    };
-  
+    confirmYes;
+
     if (confirmation.trim().toLowerCase() === confirmYes[selectedLanguage]) {
       await finalizeAppointment();
     } else {
@@ -323,7 +239,7 @@ export default function Chat() {
 
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      const response = await fetch("api/register_user", {
+      const response = await fetch("http://127.0.0.1:5000/register_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -358,7 +274,7 @@ export default function Chat() {
 
   const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
-      const response = await fetch("api/save_appointment", {
+      const response = await fetch("http://127.0.0.1:5000/save_appointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -373,8 +289,7 @@ export default function Chat() {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          `Failed to save appointment details: ${
-            errorData.error || "Unknown error"
+          `Failed to save appointment details: ${errorData.error || "Unknown error"
           }`
         );
       }
@@ -392,7 +307,7 @@ export default function Chat() {
   const handleSmsCodeInput = async (code) => {
     try {
       const response = await fetch(
-        "api/confirm_appointment",
+        "http://127.0.0.1:5000/confirm_appointment",
         {
           method: "POST",
           headers: {
@@ -442,7 +357,7 @@ export default function Chat() {
 
   const callFlaskAPI = (userMessage, time) => {
     setIsBotTyping(true);
-    fetch("api/predict", {
+    fetch("http://127.0.0.1:5000/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: userMessage, time }),
@@ -462,10 +377,7 @@ export default function Chat() {
       });
   };
 
-  const generateRandomEmail = () => {
-    const randomChars = Math.random().toString(36).substring(2, 10);
-    return `${randomChars}@yopmail.com`;
-  };
+  generateRandomEmail;
 
   const addMessage = (text, type) => {
     setMessages((prevMessages) => [
@@ -473,16 +385,9 @@ export default function Chat() {
       { text, type, time: new Date().toLocaleTimeString() },
     ]);
   };
-
   const resetAppointmentDetails = () => {
     setBookingDetails({
-      doctorName: "",
-      PcsID: "",
-      timeSlot: "",
-      first_name: "",
-      last_name: "",
-      phone_number: "",
-      email: "",
+      BookingDetailsData
     });
   };
 
@@ -502,13 +407,13 @@ export default function Chat() {
   };
 
   const fetchSpecialties = () => {
-    fetch("api/get_specialties")
+    fetch("http://127.0.0.1:5000/get_specialties")
       .then((response) => response.json())
       .then((data) => {
         setSpecialties(data["hydra:member"]);
       })
       .catch((error) => {
-        console.error("Error fetching specialties:", error);
+        console.log("Error fetching specialties:", error);
       });
   };
 
@@ -523,12 +428,12 @@ export default function Chat() {
     setAppointmentStep(0);
     resetAppointmentDetails();
     setWaitingForConfirmation(false);
-    setWaitingForSmsCode(false); // Reset waitingForSmsCode
-    setAppointmentRef(null); // Reset appointmentRef
-    setSelectedLanguage(null); // Reset selectedLanguage
-    setIsBotTyping(false); // Reset isBotTyping
-    setForceStopTyping(false); // Reset forceStopTyping
-    setShowSendIcon(true); // Reset showSendIcon
+    setWaitingForSmsCode(false); 
+    setAppointmentRef(null); 
+    setSelectedLanguage(null); 
+    setIsBotTyping(false); 
+    setForceStopTyping(false); 
+    setShowSendIcon(true); 
   };
 
   const stopBotTyping = () => {
@@ -554,199 +459,52 @@ export default function Chat() {
           <IoChatbubbles className="text-white" style={{ width: "1.5rem", height: "1.5rem" }} />
         </button>
       )}
-  {isOpen && (
-    <div
-      className={`bg-light d-flex flex-column justify-content-between rounded shadow`}
-      style={{
-        width: isExtended ? '35vw' : '390px',
-        height: isExtended ? '75vh' : '480px',
-        position: 'fixed',
-        bottom: '5rem',
-        right: '1rem',
-        transition: 'all 0.3s ease-in-out'
-      }}
-    >
-      <div
-        style={{
-          backgroundImage: "linear-gradient(to right, #00AEEF, #00ABC6, #00AAB1, #00A99D)",
-        }}
-        className="d-flex justify-content-between align-items-center py-2 px-3 rounded-top"
-      >
-        <button className="btn btn-link p-0">
-          <img src="logo.png" alt="logo" style={{ height: "1.5rem", width: "5rem" }} />
-        </button>
-        <div className="d-flex align-items-center">
-          <button
-            onClick={toggleChatSize}
-            className="btn btn-link p-2"
-            title={isExtended ? "Minimize Chat" : "Extend Chat"}
-          >
-            {isExtended ? (
-              <IoContract className="text-white" style={{ fontSize: "1.5rem" }} />
-            ) : (
-              <IoExpand className="text-white" style={{ fontSize: "1.5rem" }} />
-            )}
-          </button>
-          <button
-            onClick={resetChat}
-            className="btn btn-link p-2"
-            title="Rafraîchir le chat"
-          >
-            <IoRefresh className="text-white" style={{ fontSize: "1.5rem" }} />
-          </button>
-          <button onClick={toggleChatBox} className="btn btn-link p-2">
-            <IoCloseOutline className="text-white" style={{ fontSize: "1.5rem" }} />
-          </button>
-        </div>
-      </div>
-      <div
-        className="overflow-auto p-3"
-        style={{ 
-          height: 'calc(100% - 6rem)',
-          maxHeight: isExtended ? 'calc(75vh - 6rem)' : '380px'
-        }}
-      >
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`d-flex ${msg.type === "user" ? "flex-row-reverse" : ""} my-1`}
-          >
-            <div className="d-flex flex-column align-items-center">
-              <div className="rounded-circle overflow-hidden" style={{ width: '2rem', height: '2rem' }}>
-                <img src={msg.type === "user" ? "avatar.png" : "avatar.png"} alt={`${msg.type} Avatar`} className="w-100 h-100" />
-              </div>
-            </div>
-            <div className={msg.type === "user" ? "me-2" : "ms-2"}>
-              <div className="p-2 rounded" style={{ backgroundColor: msg.type === "user" ? "#CBF8F5" : "#CEF0FC", maxWidth: '75%' }}>
-                {msg.type === "bot" ? (
-                  <AniText msg={msg.text} forceStopTyping={forceStopTyping} />
-                ) : (
-                  msg.text
-                )}
-              </div>
-              <div className="small text-muted mt-1">
-                {msg.type === "user"
-                  ? `Seen at ${msg.time}`
-                  : `Delivered ${msg.time}`}
-              </div>
-            </div>
-          </div>
-        ))}
-  
-        {isBotTyping && !forceStopTyping && (
-          <div className="d-flex my-1">
-            <div className="d-flex flex-column align-items-center">
-              <div className="rounded-circle overflow-hidden" style={{ width: '2rem', height: '2rem' }}>
-                <img src="bot-avatar.png" alt="Bot Avatar" className="w-100 h-100" />
-              </div>
-            </div>
-            <div className="ms-2 p-2 rounded" style={{ backgroundColor: "#CEF0FC", maxWidth: '75%' }}>
-              <DOt />
-            </div>
-          </div>
-        )}
-  
-        {showSpecialtiesDropdown && (
-          <SpecialtiesDropdown
+      {isOpen && (
+        <div
+          className={`bg-light d-flex flex-column justify-content-between rounded shadow`}
+          style={{
+            width: isExtended ? '35vw' : '390px',
+            height: isExtended ? '75vh' : '480px',
+            position: 'fixed',
+            bottom: '5rem',
+            right: '1rem',
+            transition: 'all 0.3s ease-in-out'
+          }}
+        >
+          <ChatHeader isExtended={isExtended}
+            toggleChatSize={toggleChatSize}
+            toggleChatBox={toggleChatBox}
+            resetChat={resetChat} />
+
+          <MessagesList
+            messages={messages}
+            isBotTyping={isBotTyping}
+            forceStopTyping={forceStopTyping}
+            messagesEndRef={messagesEndRef}
+            showSpecialtiesDropdown={showSpecialtiesDropdown}
             specialties={specialties}
             fetchDoctorsForSpecialty={fetchDoctorsForSpecialty}
             selectedLanguage={selectedLanguage}
+            showDoctors={showDoctors}
+            selectedSpecialty={selectedSpecialty}
+            setBookingDetails={setBookingDetails}
+            displayBotMessage={displayBotMessage}
+            formatDateWithLatinNumbers={formatDateWithLatinNumbers}
+            setShowSpecialtiesDropdown={setShowSpecialtiesDropdown}
+            setShowDoctors={setShowDoctors}
+            setAppointmentStep={setAppointmentStep}
+            waitingForConfirmation={waitingForConfirmation}
+            handleConfirmation={handleConfirmation}
           />
-        )}
-  
-        {showDoctors && selectedSpecialty && (
-          <Doctor
-            specialty={selectedSpecialty.name}
-            selectedLanguage={selectedLanguage}
-            onSlotClick={(doctorName, PcsID, slot) => {
-              const timePart = slot.substring(11, 16);
-              const appointmentDate = new Date(slot);
-              const dayPart = formatDateWithLatinNumbers(appointmentDate);
-  
-              setBookingDetails({ doctorName, PcsID, timeSlot: slot });
-              displayBotMessage(
-                getMessageForLanguage(selectedLanguage, "confirm_doctor")
-                  .replace("${doctorName}", doctorName)
-                  .replace("${timePart}", timePart)
-                  .replace("${dayPart}", dayPart)
-              );
-              setShowSpecialtiesDropdown(false);
-              setShowDoctors(false);
-              setAppointmentStep(1);
-            }}
+          <ChatFooter
+            userMessage={userMessage}
+            setUserMessage={setUserMessage}
+            handleUserInput={handleUserInput}
+            stopBotTyping={stopBotTyping}
+            showSendIcon={showSendIcon}
           />
-        )}
-  
-        {waitingForConfirmation && (
-          <div className="d-flex justify-content-center my-2">
-            <button
-              onClick={() => handleConfirmation(
-                selectedLanguage === "darija" ? "ah" :
-                selectedLanguage === "francais" ? "oui" :
-                selectedLanguage === "english" ? "yes" : "نعم"
-              )}
-              className="btn btn-success mx-2"
-            >
-              {selectedLanguage === "darija"
-                ? "Ah"
-                : selectedLanguage === "francais"
-                ? "Oui"
-                : selectedLanguage === "english"
-                ? "Yes"
-                : "نعم"}
-            </button>
-            <button
-              onClick={() => handleConfirmation(
-                selectedLanguage === "darija" ? "la" :
-                selectedLanguage === "francais" ? "non" :
-                selectedLanguage === "english" ? "no" : "لا"
-              )}
-              className="btn btn-danger mx-2"
-            >
-              {selectedLanguage === "darija"
-                ? "La"
-                : selectedLanguage === "francais"
-                ? "Non"
-                : selectedLanguage === "english"
-                ? "No"
-                : "لا"}
-            </button>
-          </div>
-        )}
-  
-        <div ref={messagesEndRef} />
-      </div>
-  
-      <div className="bg-white d-flex align-items-center justify-content-between rounded-bottom border-top p-2">
-        <input
-          type="text"
-          placeholder="Type a message..."
-          className="form-control border-0 me-2"
-          value={userMessage}
-          onChange={(e) => setUserMessage(e.target.value)}
-          onKeyUp={(e) => e.key === "Enter" && handleUserInput()}
-        />
-        <div>
-          {showSendIcon ? (
-            <button
-              onClick={handleUserInput}
-              className="btn btn-primary rounded-circle p-2 d-flex align-items-center justify-content-center"
-              style={{ width: '2.5rem', height: '2.5rem', backgroundColor: '#00A99D' }}
-            >
-              <IoSend className="text-white" style={{ fontSize: "1rem" }} />
-            </button>
-          ) : (
-            <button
-              onClick={stopBotTyping}
-              className="btn btn-primary rounded-circle p-2 d-flex align-items-center justify-content-center"
-              style={{ width: '2.5rem', height: '2.5rem', backgroundColor: '#00A99D' }}
-            >
-              <IoSquare className="text-white" style={{ fontSize: "1rem" }} />
-            </button>
-          )}
         </div>
-      </div>
+      )}
     </div>
-  )}
-    </div>
-  );}
+  );
+}
