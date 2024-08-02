@@ -34,3 +34,24 @@
 .typing-dot:nth-child(3) {
   animation-delay: 0.4s;
 }
+
+
+
+.message-bubble {
+  max-width: 80%; /* Limit the width of the message bubble */
+  word-wrap: break-word; /* Ensures that words do not overflow */
+  overflow-wrap: break-word; /* Handle overflow by breaking the word */
+  padding: 8px; /* Add padding inside the bubble */
+  background-color: #CBF8F5; /* Background color for user messages */
+  border-radius: 15px; /* Rounded corners for the bubble */
+  margin: 5px 0; /* Margin for spacing between messages */
+}
+
+.message-bubble.bot {
+  background-color: #CEF0FC; /* Different background for bot messages */
+}
+
+.message-text {
+  font-size: 14px; /* Font size for the text */
+  line-height: 1.5; /* Line height for better readability */
+}

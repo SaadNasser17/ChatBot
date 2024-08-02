@@ -1,5 +1,3 @@
-// messages.jsx
-
 const messages = {
     welcome: {
       darija: "Ana NabadyBot, bach ne9der n3awnek?",
