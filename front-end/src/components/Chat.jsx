@@ -70,13 +70,22 @@ export default function Chat() {
   useEffect(() => {
     if (!initialMessageSet) {
       displayBotMessage(
-        `Ana NabadyBot, khtar logha dyalek. <br/> 1. Darija <br/> 2.الدارجة <br/> 3. العربية <br/> 4.Francais <br/> 5.English`
+        `Ana NabadyBot, khtar logha dyalek. <br/> 1. Darija <br/> 2. الدارجة <br/> 3. العربية <br/> 4.Francais <br/> 5.English`
       );
       setInitialMessageSet(true);
+      incrementSessionCounter(); // New function call
     }
-
     setWaitingForConfirmation(false);
   }, [initialMessageSet]);
+  
+  // Define the function to call the backend to increment the session counter
+  const incrementSessionCounter = async () => {
+    try {
+      await fetch("/increment_session_counter", { method: "POST" });
+    } catch (error) {
+      console.error("Error incrementing session counter:", error);
+    }
+  };
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -115,7 +124,7 @@ export default function Chat() {
             getMessageForLanguage(languageChoices[msg], "welcome")
           );
         } else {
-          displayBotMessage("Mafhemtch t9dr t3awd?");
+          displayBotMessage("3afak khtar logha!");
         }
         return;
       }
@@ -323,7 +332,7 @@ export default function Chat() {
 
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      const response = await fetch("api/register_user", {
+      const response = await fetch("http://localhost:5000/register_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -358,7 +367,7 @@ export default function Chat() {
 
   const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
-      const response = await fetch("api/save_appointment", {
+      const response = await fetch("http://localhost:5000/save_appointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -392,7 +401,7 @@ export default function Chat() {
   const handleSmsCodeInput = async (code) => {
     try {
       const response = await fetch(
-        "api/confirm_appointment",
+        "http://localhost:5000/confirm_appointment",
         {
           method: "POST",
           headers: {
@@ -442,25 +451,26 @@ export default function Chat() {
 
   const callFlaskAPI = (userMessage, time) => {
     setIsBotTyping(true);
-    fetch("api/predict", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: userMessage, time }),
+    fetch("http://localhost:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage, time, language: selectedLanguage }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        displayBotMessage(data.answer);
-        if (data.answer.includes("first name")) {
-          setAppointmentStep(1);
-        }
-        setIsBotTyping(false);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
-        setIsBotTyping(false);
-      });
-  };
+        .then((response) => response.json())
+        .then((data) => {
+            displayBotMessage(data.answer);
+            if (data.answer.includes("first name")) {
+                setAppointmentStep(1);
+            }
+            setIsBotTyping(false);
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
+            setIsBotTyping(false);
+        });
+};
+
 
   const generateRandomEmail = () => {
     const randomChars = Math.random().toString(36).substring(2, 10);
@@ -502,7 +512,7 @@ export default function Chat() {
   };
 
   const fetchSpecialties = () => {
-    fetch("api/get_specialties")
+    fetch("http://localhost:5000/get_specialties")
       .then((response) => response.json())
       .then((data) => {
         setSpecialties(data["hydra:member"]);

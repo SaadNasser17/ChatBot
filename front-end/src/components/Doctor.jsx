@@ -106,18 +106,22 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
   };
 
   const hasAvailableSlots = (agendaConfig) => {
+    if (!agendaConfig) {
+      return false;
+    }
+  
     const now = new Date();
     const { heureOuverture, heureFermeture } = agendaConfig;
     const openingHour = parseInt(heureOuverture.split(":")[0], 10);
     const closingHour = parseInt(heureFermeture.split(":")[0], 10);
-
+  
     let closingTime = new Date();
     closingTime.setHours(
       closingHour,
       parseInt(heureFermeture.split(":")[1], 10),
       0
     );
-
+  
     if (now >= closingTime) {
       // If the current time is after the closing time, consider the next day's opening time
       const nextDay = new Date(now.getTime());
@@ -129,9 +133,10 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
       );
       closingTime = nextDay;
     }
-
+  
     return now < closingTime;
   };
+  
 
   const createAgendaGrid = (agendaConfig, doctor) => {
     const now = new Date();
