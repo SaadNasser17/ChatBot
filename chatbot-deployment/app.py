@@ -223,6 +223,72 @@ def add_intent(language):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/load_intents/<language>', methods=['GET'])
+def load_intents(language):
+    files = {
+        'darija': 'intents_darija.json',
+        'الدارجة': 'intents_darija2.json',
+        'العربية': 'intents_arabic.json',
+        'francais': 'intents_francais.json',
+        'english': 'intents_english.json'
+    }
+
+    try:
+        if language in files:
+            with open(files[language], 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                return jsonify({"intents": data["intents"]}), 200
+        else:
+            return jsonify({"error": "Invalid language"}), 400
+    except FileNotFoundError:
+        return jsonify({"error": "File not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/update_intent/<language>', methods=['POST'])
+def update_intent(language):
+    data = request.get_json()
+    updated_intent = {
+        "tag": data['tag'],
+        "patterns": data['patterns'],
+        "responses": data['responses']
+    }
+
+    files = {
+        'darija': 'intents_darija.json',
+        'الدارجة': 'intents_الدارجة.json',
+        'العربية': 'intents_arabic.json',
+        'francais': 'intents_francais.json',
+        'english': 'intents_english.json'
+    }
+
+    try:
+        if language in files:
+            with open(files[language], 'r+', encoding='utf-8') as file:
+                intents_data = json.load(file)
+                # Update the existing intent with the same tag
+                for intent in intents_data["intents"]:
+                    if intent["tag"] == updated_intent["tag"]:
+                        intent["patterns"] = updated_intent["patterns"]
+                        intent["responses"] = updated_intent["responses"]
+                        break
+                else:
+                    # If the tag doesn't exist, add it as a new intent
+                    intents_data["intents"].append(updated_intent)
+
+                file.seek(0)
+                file.truncate()
+                json.dump(intents_data, file, ensure_ascii=False, indent=4)
+
+            return jsonify({"message": "Intent updated successfully"}), 201
+        else:
+            return jsonify({"error": "Invalid language"}), 400
+    except FileNotFoundError:
+        return jsonify({"error": "File not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/admin', methods=['GET'])
 def serve_admin():
     return send_from_directory('', 'admin.html')
