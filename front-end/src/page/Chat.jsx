@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../index.css";
 import {
+  IoChatbubbleEllipsesOutline,
   IoChatbubbles,
 } from "react-icons/io5";
 import { getMessageForLanguage } from "../utils/messages.js";
@@ -46,6 +47,7 @@ export default function Chat() {
   const [showSendIcon, setShowSendIcon] = useState(true);
   const [isExtended, setIsExtended] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
+  const [showBanner, setShowBanner] = useState(true)
 
   useEffect(() => {
     if (!initialMessageSet) {
@@ -61,6 +63,7 @@ export default function Chat() {
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
+    setShowBanner(false)
   };
   const toggleChatSize = () => {
     setIsExtended(!isExtended);
@@ -428,12 +431,12 @@ export default function Chat() {
     setAppointmentStep(0);
     resetAppointmentDetails();
     setWaitingForConfirmation(false);
-    setWaitingForSmsCode(false); 
-    setAppointmentRef(null); 
-    setSelectedLanguage(null); 
-    setIsBotTyping(false); 
-    setForceStopTyping(false); 
-    setShowSendIcon(true); 
+    setWaitingForSmsCode(false);
+    setAppointmentRef(null);
+    setSelectedLanguage(null);
+    setIsBotTyping(false);
+    setForceStopTyping(false);
+    setShowSendIcon(true);
   };
 
   const stopBotTyping = () => {
@@ -450,31 +453,65 @@ export default function Chat() {
   }, [forceStopTyping]);
   return (
     <div className="position-fixed bottom-0 end-0 mb-3 me-3 d-flex flex-column align-items-end">
-      {!isOpen && (
-        <button
-          onClick={toggleChatBox}
-          className="btn btn-primary rounded-circle p-2"
-          style={{ width: '3rem', height: '3rem', backgroundColor: '#00AEEF' }}
-        >
-          <IoChatbubbles className="text-white" style={{ width: "1.5rem", height: "1.5rem" }} />
-        </button>
+      {showBanner && (
+        <div className="chat-banner slide-in-right">
+          <div className="banner-content">
+            <h2 style={{ textAlign: "right" }}>Bienvenue !</h2>
+            <p style={{ textAlign: "right" }}>Essayez notre Chatbot !</p>
+            <div className="banner-icon" style={{ marginLeft: "90px" }}>
+              <IoChatbubbleEllipsesOutline
+                style={{
+                  width: "1.5rem",
+                  height: "1.5rem",
+                }}
+              />
+            </div>
+            <button
+              className="banner-button"
+              style={{ marginLeft: "80px" }}
+              onClick={toggleChatBox}
+            >
+              Cliquez ici
+            </button>
+          </div>
+          <div
+            className="arrow-down"
+            style={{ marginTop: "1rem", marginLeft: "115px" }}
+          >
+            ↓
+          </div>
+        </div>
       )}
+
+      {!isOpen && (
+        <div className="btn-chat-container">
+          <button onClick={toggleChatBox} className="btn-chat-rectangle">
+            <IoChatbubbleEllipsesOutline
+              className="icon"
+              style={{ width: "1.5rem", height: "1.5rem" }}
+            />
+          </button>
+        </div>
+      )}
+
       {isOpen && (
         <div
-          className={`bg-light d-flex flex-column justify-content-between rounded shadow`}
+          className="bg-light d-flex flex-column justify-content-between rounded shadow"
           style={{
-            width: isExtended ? '35vw' : '390px',
-            height: isExtended ? '75vh' : '480px',
-            position: 'fixed',
-            bottom: '5rem',
-            right: '1rem',
-            transition: 'all 0.3s ease-in-out'
+            width: isExtended ? "35vw" : "390px",
+            height: isExtended ? "75vh" : "480px",
+            position: "fixed",
+            bottom: "5rem",
+            right: "1rem",
+            transition: "all 0.3s ease-in-out",
           }}
         >
-          <ChatHeader isExtended={isExtended}
+          <ChatHeader
+            isExtended={isExtended}
             toggleChatSize={toggleChatSize}
             toggleChatBox={toggleChatBox}
-            resetChat={resetChat} />
+            resetChat={resetChat}
+          />
 
           <MessagesList
             messages={messages}
@@ -496,6 +533,7 @@ export default function Chat() {
             waitingForConfirmation={waitingForConfirmation}
             handleConfirmation={handleConfirmation}
           />
+
           <ChatFooter
             userMessage={userMessage}
             setUserMessage={setUserMessage}
@@ -506,5 +544,6 @@ export default function Chat() {
         </div>
       )}
     </div>
-  );
+
+  )
 }

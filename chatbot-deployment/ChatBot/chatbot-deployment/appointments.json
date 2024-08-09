@@ -630,6 +630,21 @@
                     "gpatientId": 806162
                 },
                 "motifId": 403
+            },
+            {
+                "praticien": {
+                    "name": "Dr. EL Machbouh Loubna",
+                    "PraticienCentreSoinID": 627,
+                    "timeSlot": "2024-08-09T14:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "aya",
+                    "last_name": "bacharou",
+                    "phone_number": "064015038",
+                    "patientId": 816324,
+                    "gpatientId": 806266
+                },
+                "motifId": 47
             }
         ]
     }

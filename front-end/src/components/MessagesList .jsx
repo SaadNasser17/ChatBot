@@ -30,7 +30,7 @@ export default function MessagesList({
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, isBotTyping, showSpecialtiesDropdown, showDoctors, waitingForConfirmation, selectedSpecialty,]);
+  }, [messages, isBotTyping, showSpecialtiesDropdown, showDoctors, waitingForConfirmation, selectedSpecialty]);
 
   return (
     <div
@@ -43,28 +43,51 @@ export default function MessagesList({
       {messages.map((msg, index) => (
         <div
           key={index}
-          className={`d-flex ${msg.type === "user" ? "flex-row-reverse" : "flex-row"} align-items-center my-1`}
-          style={{ maxWidth: '100%', overflow: 'hidden' }}
+          className={`d-flex ${msg.type === "user" ? "flex-row-reverse" : "flex-row"
+            } my-1 align-items-start`}
         >
-          <div className="rounded-circle overflow-hidden" style={{ width: '2rem', height: '2rem', marginLeft: msg.type === "user" ? "5px" : "0.5rem", marginRight: msg.type === "user" ? "0.5rem" : "0" }}>
-            <img src={msg.type === "user" ? "avatar.png" : "avatar.png"} alt={`${msg.type} Avatar`} className="w-100 h-100" />
+          <div
+            className="rounded-circle overflow-hidden"
+            style={{
+              width: "40px",
+              height: "40px",
+              marginLeft: msg.type === "user" ? "0.5rem" : "0",
+              marginRight: msg.type === "user" ? "0" : "0.5rem",
+            }}
+          >
+            <img
+              src={msg.type === "user" ? "avatar.png" : "avatar.png"}
+              alt={`${msg.type} Avatar`}
+              className="w-100 h-100"
+            />
           </div>
-          <div className={`flex-grow-1 ${msg.type === "user" ? "me-2" : "ms-2"}`} style={{ padding: '0.5rem' }}>
-            <div className="p-2 rounded" style={{
-              backgroundColor: msg.type === "user" ? "#CBF8F5" : "#CEF0FC",
-              maxWidth: 'calc(100% - 4rem)', 
-              wordWrap: 'break-word',
-              overflowWrap: 'break-word',
-              borderRadius: '15px'
-            }}>
+          <div
+            className={`flex-grow-1 ${msg.type === "user" ? "me-1" : "ms-1"}`}
+            // style={{ padding: "0.5rem 0.5rem 0.5rem 0" }}          
+            >
+            <div
+              className="p-2 rounded"
+              style={{
+                backgroundColor: msg.type === "user" ? "#CBF8F5" : "#CEF0FC",
+                maxWidth: 'calc(100% - 3rem)',
+                wordWrap: "break-word",
+                overflowWrap: "break-word",
+                borderRadius: "15px",
+                borderTopRightRadius: msg.type === "user" ? "0" : "15px",
+                borderTopLeftRadius: msg.type === "user" ? "15px" : "0",
+              }}
+            >
               {msg.type === "bot" ? (
                 <AniText msg={msg.text} forceStopTyping={forceStopTyping} />
               ) : (
                 msg.text
               )}
             </div>
-            <div className="small text-muted mt-1" style={{ textAlign: msg.type === "user" ? 'right' : 'left' }}>
-              {msg.type === "user" ? `Seen at ${msg.time}` : `Delivered ${msg.time}`}
+            <div
+              className="small text-muted mt-1"
+              style={{ textAlign: msg.type === "user" ? "right" : "left" }}
+            >
+              {msg.time}
             </div>
           </div>
         </div>
@@ -72,10 +95,8 @@ export default function MessagesList({
 
       {isBotTyping && !forceStopTyping && (
         <div className="d-flex my-1">
-          <div className="d-flex flex-column align-items-center">
-            <div className="rounded-circle overflow-hidden" style={{ width: '2rem', height: '2rem' }}>
-              <img src="bot-avatar.png" alt="Bot Avatar" className="w-100 h-100" />
-            </div>
+          <div className="rounded-circle overflow-hidden" style={{ width: '2rem', height: '2rem' }}>
+            <img src="bot-avatar.png" alt="Bot Avatar" className="w-100 h-100" />
           </div>
           <div className="ms-2 p-2 rounded" style={{ backgroundColor: "#CEF0FC", maxWidth: '75%' }}>
             <DOt />
@@ -124,13 +145,7 @@ export default function MessagesList({
             )}
             className="btn btn-success mx-2"
           >
-            {selectedLanguage === "darija"
-              ? "Ah"
-              : selectedLanguage === "francais"
-                ? "Oui"
-                : selectedLanguage === "english"
-                  ? "Yes"
-                  : "نعم"}
+            {selectedLanguage === "darija" ? "Ah" : selectedLanguage === "francais" ? "Oui" : selectedLanguage === "english" ? "Yes" : "نعم"}
           </button>
           <button
             onClick={() => handleConfirmation(
@@ -140,18 +155,11 @@ export default function MessagesList({
             )}
             className="btn btn-danger mx-2"
           >
-            {selectedLanguage === "darija"
-              ? "La"
-              : selectedLanguage === "francais"
-                ? "Non"
-                : selectedLanguage === "english"
-                  ? "No"
-                  : "لا"}
+            {selectedLanguage === "darija" ? "La" : selectedLanguage === "francais" ? "Non" : selectedLanguage === "english" ? "No" : "لا"}
           </button>
         </div>
       )}
       <div ref={messagesEndRef} />
     </div>
-
   );
 }

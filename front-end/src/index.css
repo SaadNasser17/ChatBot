@@ -25,3 +25,132 @@
     flex:30%; 
     padding:1 10px; 
   }
+
+  .chat-container {
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+  
+  .chat-bubble {
+    max-width: 70%;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 20px;
+    position: relative;
+    font-size: 14px;
+  }
+  
+  .user-bubble {
+    background-color: #CBF8F5;
+    color: black;
+    border-bottom-right-radius: 0;
+  }
+  
+  .bot-bubble {
+    background-color: #CEF0FC;
+    color: black;
+    border-bottom-left-radius: 0;
+  }
+  
+
+  .btn-chat-container {
+    background-color: #ffffff; /* Fond blanc */
+    border-radius: 12px; /* Coins arrondis */
+    padding: 2px; /* Espace autour du bouton, reduced from 4px */
+    display: flex; /* Pour centrer le contenu */
+    align-items: center; /* Pour centrer le contenu verticalement */
+    justify-content: center; /* Pour centrer le contenu horizontalement */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    animation: pulse 2s infinite; /* Application de l'animation de pulsation */
+  }
+  
+  .btn-chat-rectangle {
+    background-color: #009688; /* Couleur verte */
+    border: none; /* Pas de bordure */
+    border-radius: 8px; /* Coins arrondis */
+    color: #ffffff; /* Couleur de l'icône */
+    box-shadow: none; /* Pas d'ombre pour le bouton lui-même */
+    display: flex; /* Pour centrer l'icône */
+    align-items: center; /* Pour centrer l'icône */
+    justify-content: center; /* Pour centrer l'icône */
+    width: 3rem; /* Reduced width of the button */
+    height: 3rem; /* Reduced height of the button */
+    padding: 0; /* Pas de padding supplémentaire */
+  }
+  
+  
+  .btn-chat-rectangle:hover {
+    background-color: #00796B; /* Couleur légèrement plus foncée au survol */
+    transform: scale(1.05); /* Légère mise à l'échelle au survol */
+  }
+  
+  .btn-chat-rectangle:focus {
+    outline: none; /* Supprime l'outline par défaut */
+  }
+  
+  .icon {
+    width: 2rem; /* Taille de l'icône */
+    height: 2rem; /* Taille de l'icône */
+  }
+
+
+
+  
+  .chat-banner {
+    background-color: transparent; /* Enlever le fond */
+    box-shadow: none; /* Enlever l'ombre */
+    padding: 10px; /* Ajuster le padding */
+    border-radius: 5px;
+    max-width: 200px; /* Réduire la largeur */
+    text-align: center;
+  }
+  
+  .chat-banner h2 {
+    font-size: 18px; /* Réduire la taille du texte (welcome) */
+    margin-bottom: 5px;
+    color: #00AEEF;
+  }
+  
+  .chat-banner p, .chat-banner .banner-icon, .chat-banner .banner-button {
+    font-size: 14px; /* Ajuster la taille du texte(try) */
+    color: #00A99D;
+  }
+
+    
+  .chat-banner .banner-icon {
+    margin-bottom: 5px;
+  }
+  
+  .chat-banner .banner-button {
+    background-color: #00AEEF; /* Couleur de fond du bouton */
+    color: white; /* Couleur du texte */
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+/* Animation keyframes */
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Classe pour l'animation */
+.slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards, pulse 1.5s ease-out 0.5s infinite;
+}
