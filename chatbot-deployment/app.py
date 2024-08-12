@@ -176,15 +176,17 @@ def get_unrecognized_intents():
 @app.route('/add_intent/<language>', methods=['POST'])
 def add_intent(language):
     data = request.get_json()
+    print("Add Intent Function Invoked")  # Initial print to check if function is invoked
+    
     new_intent = {
         "tag": data['tag'],
-        "patterns": data['patterns'].split(','),
-        "responses": data['responses'].split(',')
+        "patterns": data['patterns'],  # Expecting this to be a list
+        "responses": data['responses']  # This should also be a list
     }
 
     files = {
         'darija': 'intents_darija.json',
-        'الدارجة': 'intents_الدارجة.json',
+        'الدارجة': 'intents_darija2.json',
         'العربية': 'intents_arabic.json',
         'francais': 'intents_francais.json',
         'english': 'intents_english.json'
@@ -200,28 +202,37 @@ def add_intent(language):
 
     try:
         if language in files:
+            # Add new intent to the intents file
             with open(files[language], 'r+', encoding='utf-8') as file:
                 intents_data = json.load(file)
                 intents_data["intents"].append(new_intent)
                 file.seek(0)
                 json.dump(intents_data, file, ensure_ascii=False, indent=4)
+                print("Unrecognized intent added")
 
-            with open(unrecognized_files[language], 'r+', encoding='utf-8') as file:
-                unrecognized_data = json.load(file)
-                for pattern in new_intent["patterns"]:
-                    if pattern in unrecognized_data:
-                        unrecognized_data.remove(pattern)
-                file.seek(0)
-                file.truncate()
-                json.dump(unrecognized_data, file, ensure_ascii=False, indent=4)
+            # Remove patterns from unrecognized words file
+            if language in unrecognized_files:
+                unrecognized_file = unrecognized_files[language]
+                if os.path.exists(unrecognized_file):
+                    with open(unrecognized_file, 'r+', encoding='utf-8') as file:
+                        unrecognized_words = json.load(file)
+                        print("Before Processing:", unrecognized_words)  # Log file contents before processing
+                        for pattern in new_intent["patterns"]:
+                            if pattern in unrecognized_words:
+                                print("Unrecognized intent detected")
+                                unrecognized_words.remove(pattern)
+                                print("Unrecognized intent deleted")
+                        print("After Processing:", unrecognized_words)  # Log file contents after processing
+                        file.seek(0)
+                        file.truncate()
+                        json.dump(unrecognized_words, file, ensure_ascii=False, indent=4)
 
             return jsonify({"message": "Intent added and removed from unrecognized intents successfully"}), 201
         else:
             return jsonify({"error": "Invalid language"}), 400
-    except FileNotFoundError:
-        return jsonify({"error": "File not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @app.route('/load_intents/<language>', methods=['GET'])
 def load_intents(language):
@@ -247,47 +258,71 @@ def load_intents(language):
 
 @app.route('/update_intent/<language>', methods=['POST'])
 def update_intent(language):
-    data = request.get_json()
-    updated_intent = {
-        "tag": data['tag'],
-        "patterns": data['patterns'],
-        "responses": data['responses']
-    }
-
-    files = {
-        'darija': 'intents_darija.json',
-        'الدارجة': 'intents_الدارجة.json',
-        'العربية': 'intents_arabic.json',
-        'francais': 'intents_francais.json',
-        'english': 'intents_english.json'
-    }
-
     try:
+        data = request.get_json()
+        tag = data['tag']
+        patterns = data['patterns']
+        responses = data['responses']
+
+        files = {
+            'darija': 'intents_darija.json',
+            'الدارجة': 'intents_الدارجة.json',
+            'العربية': 'intents_arabic.json',
+            'francais': 'intents_francais.json',
+            'english': 'intents_english.json'
+        }
+
+        unrecognized_files = {
+            'darija': 'unrecognized_words_darija.json',
+            'الدارجة': 'unrecognized_words_الدارجة.json',
+            'العربية': 'unrecognized_words_العربية.json',
+            'francais': 'unrecognized_words_francais.json',
+            'english': 'unrecognized_words_english.json'
+        }
+
         if language in files:
             with open(files[language], 'r+', encoding='utf-8') as file:
                 intents_data = json.load(file)
-                # Update the existing intent with the same tag
-                for intent in intents_data["intents"]:
-                    if intent["tag"] == updated_intent["tag"]:
-                        intent["patterns"] = updated_intent["patterns"]
-                        intent["responses"] = updated_intent["responses"]
-                        break
-                else:
-                    # If the tag doesn't exist, add it as a new intent
-                    intents_data["intents"].append(updated_intent)
+                intents = intents_data.get("intents", [])
 
+                # Check if the intent with the same tag already exists
+                existing_intent = next((intent for intent in intents if intent['tag'] == tag), None)
+
+                if existing_intent:
+                    print("Updating existing intent")
+                    existing_intent['patterns'] = patterns
+                    existing_intent['responses'] = responses
+                else:
+                    print("Adding new intent")
+                    intents.append({
+                        "tag": tag,
+                        "patterns": patterns,
+                        "responses": responses
+                    })
+
+                # Save the updated intents back to the file
                 file.seek(0)
                 file.truncate()
                 json.dump(intents_data, file, ensure_ascii=False, indent=4)
 
-            return jsonify({"message": "Intent updated successfully"}), 201
+            # Remove patterns from unrecognized words file
+            if language in unrecognized_files:
+                unrecognized_file = unrecognized_files[language]
+                if os.path.exists(unrecognized_file):
+                    with open(unrecognized_file, 'r+', encoding='utf-8') as file:
+                        unrecognized_words = json.load(file)
+                        unrecognized_words = [word for word in unrecognized_words if word not in patterns]
+                        file.seek(0)
+                        file.truncate()
+                        json.dump(unrecognized_words, file, ensure_ascii=False, indent=4)
+
+            print("Unrecognized intent removed")
+            return jsonify({"message": "Intent added/updated and removed from unrecognized intents successfully"}), 201
         else:
             return jsonify({"error": "Invalid language"}), 400
-    except FileNotFoundError:
-        return jsonify({"error": "File not found"}), 404
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 @app.route('/admin', methods=['GET'])
 def serve_admin():

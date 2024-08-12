@@ -53,7 +53,7 @@ function AdminPanel() {
       patterns: newIntent[language].patterns.split(',').map(p => p.trim()),
       responses: newIntent[language].responses.split(',').map(r => r.trim()),
     };
-
+  
     fetch(`http://localhost:5000/add_intent/${language}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
