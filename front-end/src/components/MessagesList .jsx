@@ -43,51 +43,57 @@ export default function MessagesList({
       {messages.map((msg, index) => (
         <div
           key={index}
-          className={`d-flex ${msg.type === "user" ? "flex-row-reverse" : "flex-row"
-            } my-1 align-items-start`}
+          className={`d-flex ${msg.type === "user" ? "justify-content-end" : "justify-content-start"}`}
+          style={{ width: '100%', marginBottom: '10px' }}
         >
           <div
-            className="rounded-circle overflow-hidden"
-            style={{
-              width: "40px",
-              height: "40px",
-              marginLeft: msg.type === "user" ? "0.5rem" : "0",
-              marginRight: msg.type === "user" ? "0" : "0.5rem",
-            }}
+            className={`d-flex ${msg.type === "user" ? "flex-row-reverse align-items-start" : "flex-row align-items-start"}`}
+            style={{ maxWidth: '80%' }}
           >
-            <img
-              src={msg.type === "user" ? "avatar.png" : "avatar.png"}
-              alt={`${msg.type} Avatar`}
-              className="w-100 h-100"
-            />
-          </div>
-          <div
-            className={`flex-grow-1 ${msg.type === "user" ? "me-1" : "ms-1"}`}
-            // style={{ padding: "0.5rem 0.5rem 0.5rem 0" }}          
-            >
             <div
-              className="p-2 rounded"
+              className="rounded-circle overflow-hidden"
               style={{
-                backgroundColor: msg.type === "user" ? "#CBF8F5" : "#CEF0FC",
-                maxWidth: 'calc(100% - 3rem)',
-                wordWrap: "break-word",
-                overflowWrap: "break-word",
-                borderRadius: "15px",
-                borderTopRightRadius: msg.type === "user" ? "0" : "15px",
-                borderTopLeftRadius: msg.type === "user" ? "15px" : "0",
+                width: "40px",
+                height: "40px",
+                marginLeft: msg.type === "user" ? "10px" : "0",
+                marginRight: msg.type === "user" ? "0" : "10px",
               }}
             >
-              {msg.type === "bot" ? (
-                <AniText msg={msg.text} forceStopTyping={forceStopTyping} />
-              ) : (
-                msg.text
-              )}
+              <img
+                src={msg.type === "user" ? "avatar.jpg" : "Chatbot.jpg"}
+                alt={`${msg.type} Avatar`}
+                className="w-100 h-100"
+              />
             </div>
             <div
-              className="small text-muted mt-1"
-              style={{ textAlign: msg.type === "user" ? "right" : "left" }}
+              className="position-relative w-100"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: msg.type === 'user' ? 'flex-end' : 'flex-start'
+              }}
             >
-              {msg.time}
+              <div
+                className="p-2 rounded"
+                style={{
+                  backgroundColor: msg.type === "user" ? "#CBF8F5" : "#CEF0FC",
+                  textAlign: msg.type === "user" ? 'right' : 'left',
+                  borderRadius: "20px",
+                  padding: '10px',
+                }}
+              >
+                {msg.type === "bot" ? (
+                  <AniText msg={msg.text} forceStopTyping={forceStopTyping} />
+                ) : (
+                  msg.text
+                )}
+              </div>
+              <div
+                className={`small text-muted`}
+                style={{ marginTop: '2px' }}
+              >
+                {msg.time}
+              </div>
             </div>
           </div>
         </div>
@@ -96,7 +102,7 @@ export default function MessagesList({
       {isBotTyping && !forceStopTyping && (
         <div className="d-flex my-1">
           <div className="rounded-circle overflow-hidden" style={{ width: '2rem', height: '2rem' }}>
-            <img src="bot-avatar.png" alt="Bot Avatar" className="w-100 h-100" />
+            <img src="bot-avatar.jpg" alt="Bot Avatar" className="w-100 h-100" />
           </div>
           <div className="ms-2 p-2 rounded" style={{ backgroundColor: "#CEF0FC", maxWidth: '75%' }}>
             <DOt />
