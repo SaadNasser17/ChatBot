@@ -1,0 +1,163 @@
+{
+    "intents": [
+      {
+        "tag": "greeting1",
+        "patterns": [
+          "Hello",
+          "Hi",
+          "Hey",
+          "What's up?",
+          "How are you?",
+          "Good day",
+          "How's it going?",
+          "Nice to meet you",
+          "Greetings"
+        ],
+        "responses": [
+          "Hello, welcome to NabadyBot. I'm here to help you schedule appointments. How may I assist you?"
+        ]
+      },
+      {
+        "tag": "greeting2",
+        "patterns": [
+          "Good morning",
+          "Morning",
+          "Have a great day",
+          "Hi, anything new?",
+          "Good morning, how are you?"
+        ],
+        "responses": [
+          "Good morning, welcome to NabadyBot. I'm here to help you schedule appointments. How can I be of service?"
+        ]
+      },
+      {
+        "tag": "thanks1",
+        "patterns": [
+          "Thank you",
+          "Thanks",
+          "That's very kind",
+          "Thank you very much",
+          "I appreciate it",
+          "Thanks a lot",
+          "That's very nice of you",
+          "I'm grateful"
+        ],
+        "responses": [
+          "You're welcome, it's my pleasure"
+        ]
+      },
+      {
+        "tag": "iam",
+        "patterns": [
+          "Who are you?",
+          "What's your name?",
+          "Can you introduce yourself?",
+          "What's your identity?",
+          "Who am I talking to?",
+          "What should I call you?"
+        ],
+        "responses": [
+          "My name is NabadyBot, I'm a virtual assistant"
+        ]
+      },
+      {
+        "tag": "help0",
+        "patterns": [
+          "Can I ask you a question?",
+          "I'd like to ask you something",
+          "I have a question",
+          "Can you help me?",
+          "I need help"
+        ],
+        "responses": [
+          "Of course, I'd be happy to help if I can"
+        ]
+      },
+      {
+        "tag": "thanks4",
+        "patterns": [
+          "That's very kind of you",
+          "I'm very grateful",
+          "God bless you"
+        ],
+        "responses": [
+          "You're welcome, it's my pleasure"
+        ]
+      },
+      {
+        "tag": "goodbye",
+        "patterns": [
+          "Goodbye",
+          "Bye",
+          "See you later",
+          "Take care",
+          "Have a good day",
+          "Good night",
+          "Until next time"
+        ],
+        "responses": [
+          "Goodbye, thank you for your visit",
+          "Goodbye, thank you for your trust"
+        ]
+      },
+      {
+        "tag": "help",
+        "patterns": [
+          "How long do I have to wait?",
+          "What's the waiting time?",
+          "When will it be my turn?",
+          "Will the wait be long?",
+          "How long does it usually take?"
+        ],
+        "responses": [
+          "Unfortunately, I can't determine that precisely, it depends on each doctor and their schedule"
+        ]
+      },
+      {
+        "tag": "speciality",
+        "patterns": [
+          "Is there a doctor specialized in a particular disease?",
+          "What specialties are available?",
+          "How many specialties do you have?",
+          "I want to know about medical specialties",
+          "What are the areas of specialization?"
+        ],
+        "responses": [
+          "Each specialty has a list of doctors. Here are the specialties available at our facility: Anesthesiology, Nutritional Diabetology, Endocrinology, Pediatrics, Allergology, Nutrition, General Medicine, Sports Medicine, Urology, Cardiac Surgery, Vascular Surgery, General Surgery, Orthopedic Surgery, Traumatology, Orthopedics, Occupational Medicine, Gynecology, Dermatology, Ophthalmology, Pulmonology, Cardiology, Cancer Surgery, Nephrology, Internal Medicine, Neuropsychiatry, Psychiatry, Otorhinolaryngology (ENT), Aesthetic Surgery, Gastroenterology, Physical Medicine and Rehabilitation"
+        ]
+      },
+      {
+        "tag": "help2",
+        "patterns": [
+          "Is there an appointment available next week?",
+          "Is there a suitable time to make an appointment this week?"
+        ],
+        "responses": [
+          "There are certainly appointments available, and I can also try to get you a same-day appointment if possible."
+        ]
+      },
+      {
+        "tag": "help6",
+        "patterns": [
+          "I want to talk to the doctor",
+          "Can I call the doctor?",
+          "I need to speak with the physician"
+        ],
+        "responses": [
+          "Hello, that's possible, but you first need to schedule an appointment through NabadyBot to expedite the booking process. Thank you"
+        ]
+      },
+      {
+        "tag": "help8",
+        "patterns": [
+          "Can I go directly to the clinic?",
+          "Can I see the doctor without an appointment?",
+          "Do I need a prior appointment?",
+          "I want to visit the clinic today"
+        ],
+        "responses": [
+          "You can go to the clinic or hospital, but it's best to make an appointment in advance to avoid waiting for a long time. Thank you"
+        ]
+      }
+    ]
+  }

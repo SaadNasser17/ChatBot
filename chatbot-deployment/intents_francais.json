@@ -1,0 +1,140 @@
+{
+    "intents": [
+        {
+            "tag": "greeting1",
+            "patterns": [
+                "Bonjour",
+                "Salut",
+                "Coucou",
+                "Quoi de neuf ?",
+                "Comment allez-vous ?",
+                "Bonne journée",
+                "Comment ça va ?",
+                "Enchanté",
+                "Ravi de vous rencontrer"
+            ],
+            "responses": [
+                "Bonjour, bienvenue sur NabadyBot. Je suis là pour vous aider à prendre rendez-vous. Comment puis-je vous aider ?"
+            ]
+        },
+        {
+            "tag": "greeting2",
+            "patterns": [
+                "Bonjour",
+                "Bon matin",
+                "Bonne journée",
+                "Salut, quoi de neuf ?",
+                "Bonjour, comment allez-vous ?"
+            ],
+            "responses": [
+                "Bonjour, bienvenue sur NabadyBot. Je suis là pour vous aider à prendre rendez-vous. Comment puis-je vous être utile ?"
+            ]
+        },
+        {
+            "tag": "thanks1",
+            "patterns": [
+                "Merci",
+                "Je vous remercie",
+                "C'est très gentil",
+                "Merci beaucoup",
+                "Je vous suis reconnaissant",
+                "Merci infiniment",
+                "C'est très aimable à vous",
+                "Je vous en suis gré"
+            ],
+            "responses": [
+                "Avec plaisir, je vous en prie"
+            ]
+        },
+        {
+            "tag": "iam",
+            "patterns": [
+                "Qui êtes-vous ?",
+                "Comment vous appelez-vous ?",
+                "Pouvez-vous vous présenter ?",
+                "Quelle est votre identité ?",
+                "À qui ai-je l'honneur ?",
+                "Quel est votre nom ?"
+            ],
+            "responses": [
+                "Je m'appelle NabadyBot, je suis un assistant virtuel"
+            ]
+        },
+        {
+            "tag": "help0",
+            "patterns": [
+                "Puis-je vous poser une question ?",
+                "J'aimerais vous demander quelque chose",
+                "J'ai une question",
+                "Pouvez-vous m'aider ?",
+                "J'ai besoin d'aide"
+            ],
+            "responses": [
+                "Bien sûr, je serai ravi de vous aider si je le peux"
+            ]
+        },
+        {
+            "tag": "thanks4",
+            "patterns": [
+                "C'est très gentil à vous",
+                "Je vous en suis reconnaissant",
+                "Que Dieu vous bénisse"
+            ],
+            "responses": [
+                "Je vous en prie, c'est tout naturel"
+            ]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": [
+                "Au revoir",
+                "À bientôt",
+                "Adieu",
+                "À la prochaine",
+                "Bonne journée",
+                "Bonne soirée",
+                "À plus tard"
+            ],
+            "responses": [
+                "Au revoir, merci de votre visite",
+                "Au revoir, merci de votre confiance"
+            ]
+        },
+        {
+            "tag": "help",
+            "patterns": [
+                "Combien de temps dois-je attendre ?",
+                "Quel est le temps d'attente ?",
+                "Quand sera mon tour ?",
+                "L'attente sera-t-elle longue ?",
+                "Combien de temps cela prend-il habituellement ?"
+            ],
+            "responses": [
+                "Malheureusement, je ne peux pas le déterminer avec précision, cela dépend de chaque médecin et de son emploi du temps"
+            ]
+        },
+        {
+            "tag": "specialité",
+            "patterns": [
+                "Y a-t-il un médecin spécialisé dans une maladie particulière ?",
+                "Quelles sont les spécialités disponibles ?",
+                "Combien de spécialités avez-vous ?",
+                "Je voudrais connaître les spécialités médicales",
+                "Quels sont les domaines de spécialisation ?"
+            ],
+            "responses": [
+                "Chaque spécialité a une liste de médecins, voici les spécialités disponibles chez nous : Anesthésie, Diabétologie nutritionnelle, Endocrinologie, Pédiatrie, Allergologie, Nutrition, Médecine générale, Médecine du sport, Urologie, Chirurgie cardiaque, Chirurgie vasculaire, Chirurgie générale, Chirurgie orthopédique, Traumatologie, Orthopédie, Médecine du travail, Gynécologie, Dermatologie, Ophtalmologie, Pneumologie, Cardiologie, Chirurgie cancérologique, Néphrologie, Médecine interne, Neuropsychiatrie, Psychiatrie, Oto-rhino-laryngologie (ORL), Chirurgie esthétique, Gastro-entérologie, Médecine physique et de réadaptation"
+            ]
+        },
+        {
+            "tag": "help2",
+            "patterns": [
+                "Y a-t-il un rendez-vous disponible la semaine prochaine ?",
+                "Y a-t-il un créneau disponible pour prendre rendez-vous cette semaine ?"
+            ],
+            "responses": [
+                "Il y a certainement des rendez-vous disponibles, et je peux aussi essayer de vous obtenir un rendez-vous le jour même si possible."
+            ]
+        }
+    ]
+}

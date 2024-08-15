@@ -52,11 +52,11 @@ export default function Chat() {
   useEffect(() => {
     if (!initialMessageSet) {
       displayBotMessage(
-        `Ana NabadyBot, khtar logha dyalek. <br/> 1. Darija <br/> 2.الدارجة <br/> 3. العربية <br/> 4.Francais <br/> 5.English`
+        `Ana NabadyBot, khtar logha dyalek. <br/> 1. Darija <br/> 2. الدارجة <br/> 3. العربية <br/> 4.Francais <br/> 5.English`
       );
       setInitialMessageSet(true);
+      incrementSessionCounter(); // New function call
     }
-
     setWaitingForConfirmation(false);
   }, [initialMessageSet]);
 
@@ -87,7 +87,7 @@ export default function Chat() {
             getMessageForLanguage(languageChoices[msg], "welcome")
           );
         } else {
-          displayBotMessage("Mafhemtch t9dr t3awd?");
+          displayBotMessage("3afak khtar logha!");
         }
         return;
       }
@@ -277,7 +277,7 @@ export default function Chat() {
 
   const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/save_appointment", {
+      const response = await fetch("http://localhost:5000/save_appointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -310,7 +310,7 @@ export default function Chat() {
   const handleSmsCodeInput = async (code) => {
     try {
       const response = await fetch(
-        "http://127.0.0.1:5000/confirm_appointment",
+        "http://localhost:5000/confirm_appointment",
         {
           method: "POST",
           headers: {
@@ -360,10 +360,10 @@ export default function Chat() {
 
   const callFlaskAPI = (userMessage, time) => {
     setIsBotTyping(true);
-    fetch("http://127.0.0.1:5000/predict", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: userMessage, time }),
+    fetch("http://localhost:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage, time, language: selectedLanguage }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -380,7 +380,10 @@ export default function Chat() {
       });
   };
 
-  generateRandomEmail;
+  const generateRandomEmail = () => {
+    const randomChars = Math.random().toString(36).substring(2, 10);
+    return `${randomChars}@yopmail.com`;
+  };
 
   const addMessage = (text, type) => {
     setMessages((prevMessages) => [
@@ -410,7 +413,7 @@ export default function Chat() {
   };
 
   const fetchSpecialties = () => {
-    fetch("http://127.0.0.1:5000/get_specialties")
+    fetch("http://localhost:5000/get_specialties")
       .then((response) => response.json())
       .then((data) => {
         setSpecialties(data["hydra:member"]);
