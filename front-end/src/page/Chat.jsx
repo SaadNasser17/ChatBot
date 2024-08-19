@@ -52,14 +52,21 @@ export default function Chat() {
   useEffect(() => {
     if (!initialMessageSet) {
       displayBotMessage(
-        `Ana NabadyBot, khtar logha dyalek. <br/> 1. Darija <br/> 2. الدارجة <br/> 3. العربية <br/> 4.Francais <br/> 5.English`
+        'Ana NabadyBot, khtar logha dyalek. <br/> 1. Darija <br/> 2. الدارجة <br/> 3. العربية <br/> 4.Francais <br/> 5.English'
       );
       setInitialMessageSet(true);
-      incrementSessionCounter(); // New function call
+      // incrementSessionCounter(); // New function call
     }
     setWaitingForConfirmation(false);
   }, [initialMessageSet]);
-
+  
+  // const incrementSessionCounter = async () => {
+  //   try {
+  //     await fetch("/increment_session_counter", { method: "POST" });
+  //   } catch (error) {
+  //     console.error("Error incrementing session counter:", error);
+  //   }
+  // };
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
@@ -68,7 +75,7 @@ export default function Chat() {
   const toggleChatSize = () => {
     setIsExtended(!isExtended);
   };
-
+ 
   const handleUserInput = async () => {
     if (userMessage.trim()) {
       const msg = userMessage.trim().toLowerCase();
@@ -548,6 +555,5 @@ export default function Chat() {
         </div>
       )}
     </div>
-
   )
 }

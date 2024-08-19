@@ -60,7 +60,7 @@ export default function MessagesList({
               }}
             >
               <img
-                src={msg.type === "user" ? "avatar.jpg" : "Chatbot.jpg"}
+                src={msg.type === "user" ? "avatar.jpg" : "Chatbot.png"}
                 alt={`${msg.type} Avatar`}
                 className="w-100 h-100"
               />
