@@ -348,8 +348,8 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
                         slot
                       )
                     }
-                    className="btn btn-info mx-1"
-                    style={{ minWidth: "45px", padding: "0.25rem" }}
+                    className="btn  mx-1"
+                    style={{ minWidth: "43px", padding: "0.3rem",backgroundColor:'#00a99d' }}
                   >
                     {slot}
                   </button>
@@ -370,7 +370,6 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
       )}
     </div>
   );
-
 }
 
 export default Doctor;

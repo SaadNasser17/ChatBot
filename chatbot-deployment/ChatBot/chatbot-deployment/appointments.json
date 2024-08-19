@@ -600,6 +600,21 @@
                     "gpatientId": 806262
                 },
                 "motifId": 839
+            },
+            {
+                "praticien": {
+                    "name": "Dr. Zaidani Asmaa",
+                    "PraticienCentreSoinID": 63,
+                    "timeSlot": "2024-08-19T14:30:00.000Z"
+                },
+                "patient": {
+                    "first_name": "ss",
+                    "last_name": "ss$",
+                    "phone_number": "0640155038",
+                    "patientId": 816468,
+                    "gpatientId": 806410
+                },
+                "motifId": 403
             }
         ]
     }
