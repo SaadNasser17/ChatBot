@@ -241,14 +241,14 @@ export default function Chat() {
     try {
       const randomEmail = generateRandomEmail();
       setGeneratedEmail(randomEmail);
-
+  
       setBookingDetails((prevDetails) => ({
         ...prevDetails,
         email: randomEmail,
       }));
-
+  
       await new Promise((resolve) => setTimeout(resolve, 0));
-
+  
       const response = await fetch("http://localhost:5000/register_user", {
         method: "POST",
         headers: {
@@ -261,17 +261,17 @@ export default function Chat() {
           email: randomEmail,
         }),
       });
-
+  
       if (!response.ok) throw new Error("Network response was not ok.");
-
+  
       const data = await response.json();
       const patientId = data.patient_id;
       const gpatientId = data.gpatient_id;
-
+  
       console.log("Patient ID:", patientId, "GPatient ID:", gpatientId);
-
+  
       if (patientId && gpatientId) {
-        await saveAppointmentDetails(patientId, gpatientId);
+        await saveAppointmentDetails(patientId, gpatientId, randomEmail);
       } else {
         console.error("Patient ID or GPatient ID not found in the response.");
         displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
@@ -281,7 +281,8 @@ export default function Chat() {
       displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
     }
   };
-  const saveAppointmentDetails = async (patientId, gpatientId) => {
+  
+  const saveAppointmentDetails = async (patientId, gpatientId, email) => {
     try {
       const response = await fetch("http://localhost:5000/save_appointment", {
         method: "POST",
@@ -292,9 +293,10 @@ export default function Chat() {
           ...bookingDetails,
           patientId,
           gpatientId,
+          email,
         }),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
@@ -303,7 +305,7 @@ export default function Chat() {
           }`
         );
       }
-
+  
       const data = await response.json();
       setAppointmentRef(data.ref);
       displayBotMessage(getMessageForLanguage(selectedLanguage, "sms_code"));

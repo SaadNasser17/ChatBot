@@ -5,34 +5,32 @@ import random
 import os
 from datetime import datetime
 import requests
+from pymongo import MongoClient
+import ssl 
 
 app = Flask(__name__)
 CORS(app)
 app.secret_key = '1234'
-JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjQzMjI5MzksImV4cCI6MTcyNjkxNDkzOSwicm9sZXMiOlsiUk9MRV9NRURFQ0lOIiwiUk9MRV9VU0VSIl0sImVtYWlsIjoiYmVuamxvb29uYWJkbGF6aXpAeW9wbWFpbC5jb20ifQ.pIl8AD8ZqlMZmVQ5ZbD3bkD0r5IH8grMjJFSbgjheNxW9h3tigpFhHWVS7jUCrVo4GPy5Jb3B_SxrhMa9UuW4gwvUlBWxyrMesfD2wLdnMnKo6Xok_2iEjEs0DDvTOcSOFOGbKlEkO-eIbo4y82SajOYED0oH10CU3ku9b8MSSPIzE-8Ur5nll0rwrMKt4ZR1aA8mzWt96k71mb2m4T8fuZseU1yoQQqUCy1zXXmzVnFmO0pzFDVyP3GSm_U4RD0hRQ4W_P5fOZP70j8Er4HZWusyhi5rvpVIhMrWaA-xMbnTbkUumOz6alKTFqn_pZrJRDEhhG_dqU6Tlct9lbhGg"
-intents_data = {}
-unrecognized_words_file = 'unrecognized_words.json'
+JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjA3MDE4NzAsImV4cCI6MTcyMzI5Mzg3MCwicm9sZXMiOlsiUk9MRV9NRURFQ0lOIiwiUk9MRV9VU0VSIl0sImVtYWlsIjoiY3JlYXRlcHJhdGljaWVuLnBob25lbnVtYmVyQHlvcG1haWwuY29tIn0.p34TLIVysp-HTz80Uc7_DckLK31FZ0cW7vypXwGG8NJz2cHGEWJilQvFvq9v3mfkrtbHG4P6-Q78BJxvKArFeA0CUvDLIdvCyJGN13Nfnx-lM9J8_ACvr9fG2fu-C8EEebi1RbV1oANj5ioIA6IxAEhYL3K3hOVCb6A9mQW7yFKdYDfdwLDcbfM7Z0Qk7Qvudgx7NR5O-ln6qJYB9NtMGNDzTH49gyaY6xF39REczA2MHA0UqopBztpIYZZ5uudYxNxbNLXNfLfCfRQtpvkDD1PNBt-kRQQR-q6zW35HUp_i-rDiWIlO25y7TPVPU3J0dQIcJwHGR0nqc0nCjEZsjQ"
 
-intents_file_arabic = 'intents_arabic.json'
-intents_file_darija = 'intents_darija.json'
-intents_file_darija2 = 'intents_darija2.json'
-intents_file_english = 'intents_english.json'
-intents_file_francais = 'intents_francais.json'
+# MongoDB connection setup
+client = MongoClient(
+            'mongodb+srv://snassereddine:O3LtH817wINZOcYU@nabadybotdataset.qkqs8.mongodb.net/nabadybotdataset?retryWrites=true&w=majority&appName=NabadyBotDataset',
+            tls=True,
+            tlsAllowInvalidCertificates=True
+        )
 
-with open(intents_file_arabic, 'r', encoding='utf-8') as file:
-    intents_data_arabic = json.load(file)
+db = client["Datasets"]
+intents_collection = db["Intents"]
+unrecognized_intents_collection = db["Unrecognized intents"]
 
-with open(intents_file_darija, 'r', encoding='utf-8') as file:
-    intents_data_darija = json.load(file)
-
-with open(intents_file_darija2, 'r', encoding='utf-8') as file:
-    intents_data_darija2 = json.load(file)
-
-with open(intents_file_english, 'r', encoding='utf-8') as file:
-    intents_data_english = json.load(file)
-
-with open(intents_file_francais, 'r', encoding='utf-8') as file:
-    intents_data_francais = json.load(file)
+fallback_messages = {
+    "darija": "mafhamtch t9dr t3awd",
+    "الدارجة": "مافهمتش تقدر تعاود",
+    "العربية": "لم أفهم، هل يمكنك إعادة المحاولة؟",
+    "francais": "Je ne comprends pas.",
+    "english": "I don't understand."
+}
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -45,23 +43,14 @@ def predict():
     
     return jsonify({"answer": response, "tag": tag})
 
-
 def get_intent(message, language):
     message = message.lower()
 
-    if language == "العربية":
-        intents_data = intents_data_arabic
-    elif language == "darija":
-        intents_data = intents_data_darija
-    elif language == "الدارجة":
-        intents_data = intents_data_darija2
-    elif language == "english":
-        intents_data = intents_data_english
-    elif language == "francais":
-        intents_data = intents_data_francais
-    else:
+    intents_data = intents_collection.find_one({"language": language})
+    if not intents_data:
+        store_unrecognized_word(message, language)
         return "default"
-
+    
     for intent in intents_data["intents"]:
         for pattern in intent["patterns"]:
             if pattern.lower() in message:
@@ -70,27 +59,12 @@ def get_intent(message, language):
     store_unrecognized_word(message, language)
     return "default"
 
-
-fallback_messages = {
-    "darija": "mafhamtch t9dr t3awd",
-    "الدارجة": "مافهمتش تقدر تعاود",
-    "العربية": "لم أفهم، هل يمكنك إعادة المحاولة؟",
-    "francais": "Je ne comprends pas.",
-    "english": "I don't understand."
-}
-
 def get_response_and_tag(intent_tag, language):
-    if language == "العربية":
-        intents_data = intents_data_arabic
-    elif language == "darija":
-        intents_data = intents_data_darija
-    elif language == "الدارجة":
-        intents_data = intents_data_darija2
-    elif language == "english":
-        intents_data = intents_data_english
-    elif language == "francais":
-        intents_data = intents_data_francais
-    else:
+    if intent_tag == "default":
+        return fallback_messages.get(language, fallback_messages["darija"]), "default"
+
+    intents_data = intents_collection.find_one({"language": language})
+    if not intents_data:
         return fallback_messages["english"], "default"
 
     for intent in intents_data["intents"]:
@@ -99,228 +73,77 @@ def get_response_and_tag(intent_tag, language):
 
     return fallback_messages[language], "default"
 
-
-
-def increment_session_counter():
-    try:
-        with open(unrecognized_words_file, 'r') as file:
-            try:
-                data = json.load(file)
-            except json.JSONDecodeError:
-                data = []
-    except FileNotFoundError:
-        data = []
-
-    if data:
-        session_counter = data[-1]["session_counter"] + 1
-    else:
-        session_counter = 1
-
-    data.append({"session_counter": session_counter, "unrecognized_words": []})
-
-    with open(unrecognized_words_file, 'w') as file:
-        json.dump(data, file, indent=4)
-
-    return session_counter
-
 def store_unrecognized_word(message, language):
-    filename = f'unrecognized_words_{language}.json'
-    
-    try:
-        with open(filename, 'r+', encoding='utf-8') as file:
-            data = json.load(file)
-            data.append(message)
-            file.seek(0)
-            json.dump(data, file, ensure_ascii=False, indent=4)
-    except FileNotFoundError:
-        with open(filename, 'w', encoding='utf-8') as file:
-            json.dump([message], file, ensure_ascii=False, indent=4)
-
-@app.route('/increment_session_counter', methods=['POST'])
-def increment_session():
-    session_counter = increment_session_counter()
-    return jsonify({"message": "Session counter incremented", "session_counter": session_counter}), 201
-
-
-
+    # Standardizing the language key format to avoid creating new unexpected documents
+    language_key = f"unrecognized-{language.lower()}"
+    unrecognized_intents_collection.update_one(
+        {"language": language_key},
+        {"$push": {"unrecognized_words": message}},
+        upsert=True
+    )
 
 @app.route('/unrecognized_intents', methods=['GET'])
 def get_unrecognized_intents():
     try:
-        unrecognized_intents = {
-            'darija': [],
-            'english': [],
-            'francais': [],
-            'الدارجة': [],
-            'العربية': []
-        }
-
-        files = {
-            'darija': 'unrecognized_words_darija.json',
-            'english': 'unrecognized_words_english.json',
-            'francais': 'unrecognized_words_francais.json',
-            'الدارجة': 'unrecognized_words_الدارجة.json',
-            'العربية': 'unrecognized_words_العربية.json'
-        }
-
-        for language, file in files.items():
-            if os.path.exists(file):
-                with open(file, 'r', encoding='utf-8') as f:
-                    unrecognized_intents[language] = json.load(f)
-
-        print(unrecognized_intents)  # Debug statement to check the data
+        cursor = unrecognized_intents_collection.find({})
+        unrecognized_intents = {doc["language"].split('-')[-1]: doc.get("unrecognized_words", []) for doc in cursor}
         return jsonify({'unrecognized_intents': unrecognized_intents}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/add_intent/<language>', methods=['POST'])
 def add_intent(language):
     data = request.get_json()
-    print("Add Intent Function Invoked")  # Initial print to check if function is invoked
-    
     new_intent = {
         "tag": data['tag'],
-        "patterns": data['patterns'],  # Expecting this to be a list
-        "responses": data['responses']  # This should also be a list
+        "patterns": data['patterns'],
+        "responses": data['responses']
     }
-
-    files = {
-        'darija': 'intents_darija.json',
-        'الدارجة': 'intents_darija2.json',
-        'العربية': 'intents_arabic.json',
-        'francais': 'intents_francais.json',
-        'english': 'intents_english.json'
-    }
-
-    unrecognized_files = {
-        'darija': 'unrecognized_words_darija.json',
-        'الدارجة': 'unrecognized_words_الدارجة.json',
-        'العربية': 'unrecognized_words_العربية.json',
-        'francais': 'unrecognized_words_francais.json',
-        'english': 'unrecognized_words_english.json'
-    }
-
+    language_key = language.lower()
     try:
-        if language in files:
-            # Add new intent to the intents file
-            with open(files[language], 'r+', encoding='utf-8') as file:
-                intents_data = json.load(file)
-                intents_data["intents"].append(new_intent)
-                file.seek(0)
-                json.dump(intents_data, file, ensure_ascii=False, indent=4)
-                print("Unrecognized intent added")
-
-            # Remove patterns from unrecognized words file
-            if language in unrecognized_files:
-                unrecognized_file = unrecognized_files[language]
-                if os.path.exists(unrecognized_file):
-                    with open(unrecognized_file, 'r+', encoding='utf-8') as file:
-                        unrecognized_words = json.load(file)
-                        print("Before Processing:", unrecognized_words)  # Log file contents before processing
-                        for pattern in new_intent["patterns"]:
-                            if pattern in unrecognized_words:
-                                print("Unrecognized intent detected")
-                                unrecognized_words.remove(pattern)
-                                print("Unrecognized intent deleted")
-                        print("After Processing:", unrecognized_words)  # Log file contents after processing
-                        file.seek(0)
-                        file.truncate()
-                        json.dump(unrecognized_words, file, ensure_ascii=False, indent=4)
-
-            return jsonify({"message": "Intent added and removed from unrecognized intents successfully"}), 201
-        else:
-            return jsonify({"error": "Invalid language"}), 400
+        intents_collection.update_one(
+            {"language": language_key},
+            {"$push": {"intents": new_intent}},
+            upsert=False  # Changed to False to prevent creating new documents
+        )
+        unrecognized_language_key = f"unrecognized-{language_key}"
+        unrecognized_intents_collection.update_one(
+            {"language": unrecognized_language_key},
+            {"$pull": {"unrecognized_words": {"$in": data['patterns']}}}
+        )
+        return jsonify({"message": "Intent added and removed from unrecognized intents successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 @app.route('/load_intents/<language>', methods=['GET'])
 def load_intents(language):
-    files = {
-        'darija': 'intents_darija.json',
-        'الدارجة': 'intents_darija2.json',
-        'العربية': 'intents_arabic.json',
-        'francais': 'intents_francais.json',
-        'english': 'intents_english.json'
-    }
-
     try:
-        if language in files:
-            with open(files[language], 'r', encoding='utf-8') as file:
-                data = json.load(file)
-                return jsonify({"intents": data["intents"]}), 200
+        intents_data = intents_collection.find_one({"language": language}, {"_id": 0, "intents": 1})
+        if intents_data:
+            return jsonify({"intents": intents_data["intents"]}), 200
         else:
-            return jsonify({"error": "Invalid language"}), 400
-    except FileNotFoundError:
-        return jsonify({"error": "File not found"}), 404
+            return jsonify({"error": "No intents found for the specified language"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/update_intent/<language>', methods=['POST'])
 def update_intent(language):
+    data = request.get_json()
+    language_key = language.lower()
     try:
-        data = request.get_json()
-        tag = data['tag']
-        patterns = data['patterns']
-        responses = data['responses']
-
-        files = {
-            'darija': 'intents_darija.json',
-            'الدارجة': 'intents_الدارجة.json',
-            'العربية': 'intents_arabic.json',
-            'francais': 'intents_francais.json',
-            'english': 'intents_english.json'
-        }
-
-        unrecognized_files = {
-            'darija': 'unrecognized_words_darija.json',
-            'الدارجة': 'unrecognized_words_الدارجة.json',
-            'العربية': 'unrecognized_words_العربية.json',
-            'francais': 'unrecognized_words_francais.json',
-            'english': 'unrecognized_words_english.json'
-        }
-
-        if language in files:
-            with open(files[language], 'r+', encoding='utf-8') as file:
-                intents_data = json.load(file)
-                intents = intents_data.get("intents", [])
-
-                # Check if the intent with the same tag already exists
-                existing_intent = next((intent for intent in intents if intent['tag'] == tag), None)
-
-                if existing_intent:
-                    print("Updating existing intent")
-                    existing_intent['patterns'] = patterns
-                    existing_intent['responses'] = responses
-                else:
-                    print("Adding new intent")
-                    intents.append({
-                        "tag": tag,
-                        "patterns": patterns,
-                        "responses": responses
-                    })
-
-                # Save the updated intents back to the file
-                file.seek(0)
-                file.truncate()
-                json.dump(intents_data, file, ensure_ascii=False, indent=4)
-
-            # Remove patterns from unrecognized words file
-            if language in unrecognized_files:
-                unrecognized_file = unrecognized_files[language]
-                if os.path.exists(unrecognized_file):
-                    with open(unrecognized_file, 'r+', encoding='utf-8') as file:
-                        unrecognized_words = json.load(file)
-                        unrecognized_words = [word for word in unrecognized_words if word not in patterns]
-                        file.seek(0)
-                        file.truncate()
-                        json.dump(unrecognized_words, file, ensure_ascii=False, indent=4)
-
-            print("Unrecognized intent removed")
-            return jsonify({"message": "Intent added/updated and removed from unrecognized intents successfully"}), 201
-        else:
-            return jsonify({"error": "Invalid language"}), 400
-
+        intents_collection.update_one(
+            {"language": language_key, "intents.tag": data['tag']},
+            {"$set": {"intents.$.patterns": data['patterns'], "intents.$.responses": data['responses']}},
+            upsert=False
+        )
+        unrecognized_language_key = f"unrecognized-{language_key}"
+        unrecognized_intents_collection.update_one(
+            {"language": unrecognized_language_key},
+            {"$pull": {"unrecognized_words": {"$in": data['patterns']}}}
+        )
+        return jsonify({"message": "Intent updated and removed from unrecognized intents successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -615,4 +438,3 @@ def confirm_appointment():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
