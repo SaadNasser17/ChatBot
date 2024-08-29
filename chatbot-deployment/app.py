@@ -9,7 +9,7 @@ import requests
 app = Flask(__name__)
 CORS(app)
 app.secret_key = '1234'
-JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjA3MDE4NzAsImV4cCI6MTcyMzI5Mzg3MCwicm9sZXMiOlsiUk9MRV9NRURFQ0lOIiwiUk9MRV9VU0VSIl0sImVtYWlsIjoiY3JlYXRlcHJhdGljaWVuLnBob25lbnVtYmVyQHlvcG1haWwuY29tIn0.p34TLIVysp-HTz80Uc7_DckLK31FZ0cW7vypXwGG8NJz2cHGEWJilQvFvq9v3mfkrtbHG4P6-Q78BJxvKArFeA0CUvDLIdvCyJGN13Nfnx-lM9J8_ACvr9fG2fu-C8EEebi1RbV1oANj5ioIA6IxAEhYL3K3hOVCb6A9mQW7yFKdYDfdwLDcbfM7Z0Qk7Qvudgx7NR5O-ln6qJYB9NtMGNDzTH49gyaY6xF39REczA2MHA0UqopBztpIYZZ5uudYxNxbNLXNfLfCfRQtpvkDD1PNBt-kRQQR-q6zW35HUp_i-rDiWIlO25y7TPVPU3J0dQIcJwHGR0nqc0nCjEZsjQ"
+JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjQzMjI5MzksImV4cCI6MTcyNjkxNDkzOSwicm9sZXMiOlsiUk9MRV9NRURFQ0lOIiwiUk9MRV9VU0VSIl0sImVtYWlsIjoiYmVuamxvb29uYWJkbGF6aXpAeW9wbWFpbC5jb20ifQ.pIl8AD8ZqlMZmVQ5ZbD3bkD0r5IH8grMjJFSbgjheNxW9h3tigpFhHWVS7jUCrVo4GPy5Jb3B_SxrhMa9UuW4gwvUlBWxyrMesfD2wLdnMnKo6Xok_2iEjEs0DDvTOcSOFOGbKlEkO-eIbo4y82SajOYED0oH10CU3ku9b8MSSPIzE-8Ur5nll0rwrMKt4ZR1aA8mzWt96k71mb2m4T8fuZseU1yoQQqUCy1zXXmzVnFmO0pzFDVyP3GSm_U4RD0hRQ4W_P5fOZP70j8Er4HZWusyhi5rvpVIhMrWaA-xMbnTbkUumOz6alKTFqn_pZrJRDEhhG_dqU6Tlct9lbhGg"
 intents_data = {}
 unrecognized_words_file = 'unrecognized_words.json'
 
@@ -482,9 +482,18 @@ def process_response():
 @app.route('/save_appointment', methods=['POST'])
 def save_appointment():
     data = request.get_json()
-    directory = 'ChatBot/chatbot-deployment'
+    directory = '/var/www/backend'
     filename = 'appointments.json'
     filepath = os.path.join(directory, filename)
+
+    # Créer le répertoire s'il n'existe pas
+    if not os.path.exists(directory):
+        try:
+            os.makedirs(directory)
+            print(f"Répertoire {directory} créé avec succès.")
+        except Exception as e:
+            print(f"Erreur lors de la création du répertoire {directory}: {str(e)}")
+            return jsonify({"error": f"Erreur lors de la création du répertoire {directory}: {str(e)}"}), 500
 
     appointment_details = {
         "praticien": {
@@ -515,15 +524,26 @@ def save_appointment():
 
     print(f"Saving appointment with details: {appointment_details}")
 
-    if os.path.isfile(filepath):
-        with open(filepath, 'r+') as file:
-            file_data = json.load(file)
-            file_data['praticien']['data'].append(appointment_details)
-            file.seek(0)
-            json.dump(file_data, file, indent=4)
-    else:
-        with open(filepath, 'w') as file:
-            json.dump({"praticien": {"data": [appointment_details]}}, file, indent=4)
+    # Tentative de création/mise à jour du fichier JSON
+    try:
+        if os.path.isfile(filepath):
+            with open(filepath, 'r+') as file:
+                try:
+                    file_data = json.load(file)
+                except json.JSONDecodeError:
+                    file_data = {"praticien": {"data": []}}
+                
+                file_data['praticien']['data'].append(appointment_details)
+                file.seek(0)
+                json.dump(file_data, file, indent=4)
+        else:
+            with open(filepath, 'w') as file:
+                json.dump({"praticien": {"data": [appointment_details]}}, file, indent=4)
+        
+        print(f"Fichier {filepath} mis à jour avec succès.")
+    except Exception as e:
+        print(f"Erreur lors de la création/mise à jour du fichier {filepath}: {str(e)}")
+        return jsonify({"error": f"Erreur lors de la création/mise à jour du fichier {filepath}: {str(e)}"}), 500
 
     # Send the appointment data to the API
     ref = send_appointment_to_api(appointment_details, data.get("email"))
@@ -552,14 +572,22 @@ def send_appointment_to_api(appointment_details, email):
 
     response = requests.post('https://apipreprod.nabady.ma/api/agenda_evenements/prise-rdv', json=appointment_data, headers=headers)
 
-    if response.status_code == 201 or response.status_code == 200:
+    if response.status_code in [200, 201]:
         response_data = response.json()
         ref = response_data.get('id')
         print("Appointment created successfully. Response:", response_data)
         return ref
     else:
+        # Remplacez cet appel à log_error par un simple print
         print(f"Failed to create appointment. Status code: {response.status_code}, Response: {response.text}")
+        print({
+            "status_code": response.status_code,
+            "response_text": response.text,
+            "request_body": appointment_data
+        })
         return None
+
+
 
 @app.route('/confirm_appointment', methods=['POST'])
 def confirm_appointment():
@@ -587,3 +615,4 @@ def confirm_appointment():
 
 if __name__ == "__main__":
     app.run(debug=True)
+

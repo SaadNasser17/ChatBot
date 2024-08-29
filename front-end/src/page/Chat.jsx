@@ -66,7 +66,7 @@ export default function Chat() {
   //   } catch (error) {
   //     console.error("Error incrementing session counter:", error);
   //   }
-  // };
+  // }
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
@@ -249,7 +249,7 @@ export default function Chat() {
 
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      const response = await fetch("http://127.0.0.1:5000/register_user", {
+      const response = await fetch("http://localhost:5000/register_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -281,7 +281,6 @@ export default function Chat() {
       displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
     }
   };
-
   const saveAppointmentDetails = async (patientId, gpatientId) => {
     try {
       const response = await fetch("http://localhost:5000/save_appointment", {
@@ -299,7 +298,8 @@ export default function Chat() {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          `Failed to save appointment details: ${errorData.error || "Unknown error"
+          `Failed to save appointment details: ${
+            errorData.error || "Unknown error"
           }`
         );
       }
