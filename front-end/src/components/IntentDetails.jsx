@@ -26,7 +26,7 @@ function IntentDetails({ intent, setSelectedIntent, removeIntentFromList, update
       responses: responses.split(',').map(res => res.trim())
     };
 
-    fetch(`http://localhost:5000/update_intent/${intent.language}`, {
+    fetch(`api/update_intent/${intent.language}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

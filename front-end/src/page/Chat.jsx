@@ -249,7 +249,7 @@ export default function Chat() {
   
       await new Promise((resolve) => setTimeout(resolve, 0));
   
-      const response = await fetch("http://localhost:5000/register_user", {
+      const response = await fetch("api/register_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -284,7 +284,7 @@ export default function Chat() {
   
   const saveAppointmentDetails = async (patientId, gpatientId, email) => {
     try {
-      const response = await fetch("http://localhost:5000/save_appointment", {
+      const response = await fetch("api/save_appointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -319,7 +319,7 @@ export default function Chat() {
   const handleSmsCodeInput = async (code) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/confirm_appointment",
+        "api/confirm_appointment",
         {
           method: "POST",
           headers: {
@@ -369,7 +369,7 @@ export default function Chat() {
 
   const callFlaskAPI = (userMessage, time) => {
     setIsBotTyping(true);
-    fetch("http://localhost:5000/predict", {
+    fetch("api/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage, time, language: selectedLanguage }),
@@ -422,7 +422,7 @@ export default function Chat() {
   };
 
   const fetchSpecialties = () => {
-    fetch("http://localhost:5000/get_specialties")
+    fetch("api/get_specialties")
       .then((response) => response.json())
       .then((data) => {
         setSpecialties(data["hydra:member"]);
@@ -465,32 +465,34 @@ export default function Chat() {
   }, [forceStopTyping]);
   return (
 
-      <div className="position-fixed bottom-0 end-0 mb-3 me-3 d-flex flex-column align-items-end">
+      <div className="position-fixed bottom-0 end-0 mb-3 me-1 d-flex flex-column align-items-center"style={{
+    justifyContent: "center",
+    alignItems: "center",
+  }}>
         {showBanner && (
           <div className="chat-banner slide-in-right">
          
             <div className="banner-content">
-              <h2 style={{ textAlign: "right" }}>Bienvenue !</h2>
-              <p style={{ textAlign: "right" }}>Essayez notre Chatbot !</p>
-              <div className="banner-icon" style={{ marginLeft: "100px" }}>
-                <IoChatbubbleEllipsesOutline
-                  style={{ width: "1.5rem", height: "1.5rem" }}
-                />
-              </div>
+              <h2 style={{ textAlign: "center",fontSize:"1.1rem",padding:"5px" }}>Bienvenue !</h2>
+              <h3 style={{ textAlign: "center",fontSize:"1.1rem",paddingBlock:"7px"}}>Essayez notre Chatbot !</h3>
               <button
+              style={{width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"}}
                 className="banner-button"
-                style={{ marginLeft: "90px" }}
                 onClick={toggleChatBox}
               >
                 Cliquez ici
-              </button>
-            </div>
-            <div
+                <div
               className="arrow-down"
-              style={{ marginTop: "1rem", marginLeft: "140px" }}
+              style={{marginLeft:"0.65rem"}}
             >
               ↓
             </div>
+              </button>
+            </div>
+            
           </div>
         )}
   
@@ -505,8 +507,6 @@ export default function Chat() {
           </div>
         )}
 
-      
-
       {isOpen && (
         <div
           className="bg-light d-flex flex-column justify-content-between rounded shadow"
@@ -514,7 +514,7 @@ export default function Chat() {
             width: isExtended ? "35vw" : "390px",
             height: isExtended ? "75vh" : "480px",
             position: "fixed",
-            bottom: "5rem",
+            bottom: "1rem",
             right: "1rem",
             transition: "all 0.3s ease-in-out",
           }}

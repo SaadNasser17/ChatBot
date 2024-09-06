@@ -78,18 +78,18 @@
 
 
 .chat-banner {
-  background-color: transparent; /* Enlever le fond */
+  background-color: #f0f8ff99; /* Enlever le fond */
   box-shadow: none; /* Enlever l'ombre */
   padding: 10px; /* Ajuster le padding */
   border-radius: 5px;
-  max-width: 200px; /* Réduire la largeur */
+  max-width: 180px; /* Réduire la largeur */
   text-align: center;
 }
 
 .chat-banner h2 {
   font-size: 22px; /* Réduire la taille du texte (welcome) */
   margin-bottom: 5px;
-  color: #00AEEF;
+  color: #0b0b0b;
 }
 
 .chat-banner p, .chat-banner .banner-icon, .chat-banner .banner-button {
