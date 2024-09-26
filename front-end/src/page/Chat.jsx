@@ -249,7 +249,7 @@ export default function Chat() {
   
       await new Promise((resolve) => setTimeout(resolve, 0));
   
-      const response = await fetch("api/register_user", {
+      const response = await fetch("http://localhost:5000/register_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -284,7 +284,7 @@ export default function Chat() {
   
   const saveAppointmentDetails = async (patientId, gpatientId, email) => {
     try {
-      const response = await fetch("api/save_appointment", {
+      const response = await fetch("http://localhost:5000/save_appointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -319,7 +319,7 @@ export default function Chat() {
   const handleSmsCodeInput = async (code) => {
     try {
       const response = await fetch(
-        "api/confirm_appointment",
+        "http://localhost:5000/confirm_appointment",
         {
           method: "POST",
           headers: {
@@ -369,7 +369,7 @@ export default function Chat() {
 
   const callFlaskAPI = (userMessage, time) => {
     setIsBotTyping(true);
-    fetch("api/predict", {
+    fetch("http://localhost:5000/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage, time, language: selectedLanguage }),
@@ -422,7 +422,7 @@ export default function Chat() {
   };
 
   const fetchSpecialties = () => {
-    fetch("api/get_specialties")
+    fetch("http://localhost:5000/get_specialties")
       .then((response) => response.json())
       .then((data) => {
         setSpecialties(data["hydra:member"]);
@@ -553,6 +553,7 @@ export default function Chat() {
             handleUserInput={handleUserInput}
             stopBotTyping={stopBotTyping}
             showSendIcon={showSendIcon}
+            selectedLanguage={selectedLanguage}
           />
         </div>
       )}

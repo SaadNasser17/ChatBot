@@ -147,6 +147,24 @@ def update_intent(language):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/ignore_unrecognized_intent/<language>', methods=['POST'])
+def ignore_unrecognized_intent(language):
+    try:
+        data = request.get_json()
+        pattern_to_ignore = data['pattern']
+        language_key = f"unrecognized-{language.lower()}"
+
+        # Pull the pattern from the unrecognized words list
+        unrecognized_intents_collection.update_one(
+            {"language": language_key},
+            {"$pull": {"unrecognized_words": pattern_to_ignore}}
+        )
+
+        return jsonify({"message": f"Pattern '{pattern_to_ignore}' removed successfully from unrecognized intents"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/admin', methods=['GET'])
 def serve_admin():
     return send_from_directory('', 'admin.html')

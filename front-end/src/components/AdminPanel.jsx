@@ -1,389 +1,411 @@
 import React, { useState, useEffect } from 'react';
-import IntentDetails from './IntentDetails';
+import { Eye, Mic, ArrowLeft, ArrowRight, Download, CircleX } from 'lucide-react';
+import Header from './Header';
 
 function AdminPanel() {
-  const [unrecognizedIntents, setUnrecognizedIntents] = useState({
-    darija: [],
-    'الدارجة': [],
-    'العربية': [],
-    francais: [],
-    english: []
-  });
-  const [existingIntents, setExistingIntents] = useState({
-    darija: [],
-    'الدارجة': [],
-    'العربية': [],
-    francais: [],
-    english: []
-  });
-  const [selectedIntent, setSelectedIntent] = useState(null);
-  const [error, setError] = useState(null);
-  const [newIntent, setNewIntent] = useState({
-    darija: { tag: '', patterns: '', responses: '' },
-    'الدارجة': { tag: '', patterns: '', responses: '' },
-    'العربية': { tag: '', patterns: '', responses: '' },
-    francais: { tag: '', patterns: '', responses: '' },
-    english: { tag: '', patterns: '', responses: '' },
+  const [intents, setIntents] = useState({
+    darija: { tag: '', pattern: '', response: '' },
+    'الدارجة': { tag: '', pattern: '', response: '' },
+    'العربية': { tag: '', pattern: '', response: '' },
+    english: { tag: '', pattern: '', response: '' },
+    francais: { tag: '', pattern: '', response: '' }
   });
 
+  const [unrecognizedIntents, setUnrecognizedIntents] = useState({});
+  const [currentIndex, setCurrentIndex] = useState(0); // Main page carousel index
+  const [popupIndex, setPopupIndex] = useState(0); // Popup carousel index
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
+  const [error, setError] = useState(null);
+  const [showLanguages, setShowLanguages] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [dataset, setDataset] = useState([]);
+  const [isUpdating, setIsUpdating] = useState(false); // Flag to determine if updating intent
+
   useEffect(() => {
+    // Fetch Unrecognized Intents from API
     fetch('http://localhost:5000/unrecognized_intents')
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
       })
-      .then(data => {
-        const formattedIntents = Object.entries(data.unrecognized_intents).reduce((acc, [language, words]) => {
-          acc[language] = words.map(word => ({ words: [word], language }));
-          return acc;
-        }, {});
-        setUnrecognizedIntents(formattedIntents);
+      .then((data) => {
+        setUnrecognizedIntents(data.unrecognized_intents);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('There was an error fetching the unrecognized intents!', error);
         setError(error.message);
       });
   }, []);
 
-  const handleAddIntent = (language) => {
+  const languages = Object.keys(unrecognizedIntents);
+  const currentLanguage = languages[currentIndex] || '';
+  const popupLanguage = languages[popupIndex] || ''; // Popup-specific language
+  const currentIntents = unrecognizedIntents[currentLanguage] || [];
+
+  const handleInputChange = (language, field, value) => {
+    setIntents((prevIntents) => ({
+      ...prevIntents,
+      [language]: { ...prevIntents[language], [field]: value }
+    }));
+  };
+
+  const handleSave = (language) => {
     const payload = {
-      tag: newIntent[language].tag,
-      patterns: newIntent[language].patterns.split(',').map(p => p.trim()),
-      responses: newIntent[language].responses.split(',').map(r => r.trim()),
+      tag: intents[language].tag,
+      patterns: intents[language].pattern.split(',').map((p) => p.trim()),
+      responses: intents[language].response.split(',').map((r) => r.trim())
     };
-  
-    fetch(`http://localhost:5000/add_intent/${language}`, {
+
+    const endpoint = isUpdating ? `/update_intent/${language}` : `/add_intent/${language}`;
+
+    fetch(`http://localhost:5000${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     })
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
       })
       .then(() => {
-        alert('New intent added successfully!');
-        setNewIntent({
-          darija: { tag: '', patterns: '', responses: '' },
-          'الدارجة': { tag: '', patterns: '', responses: '' },
-          'العربية': { tag: '', patterns: '', responses: '' },
-          francais: { tag: '', patterns: '', responses: '' },
-          english: { tag: '', patterns: '', responses: '' },
-        });
-        setSelectedIntent(null);
-        handleLoadIntent(language); // Reload the intents for this language
+        alert(`Intent for ${language} ${isUpdating ? 'updated' : 'saved'}!`);
+        setIsUpdating(false); // Reset after update
       })
-      .catch(error => {
-        console.error('There was an error adding the new intent!', error);
+      .catch((error) => {
+        console.error(`There was an error ${isUpdating ? 'updating' : 'adding'} the intent!`, error);
         setError(error.message);
       });
   };
 
-  const removeIntentFromList = (intent) => {
-    if (intent.isUnrecognized) {
-      setUnrecognizedIntents(prev => {
-        const newIntents = { ...prev };
-        newIntents[intent.language] = newIntents[intent.language].filter(i => i !== intent);
-        return newIntents;
-      });
-    } else {
-      handleLoadIntent(intent.language); // Reload the intents for this language
-    }
+  const handleSaveAll = () => {
+    Object.keys(intents).forEach((language) => {
+      handleSave(language);
+    });
+    alert('All intents saved!');
   };
 
-  const handleLoadIntent = (language) => {
+  const handleIgnoreIntent = (language, intent, e) => {
+    e.stopPropagation();
+
+    fetch(`http://localhost:5000/ignore_unrecognized_intent/${language}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ pattern: intent })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to ignore intent');
+        }
+        return response.json();
+      })
+      .then(() => {
+        setUnrecognizedIntents((prevIntents) => {
+          const updatedIntents = { ...prevIntents };
+          updatedIntents[language] = updatedIntents[language].filter(i => i !== intent);
+          return updatedIntents;
+        });
+        alert(`Intent "${intent}" ignored and removed from unrecognized intents!`);
+      })
+      .catch(error => {
+        console.error('Error ignoring the intent:', error);
+      });
+  };
+
+  const toggleLanguageButtons = () => {
+    setShowLanguages(!showLanguages);
+  };
+
+  const startSpeechRecognition = (language, field) => {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang =
+      language === 'darija'
+        ? 'ar-MA'
+        : language === 'الدارجة'
+        ? 'ar-MA'
+        : language === 'العربية'
+        ? 'ar-SA'
+        : language === 'english'
+        ? 'en-US'
+        : 'fr-FR';
+
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setIntents((prevIntents) => ({
+        ...prevIntents,
+        [language]: { ...prevIntents[language], [field]: transcript }
+      }));
+    };
+
+    recognition.start();
+  };
+
+  // Handlers for main page carousel (Unrecognized Intents)
+  const nextIntent = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % languages.length);
+  };
+
+  const prevIntent = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + languages.length) % languages.length);
+  };
+
+  // Handlers for popup carousel (Dataset)
+  const nextPopupIntent = () => {
+    const nextIndex = (popupIndex + 1) % languages.length;
+    setPopupIndex(nextIndex);
+    loadDatasetForLanguage(languages[nextIndex]); // Load new dataset for the next language
+  };
+
+  const prevPopupIntent = () => {
+    const prevIndex = (popupIndex - 1 + languages.length) % languages.length;
+    setPopupIndex(prevIndex);
+    loadDatasetForLanguage(languages[prevIndex]); // Load new dataset for the previous language
+  };
+
+  const loadDatasetForLanguage = (language) => {
     fetch(`http://localhost:5000/load_intents/${language}`)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
       })
-      .then(data => {
-        const formattedIntents = data.intents.map(intent => ({
-          tag: intent.tag,
-          words: intent.patterns,
-          responses: intent.responses,
-          language: language,
-          isUnrecognized: false
-        }));
-
-        setExistingIntents(prevIntents => ({
-          ...prevIntents,
-          [language]: formattedIntents,
-        }));
-
-        alert('Loaded successfully!');
+      .then((data) => {
+        setDataset(data.intents);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('There was an error loading the intents!', error);
         setError(error.message);
       });
   };
 
-  const updateExistingIntents = (language) => {
-    handleLoadIntent(language);
+  const handleWordClick = (word) => {
+    setIntents((prevIntents) => ({
+      ...prevIntents,
+      [currentLanguage]: { ...prevIntents[currentLanguage], pattern: word }
+    }));
+  };
+
+  const handleLanguageClick = (language) => {
+    setSelectedLanguage(language);
+    loadDatasetForLanguage(language); // Load dataset for the selected language
+    setShowPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
+  const handleSelectIntent = (intent) => {
+    setIntents((prevIntents) => ({
+      ...prevIntents,
+      [selectedLanguage]: {
+        ...prevIntents[selectedLanguage],
+        tag: intent.tag,
+        pattern: intent.patterns.join(', '),
+        response: intent.responses.join(', ')
+      }
+    }));
+    setIsUpdating(true); // Set flag to true when updating an existing intent
+    setShowPopup(false);
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h1 style={styles.headerText}>NABADYBOT ADMIN</h1>
-      </div>
-      {error && <p style={styles.errorText}>Error: {error}</p>}
+    <div className="container mx-auto mt-10">
+      <Header /> {/* Add the Header component here */}
+      
+      <div className="unrecognized-intents-container">
+        <h2 className="text-center text-blue-600 mb-4">List of Unrecognized Intents</h2>
+        <div className="carousel-container flex items-center justify-between my-4">
+          <button onClick={prevIntent} className="arrow-btn p-2 bg-gray-200 rounded-full hover:bg-gray-300">
+            <ArrowLeft />
+          </button>
 
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>List of Unrecognized Intents</h2>
-        <div style={styles.gridContainer}>
-          {Object.entries(unrecognizedIntents).map(([language, intents]) => (
-            <div key={language} style={styles.gridItem}>
-              <h3 style={styles.languageTitle}>{language}</h3>
-              {intents.length > 0 ? (
-                <ul style={styles.intentList}>
-                  {intents.map((intent, index) => (
-                    <li
-                      key={index}
-                      style={styles.intentListItem}
-                      onClick={() => setSelectedIntent({ ...intent, isUnrecognized: true })}
-                    >
-                      {intent.words.join(', ')}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p style={styles.noIntentsText}>No unrecognized intents found for {language}.</p>
-              )}
-            </div>
-          ))}
+          <div className="intent-card p-4 mx-4 text-center w-full flex items-center flex-col">
+            <h3 className="text-lg font-bold">{currentLanguage}</h3>
+            <ul className="intent-list flex flex-row gap-x-2">
+              {currentIntents.map((intent, index) => (
+                <li
+                  key={index}
+                  className="intent-item py-1 bg-white shadow-md rounded-md px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center"
+                  onClick={() => handleWordClick(intent)}
+                >
+                  {intent}
+                  <button
+                    className="ml-2 text-red-500 hover:text-red-700"
+                    onClick={(e) => handleIgnoreIntent(currentLanguage, intent, e)}
+                  >
+                    <CircleX />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <button onClick={nextIntent} className="arrow-btn p-2 bg-gray-200 rounded-full hover:bg-gray-300">
+            <ArrowRight />
+          </button>
         </div>
-      </section>
+      </div>
 
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Add New Intent</h2>
-        <div style={styles.gridContainer}>
-          {Object.entries(newIntent).map(([language, intent], index) => (
-            <div key={index} style={styles.gridItem}>
-              <h3 style={styles.languageTitle}>{language}</h3>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Tag</label>
-                <input
-                  type="text"
-                  value={intent.tag}
-                  onChange={(e) => setNewIntent({ ...newIntent, [language]: { ...intent, tag: e.target.value } })}
-                  style={styles.input}
-                />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Patterns (comma-separated)</label>
-                <input
-                  type="text"
-                  value={intent.patterns}
-                  onChange={(e) => setNewIntent({ ...newIntent, [language]: { ...intent, patterns: e.target.value } })}
-                  style={styles.input}
-                />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Responses (comma-separated)</label>
-                <input
-                  type="text"
-                  value={intent.responses}
-                  onChange={(e) => setNewIntent({ ...newIntent, [language]: { ...intent, responses: e.target.value } })}
-                  style={styles.input}
-                />
-              </div>
-              <button
-                onClick={() => handleAddIntent(language)}
-                style={styles.saveButton}
-              >
-                Save
+      <table className="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr>
+            <th className="border text-center p-2">Language</th>
+            <th className="border text-center p-2">Tag</th>
+            <th className="border text-center p-2">Pattern</th>
+            <th className="border text-center p-2">Response</th>
+            <th className="border text-center p-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(intents).map(([language, intent], index) => (
+            <tr key={language} className="text-center border-t">
+              <td className="border-r border-b p-2">{language}</td>
+              <td className="p-2">
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    value={intent.tag}
+                    onChange={(e) => handleInputChange(language, 'tag', e.target.value)}
+                    className="border p-1 w-full bg-white"
+                    placeholder="Enter tag"
+                  />
+                  <button
+                    onClick={() => startSpeechRecognition(language, 'tag')}
+                    className="ml-2 bg-gray-200 p-1 rounded-full hover:bg-gray-300"
+                  >
+                    <Mic />
+                  </button>
+                </div>
+              </td>
+              <td className="p-2">
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    value={intent.pattern}
+                    onChange={(e) => handleInputChange(language, 'pattern', e.target.value)}
+                    className="border p-1 w-full bg-white"
+                    placeholder="Enter pattern"
+                  />
+                  <button
+                    onClick={() => startSpeechRecognition(language, 'pattern')}
+                    className="ml-2 bg-gray-200 p-1 rounded-full hover:bg-gray-300"
+                  >
+                    <Mic />
+                  </button>
+                </div>
+              </td>
+              <td className="p-2">
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    value={intent.response}
+                    onChange={(e) => handleInputChange(language, 'response', e.target.value)}
+                    className="border p-1 w-full bg-white"
+                    placeholder="Enter response"
+                  />
+                  <button
+                    onClick={() => startSpeechRecognition(language, 'response')}
+                    className="ml-2 bg-gray-200 p-1 rounded-full hover:bg-gray-300"
+                  >
+                    <Mic />
+                  </button>
+                </div>
+              </td>
+              <td className="p-2">
+                <button
+                  onClick={() => handleSave(language)}
+                  className="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-700"
+                >
+                  <Download />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="flex justify-end mt-4">
+        <button
+          onClick={handleSaveAll}
+          className="bg-green-500 text-white py-2 px-6 rounded hover:bg-green-700 flex items-center"
+        >
+          <Download className="mr-2" /> Save All
+        </button>
+      </div>
+
+      <div className="mt-4 flex items-center">
+        <button onClick={toggleLanguageButtons} className="bg-gray-300 text-gray-800 p-2 rounded-full hover:bg-gray-400">
+          <Eye />
+        </button>
+        {showLanguages && (
+          <div className="ml-4 flex space-x-2">
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('darija')}>
+              dr
+            </button>
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('الدارجة')}>
+              در
+            </button>
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('العربية')}>
+              ar
+            </button>
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('english')}>
+              en
+            </button>
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('francais')}>
+              fr
+            </button>
+          </div>
+        )}
+      </div>
+
+      {showPopup && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center">
+          <div className="bg-white p-6 rounded shadow-lg w-1/2 max-h-[80vh] overflow-y-scroll">
+            <div className="flex justify-between items-center sticky top-0 bg-white p-4">
+              <button onClick={prevPopupIntent} className="p-2 text-black hover:bg-gray-100 rounded-full">
+                <ArrowLeft />
+              </button>
+              <h2 className="text-xl text-center flex-1">Dataset for {popupLanguage}</h2>
+              <button onClick={closePopup} className="p-2 text-black hover:bg-gray-100 rounded-full">
+                <CircleX />
+              </button>
+              <button onClick={nextPopupIntent} className="p-2 text-black hover:bg-gray-100 rounded-full">
+                <ArrowRight />
               </button>
             </div>
-          ))}
-        </div>
-      </section>
 
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Load Existing Intents</h2>
-        <div style={styles.buttonGroup}>
-          {Object.keys(existingIntents).map((language) => (
-            <button
-              key={language}
-              onClick={() => handleLoadIntent(language)}
-              style={styles.loadButton}
-            >
-              Load Intents for {language}
-            </button>
-          ))}
-        </div>
-      </section>
+            <hr className="border-black my-2" />
 
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Existing Intents</h2>
-        <div style={styles.gridContainer}>
-          {Object.entries(existingIntents).map(([language, intents]) => (
-            <div key={language} style={styles.gridItem}>
-              <h3 style={styles.languageTitle}>{language}</h3>
-              {intents.length > 0 ? (
-                <ul style={styles.intentList}>
-                  {intents.map((intent, index) => (
-                    <li
-                      key={index}
-                      style={styles.intentListItem}
-                      onClick={() => setSelectedIntent({ ...intent, isUnrecognized: false })}
-                    >
-                      {intent.words.join(', ')} - Tag: {intent.tag}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p style={styles.noIntentsText}>No intents found for {language}.</p>
-              )}
+            <div className="max-h-[70vh] overflow-y-scroll">
+              <ul>
+                {dataset?.map((intent, idx) => (
+                  <li
+                    key={idx}
+                    className="cursor-pointer hover:bg-gray-100 p-2 rounded"
+                    onClick={() => handleSelectIntent(intent)}
+                  >
+                    <strong>Tag:</strong> {intent.tag} <br />
+                    <strong>Patterns:</strong> {intent.patterns.join(', ')} <br />
+                    <strong>Responses:</strong> {intent.responses.join(', ')}
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
+          </div>
         </div>
-      </section>
-
-      {selectedIntent && (
-        <IntentDetails
-          intent={selectedIntent}
-          setSelectedIntent={setSelectedIntent}
-          removeIntentFromList={removeIntentFromList}
-          updateExistingIntents={updateExistingIntents}
-        />
       )}
     </div>
   );
 }
-
-const styles = {
-  container: {
-    width: '90%',
-    maxWidth: '1200px',
-    margin: '20px auto',
-    backgroundColor: '#f8f9fa',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-    padding: '20px',
-    borderRadius: '8px',
-  },
-  header: {
-    backgroundColor: '#17a2b8',
-    padding: '20px',
-    borderRadius: '8px',
-    textAlign: 'center',
-    color: '#fff',
-  },
-  headerText: {
-    color: '#333',
-    margin: '0',
-    fontSize: '2rem',
-    fontWeight: 'bold',
-  },
-  section: {
-    marginTop: '30px',
-  },
-  sectionTitle: {
-    color: '#007bff',
-    fontSize: '1.5rem',
-    marginBottom: '20px',
-  },
-  gridContainer: {
-    display: 'grid',
-    gap: '20px',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-  },
-  gridItem: {
-    backgroundColor: '#fff',
-    padding: '20px',
-    borderRadius: '8px',
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    border: '1px solid #ddd',
-  },
-  languageTitle: {
-    marginBottom: '15px',
-    color: '#495057',
-    fontSize: '1.25rem',
-    fontWeight: 'bold',
-  },
-  inputGroup: {
-    marginBottom: '15px',
-  },
-  label: {
-    display: 'block',
-    marginBottom: '5px',
-    color: '#495057',
-    fontSize: '1rem',
-  },
-  input: {
-    width: '100%',
-    padding: '10px',
-    marginBottom: '10px',
-    border: '1px solid #ced4da',
-    borderRadius: '4px',
-    boxSizing: 'border-box',
-    fontSize: '1rem',
-  },
-  saveButton: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '16px',
-    transition: 'background 0.2s ease-in-out',
-  },
-  saveButtonHover: {
-    backgroundColor: '#0056b3',
-  },
-  buttonGroup: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  loadButton: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '16px',
-    margin: '0 10px',
-    transition: 'background 0.2s ease-in-out',
-  },
-  loadButtonHover: {
-    backgroundColor: '#0056b3',
-  },
-  intentList: {
-    maxHeight: '200px',
-    overflowY: 'auto',
-    margin: '20px 0',
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    backgroundColor: '#e9ecef',
-  },
-  intentListItem: {
-    padding: '10px',
-    borderBottom: '1px solid #ddd',
-    cursor: 'pointer',
-    transition: 'background 0.2s ease-in-out',
-  },
-  intentListItemHover: {
-    backgroundColor: '#f1f3f5',
-  },
-  noIntentsText: {
-    fontSize: '14px',
-    color: '#6c757d',
-  },
-  errorText: {
-    color: 'red',
-    fontWeight: 'bold',
-    marginTop: '10px',
-  },
-};
 
 export default AdminPanel;
