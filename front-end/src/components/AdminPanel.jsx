@@ -370,23 +370,23 @@ function AdminPanel() {
 
       {showPopup && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg w-1/2 max-h-[80vh] overflow-y-scroll">
+          <div className="bg-white p-6 rounded shadow-lg w-1/2 max-h-[80vh] overflow-hidden">
             <div className="flex justify-between items-center sticky top-0 bg-white p-4">
               <button onClick={prevPopupIntent} className="p-2 text-black hover:bg-gray-100 rounded-full">
                 <ArrowLeft />
               </button>
-              <h2 className="text-xl text-center flex-1">Dataset for {popupLanguage}</h2>
-              <button onClick={closePopup} className="p-2 text-black hover:bg-gray-100 rounded-full">
-                <CircleX />
-              </button>
+              <h2 className="text-xl text-center flex-1 font-bold">Dataset for {popupLanguage}</h2>
               <button onClick={nextPopupIntent} className="p-2 text-black hover:bg-gray-100 rounded-full">
                 <ArrowRight />
+              </button>
+              <button onClick={closePopup} className="p-2 text-black hover:bg-gray-100 rounded-full absolute right-0.5 top-0">
+                <CircleX />
               </button>
             </div>
 
             <hr className="border-black my-2" />
 
-            <div className="max-h-[70vh] overflow-y-scroll">
+            <div className="overflow-y-auto max-h-[60vh] p-4">
               <ul>
                 {dataset?.map((intent, idx) => (
                   <li

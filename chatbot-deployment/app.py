@@ -6,23 +6,28 @@ import os
 from datetime import datetime
 import requests
 from pymongo import MongoClient
-import ssl 
+import bcrypt
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 app = Flask(__name__)
 CORS(app)
-app.secret_key = '1234'
-JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjA3MDE4NzAsImV4cCI6MTcyMzI5Mzg3MCwicm9sZXMiOlsiUk9MRV9NRURFQ0lOIiwiUk9MRV9VU0VSIl0sImVtYWlsIjoiY3JlYXRlcHJhdGljaWVuLnBob25lbnVtYmVyQHlvcG1haWwuY29tIn0.p34TLIVysp-HTz80Uc7_DckLK31FZ0cW7vypXwGG8NJz2cHGEWJilQvFvq9v3mfkrtbHG4P6-Q78BJxvKArFeA0CUvDLIdvCyJGN13Nfnx-lM9J8_ACvr9fG2fu-C8EEebi1RbV1oANj5ioIA6IxAEhYL3K3hOVCb6A9mQW7yFKdYDfdwLDcbfM7Z0Qk7Qvudgx7NR5O-ln6qJYB9NtMGNDzTH49gyaY6xF39REczA2MHA0UqopBztpIYZZ5uudYxNxbNLXNfLfCfRQtpvkDD1PNBt-kRQQR-q6zW35HUp_i-rDiWIlO25y7TPVPU3J0dQIcJwHGR0nqc0nCjEZsjQ"
+
+# Load sensitive information from environment variables
+JWT_TOKEN = os.getenv("JWT_TOKEN")
 
 # MongoDB connection setup
 client = MongoClient(
-            'mongodb+srv://snassereddine:O3LtH817wINZOcYU@nabadybotdataset.qkqs8.mongodb.net/nabadybotdataset?retryWrites=true&w=majority&appName=NabadyBotDataset',
-            tls=True,
-            tlsAllowInvalidCertificates=True
-        )
+    os.getenv("MONGO_URI"),
+    tls=True,
+    tlsAllowInvalidCertificates=True
+)
 
 db = client["Datasets"]
 intents_collection = db["Intents"]
 unrecognized_intents_collection = db["Unrecognized intents"]
+users_collection = client["Users"]["Users"]  # Access the Users collection
 
 fallback_messages = {
     "darija": "mafhamtch t9dr t3awd",
@@ -31,6 +36,70 @@ fallback_messages = {
     "francais": "Je ne comprends pas.",
     "english": "I don't understand."
 }
+
+# Define global headers for all API calls
+GLOBAL_HEADERS = {
+    "Origin": "chatbotNabady",
+      "Synchronize":"true" 
+}
+
+# Function for making GET requests with global headers
+def api_get_request(url):
+    try:
+        response = requests.get(url, headers=GLOBAL_HEADERS)
+        response.raise_for_status()
+        return response
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data from {url}: {e}")
+        return None
+
+# Function for making POST requests with global headers
+def api_post_request(url, data):
+    try:
+        response = requests.post(url, json=data, headers=GLOBAL_HEADERS)
+        response.raise_for_status()
+        return response
+    except requests.exceptions.RequestException as e:
+        print(f"Error sending data to {url}: {e}")
+        return None
+#start of login for admin panel
+# Function to authenticate the user
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    # Find the user in the MongoDB collection
+    user = users_collection.find_one({"username": username})
+
+    if user:
+        # Check if the password matches the hashed password stored in the database
+        if bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+            return jsonify({"message": "Login successful!", "auth": True}), 200
+        else:
+            return jsonify({"message": "Invalid credentials", "auth": False}), 401
+    else:
+        return jsonify({"message": "User not found", "auth": False}), 404
+
+# Hashing password before saving to the database
+def create_user(username, password):
+    # Check if the user already exists
+    existing_user = users_collection.find_one({"username": username})
+    if existing_user:
+        print(f"User {username} already exists in the database.")
+        return
+    
+    # If user doesn't exist, hash the password and create the user
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+
+    # Store the new user in MongoDB
+    users_collection.insert_one({
+        "username": username,
+        "password": hashed_password.decode('utf-8')  # Save as string in MongoDB
+    })
+    print(f"User {username} created successfully.")
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -171,34 +240,77 @@ def serve_admin():
 
 @app.route("/get_specialties")
 def get_specialties():
-    response = requests.get("https://apipreprod.nabady.ma/api/specialites")
-    specialties = response.json()
-    return jsonify(specialties)
+    response = api_get_request("https://apipreprod.nabady.ma/api/specialites")
+    if response:
+        return jsonify(response.json()), 200
+    else:
+        return jsonify({"error": "Failed to fetch specialties"}), 500
 
 def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, isIframe=False, referrer=""):
-    response = requests.post(
-        "https://apipreprod.nabady.ma/api/users/medecin/search",
-        json={
-            "query": query,
-            "consultation": consultation,
-            "page": page,
-            "result": result,
-            "isIframe": isIframe,
-            "referrer": referrer
-        }
-    )
-    if response.status_code == 200:
-        doctors = response.json()['praticien']['data']
+    data = {
+        "query": query,
+        "consultation": consultation,
+        "page": page,
+        "result": result,
+        "isIframe": isIframe,
+        "referrer": referrer
+    }
+    response = api_post_request("https://apipreprod.nabady.ma/api/users/medecin/search", data)
+    if response:
+        doctors = response.json().get('praticien', {}).get('data', [])
         for doctor in doctors:
             pcs_id = doctor['PcsID']
-            appointments_response = requests.get(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/2")
-            if appointments_response.ok:
+            appointments_response = api_get_request(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/2")
+            if appointments_response:
                 unavailable_times = appointments_response.json()
                 doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)
             else:
                 doctor['available_slots'] = []
         return doctors
+    return None
+
+@app.route("/get_doctors", methods=["POST"])
+def get_doctors():
+    data = request.get_json()
+    specialty_name = data.get("specialty_name")
+    doctors_data = fetch_doctors_from_api(query=specialty_name)
+    if doctors_data:
+        return jsonify(doctors_data), 200
     else:
+        return jsonify({"error": "Failed to fetch doctors"}), 500
+    
+def send_appointment_to_api(appointment_details, email):
+    appointment_data = {
+        "praticienCs": appointment_details["praticien"]["PraticienCentreSoinID"],
+        "patient": appointment_details["patient"]["patientId"],
+        "date_time_start": appointment_details["praticien"]["timeSlot"],
+        "motif": appointment_details["motifId"],
+        "type_rdv": "Cabinet",
+        "id": None,
+        "typeNotif": "sms",
+        "emailParent": email
+    }
+
+    headers = {
+        "Origin": "nabadyChatbot",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post('https://apipreprod.nabady.ma/api/agenda_evenements/prise-rdv', json=appointment_data, headers=headers)
+
+    if response.status_code in [200, 201]:
+        response_data = response.json()
+        ref = response_data.get('id')
+        print("Appointment created successfully. Response:", response_data)
+        return ref
+    else:
+        # Remplacez cet appel à log_error par un simple print
+        print(f"Failed to create appointment. Status code: {response.status_code}, Response: {response.text}")
+        print({
+            "status_code": response.status_code,
+            "response_text": response.text,
+            "request_body": appointment_data
+        })
         return None
 
 @app.route('/register_user', methods=['POST'])
@@ -228,27 +340,21 @@ def register_user():
         "validateBYCode": False
     }
 
-    response = requests.post('https://apipreprod.nabady.ma/api/users/register', json=user_data)
+    # Use the global headers and post request function
+    response = api_post_request('https://apipreprod.nabady.ma/api/users/register', user_data)
 
-    if response.status_code == 201:
+    if response and response.status_code == 201:
         data = response.json()
         patient_id = data["user"]["id"]
         gpatient_id = data["user"]["gpatient"]["id"]
         print(f"Patient ID: {patient_id}, GPatient ID: {gpatient_id}")
         return jsonify({'message': 'User registered successfully!', 'patient_id': patient_id, 'gpatient_id': gpatient_id}), 201
     else:
-        print(f"Error: {response.status_code} - {response.text}")
-        return jsonify({'error': 'Failed to register user'}), response.status_code
+        error_message = f"Error: {response.status_code} - {response.text}" if response else "No response from server"
+        print(error_message)
+        return jsonify({'error': 'Failed to register user'}), response.status_code if response else 500
 
-@app.route("/get_doctors", methods=["POST"])
-def get_doctors():
-    data = request.get_json()
-    specialty_name = data.get("specialty_name")
-    doctors_data = fetch_doctors_from_api(query=specialty_name)
-    if doctors_data:
-        return jsonify(doctors_data)
-    else:
-        return jsonify({"error": "Failed to fetch doctors"}), 500
+
 
 @app.route('/get_doctors_agenda', methods=['GET'])
 def get_doctors_agenda():
@@ -351,10 +457,12 @@ def save_appointment():
         }
     }
 
-    # Fetch the motif ID
-    motif_response = requests.get(f"https://apipreprod.nabady.ma/api/motif_praticiens?teamMember={appointment_details['praticien']['PraticienCentreSoinID']}")
-    if motif_response.ok:
+   # Fetch the motif ID with synchronize=true
+    motif_response = api_get_request(f"https://apipreprod.nabady.ma/api/motif_praticiens?teamMember={appointment_details['praticien']['PraticienCentreSoinID']}&synchronize=true")
+    if motif_response and motif_response.ok:
         motifs = motif_response.json()
+       # print(f"Motif Response: {json.dumps(motifs, indent=4)}")  # Print the full response for debugging
+        
         if motifs and "hydra:member" in motifs and motifs["hydra:member"]:
             motifId = motifs["hydra:member"][0]["id"]
             appointment_details["motifId"] = motifId
@@ -362,6 +470,7 @@ def save_appointment():
             return jsonify({"error": "No motifs found for the doctor"}), 500
     else:
         return jsonify({"error": "Failed to fetch motifs"}), 500
+
 
     print(f"Saving appointment with details: {appointment_details}")
 
@@ -394,41 +503,6 @@ def save_appointment():
     else:
         return jsonify({"error": "Failed to create appointment"}), 500
 
-def send_appointment_to_api(appointment_details, email):
-    appointment_data = {
-        "praticienCs": appointment_details["praticien"]["PraticienCentreSoinID"],
-        "patient": appointment_details["patient"]["patientId"],
-        "date_time_start": appointment_details["praticien"]["timeSlot"],
-        "motif": appointment_details["motifId"],
-        "type_rdv": "Cabinet",
-        "id": None,
-        "typeNotif": "sms",
-        "emailParent": email
-    }
-
-    headers = {
-        "Authorization": f"Bearer {JWT_TOKEN}",
-        "Content-Type": "application/json"
-    }
-
-    response = requests.post('https://apipreprod.nabady.ma/api/agenda_evenements/prise-rdv', json=appointment_data, headers=headers)
-
-    if response.status_code in [200, 201]:
-        response_data = response.json()
-        ref = response_data.get('id')
-        print("Appointment created successfully. Response:", response_data)
-        return ref
-    else:
-        # Remplacez cet appel à log_error par un simple print
-        print(f"Failed to create appointment. Status code: {response.status_code}, Response: {response.text}")
-        print({
-            "status_code": response.status_code,
-            "response_text": response.text,
-            "request_body": appointment_data
-        })
-        return None
-
-
 
 @app.route('/confirm_appointment', methods=['POST'])
 def confirm_appointment():
@@ -443,7 +517,7 @@ def confirm_appointment():
     }
 
     headers = {
-        "Authorization": f"Bearer {JWT_TOKEN}",
+        "Origin": "nabadyChatbot",
         "Content-Type": "application/json"
     }
 

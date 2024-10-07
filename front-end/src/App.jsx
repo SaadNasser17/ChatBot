@@ -9,7 +9,9 @@ import Header from './components/Header';
 import Authentification from './components/Authentification';
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem('isAuthenticated') === 'true'
+  );
 
   useEffect(() => {
     const checkAuth = () => {
@@ -17,6 +19,7 @@ export default function App() {
       setIsAuthenticated(auth);
     };
 
+    // Check authentication state on refresh and listen for any changes
     checkAuth();
     window.addEventListener('storage', checkAuth);
 
@@ -37,25 +40,37 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Chat />} />
-          <Route path="/login" element={<Authentification setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/admin" element={
-            <ProtectedRoute>
-              <Header />
-              <AdminPanel />
-            </ProtectedRoute>
-          } />
-          <Route path="/statistiques" element={
-            <ProtectedRoute>
-              <Header />
-              <Statistiques />
-            </ProtectedRoute>
-          } />
-          <Route path="/rendezvous" element={
-            <ProtectedRoute>
-              <Header />
-              <RendezVous />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="/login"
+            element={<Authentification setIsAuthenticated={setIsAuthenticated} />}
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Header />
+                <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/statistiques"
+            element={
+              <ProtectedRoute>
+                <Header />
+                <Statistiques />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rendezvous"
+            element={
+              <ProtectedRoute>
+                <Header />
+                <RendezVous />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
     </BookingProvider>

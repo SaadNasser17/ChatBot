@@ -307,7 +307,7 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
           >
             <div className="d-flex align-items-start mb-2">
               <img
-                src="https://uat.nabady.ma/assets/images/avatars/medecin_homme.svg"
+                src="https://preprod.nabady.ma/assets/images/avatars/medecin_homme.svg"
                 alt="Doctor"
                 className="mr-3"
                 style={{ width: '48px', height: '48px' }}

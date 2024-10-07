@@ -2,19 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, LockKeyhole } from 'lucide-react';
 
-const Authentication = () => {
+const Authentication = ({ setIsAuthenticated }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [isAuth, setIsAuth] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isAuth) {
-      navigate('/admin', { replace: true });
-    }
-  }, [isAuth, navigate]);
 
   const handleLogin = () => {
     const adminUsername = 'admin';
@@ -22,11 +15,10 @@ const Authentication = () => {
 
     if (username.trim() === adminUsername && password.trim() === adminPassword) {
       localStorage.setItem('isAuthenticated', 'true');
-      console.log('Login successful! Redirecting...');
-      setIsAuth(true);
+      setIsAuthenticated(true);  // Update the app state
+      navigate('/admin', { replace: true });
     } else {
       setError('Invalid username or password');
-      console.log('Login failed: Invalid credentials');
     }
   };
 
@@ -39,7 +31,7 @@ const Authentication = () => {
       <img src="/nabady_chatbot.svg" alt="NabadyBot Logo" style={styles.logo} />
       <p style={styles.analyticsText}>NabadyBot Analytics</p>
       <div style={styles.card}>
-        <h2>Login</h2>
+        <h2 style={styles.title}>Login</h2>
         <div style={styles.inputContainer}>
           <label style={styles.label}>Username</label>
           <div style={styles.inputWrapper}>
@@ -87,10 +79,11 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
-    backgroundImage: 'url(green_blue.jpg)',
+    backgroundImage: 'url(green_blue.jpg)', // Adjust path if necessary
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
+    color: '#fff', // Set default text color to white for better contrast
   },
   logo: {
     width: '150px',
@@ -100,7 +93,7 @@ const styles = {
     fontSize: '18px',
     fontWeight: 'bold',
     marginBottom: '20px',
-    color: '#fff',
+    color: '#fff', // Make sure text is visible on the background
   },
   card: {
     padding: '20px',
@@ -109,6 +102,13 @@ const styles = {
     width: '300px',
     textAlign: 'center',
     backgroundColor: '#fff',
+    color: '#000', // Set text color to black inside the card
+  },
+  title: {
+    marginBottom: '20px',
+    fontSize: '24px',
+    fontWeight: 'bold',
+    color: '#333',
   },
   inputContainer: {
     marginBottom: '20px',
@@ -131,11 +131,11 @@ const styles = {
   },
   input: {
     width: '100%',
-    padding: '10px 10px 10px 40px',
+    padding: '10px 10px 10px 40px', // Adjust padding for icons
     borderRadius: '4px',
     border: '1px solid #ccc',
     backgroundColor: '#fff',
-    color: '#000',
+    color: '#000', // Ensure input text is black
   },
   eyeIcon: {
     position: 'absolute',
