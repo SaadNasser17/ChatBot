@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import AniText from "../components/Anitext";
-import DOt from "../components/DOt";
-import SpecialtiesDropdown from './SpecialtiesDropdown';
-import Doctor from './Doctor';
+import AniText from "./Anitext.jsx";
+import DOt from "./DOt.jsx";
+import SpecialtiesDropdown from './SpecialtiesDropdown.jsx';
+import Doctor from './Doctor.jsx';
 import { getMessageForLanguage } from "../utils/messages.js";
 
 export default function MessagesList({

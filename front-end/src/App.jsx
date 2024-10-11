@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import AdminPanel from './components/AdminPanel';
 import Statistiques from './components/Statistiques';
 import RendezVous from './components/RendezVous';
+import MotsPourRendezVous from './components/MotsPourRendezVous';
 import { BookingProvider } from './components/BookingContext';
 import Chat from './page/Chat';
 import Header from './components/Header';
@@ -68,6 +69,15 @@ export default function App() {
               <ProtectedRoute>
                 <Header />
                 <RendezVous />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/motspourrendezvous"
+            element={
+              <ProtectedRoute>
+                <Header />
+                <MotsPourRendezVous />
               </ProtectedRoute>
             }
           />

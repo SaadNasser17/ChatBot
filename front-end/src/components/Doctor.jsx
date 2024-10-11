@@ -191,35 +191,38 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
   };
 
   const handleSlotClick = async (doctor, doctorName, PcsID, slot) => {
-    const [hours, minutes] = slot.split(":");
-
-    const { heureOuverture, heureFermeture } = doctor.agendaConfig;
-    const openingHour = parseInt(heureOuverture.split(":")[0], 10);
-    const closingHour = parseInt(heureFermeture.split(":")[0], 10);
-
+    // Parse the hours and minutes from the selected slot
+    const [hours, minutes] = slot.split(":").map(Number);
+  
+    // Set the date for the selected slot time
     const now = new Date();
-    const slotTime = new Date(now.getTime());
-    slotTime.setHours(hours);
-    slotTime.setMinutes(minutes);
-    slotTime.setSeconds(0);
-    slotTime.setMilliseconds(0);
-
-    const isNextDay =
-      slotTime.getHours() < openingHour || slotTime.getHours() >= closingHour;
-
-    let selectedDate = new Date(now.getTime());
-    if (isNextDay || isTomorrow) {
-      selectedDate.setDate(selectedDate.getDate() + 1);
-    }
+    let selectedDate = new Date(now);
+  
+    // Set the hours and minutes for the selected time in local time
     selectedDate.setHours(hours);
     selectedDate.setMinutes(minutes);
     selectedDate.setSeconds(0);
     selectedDate.setMilliseconds(0);
-
-    const isoString = selectedDate.toISOString();
-
-    onSlotClick(doctorName, PcsID, isoString);
+  
+    // Check if the selected time is for tomorrow (based on the button click)
+    if (isTomorrow) {
+      selectedDate.setDate(selectedDate.getDate() + 1);
+    }
+  
+    // Instead of using `toISOString()` which converts to UTC, format manually
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(selectedDate.getDate()).padStart(2, '0');
+    const hour = String(selectedDate.getHours()).padStart(2, '0');
+    const minute = String(selectedDate.getMinutes()).padStart(2, '0');
+    
+    // Create the ISO-like string manually without converting to UTC
+    const formattedDate = `${year}-${month}-${day}T${hour}:${minute}:00.000Z`;
+  
+    // Call the provided callback with the selected doctor details and time slot
+    onSlotClick(doctorName, PcsID, formattedDate);
   };
+  
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

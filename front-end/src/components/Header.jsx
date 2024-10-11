@@ -1,3 +1,4 @@
+// Header Component with Sidebar Update
 import React, { useState } from 'react';
 import { Columns3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom'; // For navigation
@@ -74,6 +75,12 @@ const Header = () => {
           >
             Rendez vous
           </li>
+          <li
+            style={styles.sidebarItem}
+            onClick={() => handleNavigation('/motspourrendezvous')}
+          >
+            Mots pour rendez-vous
+          </li>
         </ul>
       </div>
     </>
@@ -117,7 +124,7 @@ const styles = {
   },
   logoutContainer: {
     marginLeft: 'auto',
-    marginRight: '20px', // Adjust as needed
+    marginRight: '20px',
   },
   logoutButton: {
     backgroundColor: '#FF4D4D',

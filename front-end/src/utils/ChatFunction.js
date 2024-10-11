@@ -1,45 +1,29 @@
-const actionWords = [
-  "make",
-  "book",
-  "schedule",
-  "set",
-  "get",
-  "need",
-  "want",
-  "take",
-  "nakhod",
-  "ndir",
-  "bghit",
-  "bghyt",
-];
+// Fetch words from the backend instead of MongoDB directly
+const fetchWordsFromBackend = async () => {
+  try {
+    const response = await fetch('http://localhost:5000/get_word_lists');
+    if (!response.ok) {
+      throw new Error('Failed to fetch word lists');
+    }
+    const data = await response.json();
+    return data; // Contains actionWords, appointmentKeywords, medicalWords
+  } catch (error) {
+    console.error('Error fetching word lists from backend:', error);
+    return { actionWords: [], appointmentKeywords: [], medicalWords: [] }; // Return empty lists if error
+  }
+};
 
-const appointmentKeywords = [
-  "rdv",
-  "rendez",
-  "vous",
-  "موعد",
-  "appointment",
-  "booking",
-  "schedule",
-  "doctor",
-  "physician",
-  "clinic",
-  "hospital",
-  "medical",
-  "checkup",
-  "consultation",
-  "tbib",
-  "doktor",
-  "docteur",
-];
+// Initialize the words from the backend for the chatbot logic
+const initWordLists = async () => {
+  const { actionWords, appointmentKeywords, medicalWords } = await fetchWordsFromBackend();
+  return { actionWords, appointmentKeywords, medicalWords };
+};
 
+// Other utility functions remain unchanged
 const arabicToLatinNumbers = (str) => {
   const arabicNumbers = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
   const latinNumbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  return str.replace(
-    /[٠-٩]/g,
-    (char) => latinNumbers[arabicNumbers.indexOf(char)]
-  );
+  return str.replace(/[٠-٩]/g, (char) => latinNumbers[arabicNumbers.indexOf(char)]);
 };
 
 const BookingDetailsData = {
@@ -84,26 +68,12 @@ const languageChoices = {
   english: "english",
 };
 
-const medicalWords = [
-  "doctor",
-  "physician",
-  "clinic",
-  "hospital",
-  "medical",
-  "checkup",
-  "consultation",
-  "tbib",
-  "doktor",
-];
-
 export {
-  medicalWords,
+  initWordLists, // Export the function to initialize word lists from the backend
   languageChoices,
   generateRandomEmail,
   formatDateWithLatinNumbers,
   confirmYes,
   BookingDetailsData,
   arabicToLatinNumbers,
-  actionWords,
-  appointmentKeywords,
 };

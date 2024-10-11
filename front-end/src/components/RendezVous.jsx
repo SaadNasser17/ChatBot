@@ -2,19 +2,24 @@ import React, { useState, useEffect } from 'react';
 
 const RendezVous = () => {
   const [stats, setStats] = useState({
-    today: 5,        // Static data for today's appointments
-    thisWeek: 20,    // Static data for this week's appointments
-    total: 150,      // Static data for total appointments
+    today: 0,
+    thisWeek: 0,
+    total: 0,
   });
 
   useEffect(() => {
-    // Uncomment this section once backend is available
-    // fetch('http://localhost:5000/appointment_stats')
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     setStats(data);
-    //   })
-    //   .catch(error => console.error('Error fetching stats:', error));
+    // Fetch statistics from backend dynamically
+    fetch('http://localhost:5000/appointment_stats')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setStats(data);
+      })
+      .catch(error => console.error('Error fetching stats:', error));
   }, []);
 
   const todayDate = new Date().toLocaleDateString();

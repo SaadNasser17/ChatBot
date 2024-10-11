@@ -1,30 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../index.css";
-import {
-  IoChatbubbleEllipsesOutline,
-  IoChatbubbles,
-} from "react-icons/io5";
+import { IoChatbubbleEllipsesOutline, IoChatbubbles } from "react-icons/io5";
 import { getMessageForLanguage } from "../utils/messages.js";
 import { useBooking } from "../components/BookingContext";
 
 import ChatHeader from "../components/ChatHeader";
-import MessagesList from "../components/MessagesList ";
+import MessagesList from "../components/MessagesList";
 import ChatFooter from "../components/ChatFooter";
+
 import {
-  medicalWords,
+  initWordLists,
   languageChoices,
   generateRandomEmail,
   formatDateWithLatinNumbers,
   confirmYes,
   BookingDetailsData,
   arabicToLatinNumbers,
-  actionWords,
-  appointmentKeywords,
 } from "../utils/ChatFunction";
-
-arabicToLatinNumbers;
-formatDateWithLatinNumbers;
-languageChoices;
 
 export default function Chat() {
   const { bookingDetails, setBookingDetails } = useBooking();
@@ -47,7 +39,23 @@ export default function Chat() {
   const [showSendIcon, setShowSendIcon] = useState(true);
   const [isExtended, setIsExtended] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
-  const [showBanner, setShowBanner] = useState(true)
+  const [showBanner, setShowBanner] = useState(true);
+
+  // Initialize word lists from MongoDB
+  const [wordLists, setWordLists] = useState({
+    actionWords: [],
+    appointmentKeywords: [],
+    medicalWords: [],
+  });
+
+  useEffect(() => {
+    const fetchWordLists = async () => {
+      const { actionWords, appointmentKeywords, medicalWords } =
+        await initWordLists();
+      setWordLists({ actionWords, appointmentKeywords, medicalWords });
+    };
+    fetchWordLists();
+  }, []);
 
   useEffect(() => {
     if (!initialMessageSet) {
@@ -55,27 +63,19 @@ export default function Chat() {
         'Ana NabadyBot, khtar logha dyalek. <br/> 1. Darija <br/> 2. الدارجة <br/> 3. العربية <br/> 4.Francais <br/> 5.English'
       );
       setInitialMessageSet(true);
-      // incrementSessionCounter(); // New function call
     }
     setWaitingForConfirmation(false);
   }, [initialMessageSet]);
-  
-  // const incrementSessionCounter = async () => {
-  //   try {
-  //     await fetch("/increment_session_counter", { method: "POST" });
-  //   } catch (error) {
-  //     console.error("Error incrementing session counter:", error);
-  //   }
-  // }
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
-    setShowBanner(false)
+    setShowBanner(false);
   };
+
   const toggleChatSize = () => {
     setIsExtended(!isExtended);
   };
- 
+
   const handleUserInput = async () => {
     if (userMessage.trim()) {
       const msg = userMessage.trim().toLowerCase();
@@ -89,7 +89,6 @@ export default function Chat() {
       if (!selectedLanguage) {
         if (languageChoices[msg]) {
           setSelectedLanguage(languageChoices[msg]);
-          console.log("Selected language:", languageChoices[msg]);
           displayBotMessage(
             getMessageForLanguage(languageChoices[msg], "welcome")
           );
@@ -121,10 +120,7 @@ export default function Chat() {
   };
 
   const isAppointmentRelated = (message) => {
-    appointmentKeywords;
-    actionWords;
-    medicalWords;
-
+    const { actionWords, appointmentKeywords, medicalWords } = wordLists;
     const processedMessage = message
       .toLowerCase()
       .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
@@ -201,13 +197,17 @@ export default function Chat() {
 
           displayBotMessage(confirmationMessage);
           await delay(10500);
-          displayBotMessage(getMessageForLanguage(selectedLanguage, "confirm"));
+          displayBotMessage(
+            getMessageForLanguage(selectedLanguage, "confirm")
+          );
           await delay(4500);
           setWaitingForConfirmation(true);
           break;
 
         default:
-          displayBotMessage(getMessageForLanguage(selectedLanguage, "default"));
+          displayBotMessage(
+            getMessageForLanguage(selectedLanguage, "default")
+          );
           break;
       }
     } catch (error) {
@@ -218,7 +218,6 @@ export default function Chat() {
 
   const handleConfirmation = async (confirmation) => {
     setWaitingForConfirmation(false);
-    confirmYes;
 
     if (confirmation.trim().toLowerCase() === confirmYes[selectedLanguage]) {
       await finalizeAppointment();
@@ -241,14 +240,14 @@ export default function Chat() {
     try {
       const randomEmail = generateRandomEmail();
       setGeneratedEmail(randomEmail);
-  
+
       setBookingDetails((prevDetails) => ({
         ...prevDetails,
         email: randomEmail,
       }));
-  
+
       await new Promise((resolve) => setTimeout(resolve, 0));
-  
+
       const response = await fetch("http://localhost:5000/register_user", {
         method: "POST",
         headers: {
@@ -261,27 +260,26 @@ export default function Chat() {
           email: randomEmail,
         }),
       });
-  
+
       if (!response.ok) throw new Error("Network response was not ok.");
-  
+
       const data = await response.json();
       const patientId = data.patient_id;
       const gpatientId = data.gpatient_id;
-  
-      console.log("Patient ID:", patientId, "GPatient ID:", gpatientId);
-  
+
       if (patientId && gpatientId) {
         await saveAppointmentDetails(patientId, gpatientId, randomEmail);
       } else {
-        console.error("Patient ID or GPatient ID not found in the response.");
-        displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
+        displayBotMessage(
+          getMessageForLanguage(selectedLanguage, "error")
+        );
       }
     } catch (error) {
       console.error("Error finalizing appointment:", error);
       displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
     }
   };
-  
+
   const saveAppointmentDetails = async (patientId, gpatientId, email) => {
     try {
       const response = await fetch("http://localhost:5000/save_appointment", {
@@ -296,19 +294,19 @@ export default function Chat() {
           email,
         }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          `Failed to save appointment details: ${
-            errorData.error || "Unknown error"
-          }`
+          `Failed to save appointment details: ${errorData.error || "Unknown error"}`
         );
       }
-  
+
       const data = await response.json();
       setAppointmentRef(data.ref);
-      displayBotMessage(getMessageForLanguage(selectedLanguage, "sms_code"));
+      displayBotMessage(
+        getMessageForLanguage(selectedLanguage, "sms_code")
+      );
       setWaitingForSmsCode(true);
     } catch (error) {
       console.error("Error saving appointment details:", error);
@@ -337,13 +335,9 @@ export default function Chat() {
       }
 
       if (!response.ok)
-        throw new Error(
-          getMessageForLanguage(selectedLanguage, "confirm_error")
-        );
+        throw new Error(getMessageForLanguage(selectedLanguage, "confirm_error"));
 
-      displayBotMessage(
-        getMessageForLanguage(selectedLanguage, "confirm_success")
-      );
+      displayBotMessage(getMessageForLanguage(selectedLanguage, "confirm_success"));
       resetAppointmentDetails();
       setAppointmentStep(0);
       setWaitingForSmsCode(false);
@@ -362,7 +356,6 @@ export default function Chat() {
   };
 
   const fetchDoctorsForSpecialty = async (specialtyName) => {
-    console.log(`Fetching doctors for ${specialtyName}`);
     setSelectedSpecialty({ name: specialtyName });
     setShowDoctors(true);
   };
@@ -370,9 +363,13 @@ export default function Chat() {
   const callFlaskAPI = (userMessage, time) => {
     setIsBotTyping(true);
     fetch("http://localhost:5000/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage, time, language: selectedLanguage }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: userMessage,
+        time,
+        language: selectedLanguage,
+      }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -389,20 +386,16 @@ export default function Chat() {
       });
   };
 
-  const generateRandomEmail = () => {
-    const randomChars = Math.random().toString(36).substring(2, 10);
-    return `${randomChars}@yopmail.com`;
-  };
-
   const addMessage = (text, type) => {
     setMessages((prevMessages) => [
       ...prevMessages,
       { text, type, time: new Date().toLocaleTimeString() },
     ]);
   };
+
   const resetAppointmentDetails = () => {
     setBookingDetails({
-      BookingDetailsData
+      BookingDetailsData,
     });
   };
 
@@ -463,49 +456,59 @@ export default function Chat() {
       return () => clearTimeout(timer);
     }
   }, [forceStopTyping]);
-  return (
 
-      <div className="position-fixed bottom-0 end-0 mb-3 me-1 d-flex flex-column align-items-center"style={{
-    justifyContent: "center",
-    alignItems: "center",
-  }}>
-        {showBanner && (
-          <div className="chat-banner slide-in-right">
-         
-            <div className="banner-content">
-              <h2 style={{ textAlign: "center",fontSize:"1.1rem",padding:"5px" }}>Bienvenue !</h2>
-              <h3 style={{ textAlign: "center",fontSize:"1.1rem",paddingBlock:"7px"}}>Essayez notre Chatbot !</h3>
-              <button
-              style={{width: "100%",
+  return (
+    <div
+      className="position-fixed bottom-0 end-0 mb-3 me-1 d-flex flex-column align-items-center"
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {showBanner && (
+        <div className="chat-banner slide-in-right">
+          <div className="banner-content">
+            <h2 style={{ textAlign: "center", fontSize: "1.1rem", padding: "5px" }}>
+              Bienvenue !
+            </h2>
+            <h3
+              style={{
+                textAlign: "center",
+                fontSize: "1.1rem",
+                paddingBlock: "7px",
+              }}
+            >
+              Essayez notre Chatbot !
+            </h3>
+            <button
+              style={{
+                width: "100%",
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center"}}
-                className="banner-button"
-                onClick={toggleChatBox}
-              >
-                Cliquez ici
-                <div
-              className="arrow-down"
-              style={{marginLeft:"0.65rem"}}
+                alignItems: "center",
+              }}
+              className="banner-button"
+              onClick={toggleChatBox}
             >
-              ↓
-            </div>
-              </button>
-            </div>
-            
-          </div>
-        )}
-  
-        {!isOpen && (
-          <div className="btn-chat-container">
-            <button onClick={toggleChatBox} className="btn-chat-rectangle">
-              <IoChatbubbleEllipsesOutline
-                className="icon"
-                style={{ width: "2.5rem", height: "2.5rem" }}
-              />
+              Cliquez ici
+              <div className="arrow-down" style={{ marginLeft: "0.65rem" }}>
+                ↓
+              </div>
             </button>
           </div>
-        )}
+        </div>
+      )}
+
+      {!isOpen && (
+        <div className="btn-chat-container">
+          <button onClick={toggleChatBox} className="btn-chat-rectangle">
+            <IoChatbubbleEllipsesOutline
+              className="icon"
+              style={{ width: "2.5rem", height: "2.5rem" }}
+            />
+          </button>
+        </div>
+      )}
 
       {isOpen && (
         <div
@@ -558,5 +561,5 @@ export default function Chat() {
         </div>
       )}
     </div>
-  )
+  );
 }

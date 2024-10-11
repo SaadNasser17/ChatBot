@@ -24,10 +24,18 @@ client = MongoClient(
     tlsAllowInvalidCertificates=True
 )
 
-db = client["Datasets"]
-intents_collection = db["Intents"]
-unrecognized_intents_collection = db["Unrecognized intents"]
-users_collection = client["Users"]["Users"]  # Access the Users collection
+# Access collections in different databases
+db_datasets = client["Datasets"]
+intents_collection = db_datasets["Intents"]
+unrecognized_intents_collection = db_datasets["Unrecognized intents"]
+users_collection = client["Users"]["Users"]
+
+# Access collections in the AppointmentRelated database
+db_appointment_related = client["AppointmentRelated"]
+
+db_appointments = client["appointments"]  # The database is "appointments"
+appointments_collection = db_appointments["appointments"]  # The collection is "appointments"
+
 
 fallback_messages = {
     "darija": "mafhamtch t9dr t3awd",
@@ -62,6 +70,71 @@ def api_post_request(url, data):
     except requests.exceptions.RequestException as e:
         print(f"Error sending data to {url}: {e}")
         return None
+    
+@app.route('/get_word_lists', methods=['GET'])
+def get_word_lists():
+    try:
+        db = client['AppointmentRelated']
+
+        # Fetch actionWords
+        action_words_doc = db['actionWords'].find_one()
+        actionWords = action_words_doc.get('words', []) if action_words_doc else []
+
+        # Fetch appointmentKeywords
+        appointment_keywords_doc = db['appointmentKeywords'].find_one()
+        appointmentKeywords = appointment_keywords_doc.get('words', []) if appointment_keywords_doc else []
+
+        # Fetch medicalWords
+        medical_words_doc = db['medicalWords'].find_one()
+        medicalWords = medical_words_doc.get('words', []) if medical_words_doc else []
+
+        return jsonify({
+            'actionWords': actionWords,
+            'appointmentKeywords': appointmentKeywords,
+            'medicalWords': medicalWords
+        }), 200  # Explicitly returning 200 status code for success
+
+    except Exception as e:
+        print(f"Error fetching word lists: {e}")  # Improved error logging
+        return jsonify({'error': f'Failed to fetch word lists due to: {str(e)}'}), 500
+
+@app.route('/add_word', methods=['POST'])
+def add_word():
+    try:
+        db = client['AppointmentRelated']
+        data = request.get_json()
+        word_type = data.get('type')  # 'actionWords', 'appointmentKeywords', or 'medicalWords'
+        new_word = data.get('word')
+
+        if not new_word:
+            return jsonify({'error': 'No word provided'}), 400
+
+        # Determine the correct collection based on type
+        if word_type == 'actionWords':
+            collection = db['actionWords']
+        elif word_type == 'appointmentKeywords':
+            collection = db['appointmentKeywords']
+        elif word_type == 'medicalWords':
+            collection = db['medicalWords']
+        else:
+            return jsonify({'error': 'Invalid word type'}), 400
+
+        # Update the existing document to add the new word to the "words" array
+        result = collection.update_one(
+            {},  # Empty filter to match the first document
+            {'$push': {'words': new_word}}
+        )
+
+        if result.modified_count == 0:
+            return jsonify({'error': 'Failed to add word to the list'}), 400
+
+        return jsonify({'message': 'Word added successfully'}), 201
+
+    except Exception as e:
+        print(f"Error adding word: {e}")
+        return jsonify({'error': f'Failed to add word due to: {str(e)}'}), 500
+
+
 #start of login for admin panel
 # Function to authenticate the user
 @app.route('/login', methods=['POST'])
@@ -103,14 +176,22 @@ def create_user(username, password):
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    data = request.get_json()
-    message = data["message"]
-    selected_language = data["language"]
+    try:
+        data = request.get_json()
+        message = data.get("message", "")
+        selected_language = data.get("language", "")
+        
+        if not message or not selected_language:
+            return jsonify({"error": "Missing required fields: 'message' or 'language'"}), 400
+        
+        intent_tag = get_intent(message, selected_language)
+        response, tag = get_response_and_tag(intent_tag, selected_language)
+        
+        return jsonify({"answer": response, "tag": tag}), 200
     
-    intent_tag = get_intent(message, selected_language)
-    response, tag = get_response_and_tag(intent_tag, selected_language)
-    
-    return jsonify({"answer": response, "tag": tag})
+    except Exception as e:
+        print(f"Error in /predict route: {e}")  # Improved error logging
+        return jsonify({"error": f"Failed to process the prediction due to: {str(e)}"}), 500
 
 def get_intent(message, language):
     message = message.lower()
@@ -524,9 +605,67 @@ def confirm_appointment():
     response = requests.post('https://apipreprod.nabady.ma/api/sms/confirm', json=confirmation_data, headers=headers)
 
     if response.status_code == 200:
+        # Increment statistics upon successful appointment confirmation
+        today = datetime.now().strftime("%Y-%m-%d")
+        current_week = datetime.now().isocalendar()[1]
+        current_year = datetime.now().year
+
+        # Increment the daily counter
+        appointments_collection.update_one(
+            {"type": "daily", "date": today},
+            {"$inc": {"count": 1}},
+            upsert=True
+        )
+
+        # Increment the weekly counter
+        appointments_collection.update_one(
+            {"type": "weekly", "week": current_week, "year": current_year},
+            {"$inc": {"count": 1}},
+            upsert=True
+        )
+
+        # Increment the total counter
+        appointments_collection.update_one(
+            {"type": "total"},
+            {"$inc": {"count": 1}},
+            upsert=True
+        )
+
         return jsonify({"message": "Appointment confirmed successfully!"}), 200
     else:
         return jsonify({"error": "Failed to confirm appointment."}), response.status_code
+
+@app.route('/appointment_stats', methods=['GET'])
+def get_appointment_stats():
+    today = datetime.now().strftime("%Y-%m-%d")
+    current_week = datetime.now().isocalendar()[1]
+    current_year = datetime.now().year
+
+    # Reset daily and weekly stats if necessary
+    daily_stat = appointments_collection.find_one({"type": "daily", "date": today})
+    if not daily_stat:
+        # If there is no stat for today, it means a new day has started
+        today_count = 0
+    else:
+        today_count = daily_stat.get("count", 0)
+
+    # Fetch weekly appointments count
+    weekly_stat = appointments_collection.find_one({"type": "weekly", "week": current_week, "year": current_year})
+    if not weekly_stat:
+        # If there is no stat for the current week, it means a new week has started
+        weekly_count = 0
+    else:
+        weekly_count = weekly_stat.get("count", 0)
+
+    # Fetch total appointments count
+    total_stat = appointments_collection.find_one({"type": "total"})
+    total_count = total_stat.get("count", 0) if total_stat else 0
+
+    return jsonify({
+        "today": today_count,
+        "thisWeek": weekly_count,
+        "total": total_count
+    }), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
