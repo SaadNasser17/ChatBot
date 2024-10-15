@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Statistiques = () => {
   const [unrecognizedCounts, setUnrecognizedCounts] = useState({
@@ -8,6 +9,8 @@ const Statistiques = () => {
     english: 0,
     francais: 0,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetching unrecognized intents counts from API
@@ -24,6 +27,10 @@ const Statistiques = () => {
       .catch(error => console.error('Error fetching data:', error));
   }, []);
 
+  const handleCardClick = (language) => {
+    navigate(`/admin#${encodeURIComponent(language)}`);
+  };
+
   return (
     <div className="statistiques-container" style={styles.container}>
       <h2 style={styles.header}>Unrecognized Intents Count</h2>
@@ -38,6 +45,7 @@ const Statistiques = () => {
             }}
             onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
             onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            onClick={() => handleCardClick(language)}
           >
             <h3 style={styles.language}>{`UNRECOGNIZED WORDS FOR ${language.toUpperCase()}`}</h3>
             <p style={styles.count}>{count}</p>

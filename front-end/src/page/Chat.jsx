@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../index.css";
-import { IoChatbubbleEllipsesOutline, IoChatbubbles } from "react-icons/io5";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { getMessageForLanguage } from "../utils/messages.js";
 import { useBooking } from "../components/BookingContext";
 
@@ -37,7 +37,6 @@ export default function Chat() {
   const [waitingForSmsCode, setWaitingForSmsCode] = useState(false);
   const [appointmentRef, setAppointmentRef] = useState(null);
   const [showSendIcon, setShowSendIcon] = useState(true);
-  const [isExtended, setIsExtended] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [showBanner, setShowBanner] = useState(true);
 
@@ -70,10 +69,6 @@ export default function Chat() {
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
     setShowBanner(false);
-  };
-
-  const toggleChatSize = () => {
-    setIsExtended(!isExtended);
   };
 
   const handleUserInput = async () => {
@@ -136,7 +131,7 @@ export default function Chat() {
       words.some((word) => actionWords.includes(word.toLowerCase())) &&
       words.some((word) => medicalWords.includes(word.toLowerCase()));
 
-    const hasArabicAppointmentWord = /موعد|حجز|طبيب|دكتور/.test(
+    const hasArabicAppointmentWord = /\u0645\u0648\u0639\u062f|\u062d\u062c\u0632|\u0637\u0628\u064a\u0628|\u062f\u0643\u062a\u0648\u0631/.test(
       processedMessage
     );
 
@@ -248,7 +243,7 @@ export default function Chat() {
 
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      const response = await fetch("http://localhost:5000/register_user", {
+      const response = await fetch("api/register_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -282,7 +277,7 @@ export default function Chat() {
 
   const saveAppointmentDetails = async (patientId, gpatientId, email) => {
     try {
-      const response = await fetch("http://localhost:5000/save_appointment", {
+      const response = await fetch("api/save_appointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -317,7 +312,7 @@ export default function Chat() {
   const handleSmsCodeInput = async (code) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/confirm_appointment",
+        "api/confirm_appointment",
         {
           method: "POST",
           headers: {
@@ -362,7 +357,7 @@ export default function Chat() {
 
   const callFlaskAPI = (userMessage, time) => {
     setIsBotTyping(true);
-    fetch("http://localhost:5000/predict", {
+    fetch("api/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -415,7 +410,7 @@ export default function Chat() {
   };
 
   const fetchSpecialties = () => {
-    fetch("http://localhost:5000/get_specialties")
+    fetch("api/get_specialties")
       .then((response) => response.json())
       .then((data) => {
         setSpecialties(data["hydra:member"]);
@@ -514,8 +509,8 @@ export default function Chat() {
         <div
           className="bg-light d-flex flex-column justify-content-between rounded shadow"
           style={{
-            width: isExtended ? "35vw" : "390px",
-            height: isExtended ? "75vh" : "480px",
+            width: "390px",
+            height: "480px",
             position: "fixed",
             bottom: "1rem",
             right: "1rem",
@@ -523,8 +518,6 @@ export default function Chat() {
           }}
         >
           <ChatHeader
-            isExtended={isExtended}
-            toggleChatSize={toggleChatSize}
             toggleChatBox={toggleChatBox}
             resetChat={resetChat}
           />

@@ -158,8 +158,6 @@ const styles = {
     color: '#fff',
     fontSize: '16px',
     cursor: 'pointer',
-    textDecoration: 'underline',
-    textDecorationColor: 'black',
   },
 };
 

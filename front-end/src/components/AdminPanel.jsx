@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, Mic, ArrowLeft, ArrowRight, Download, CircleX } from 'lucide-react';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 
 function AdminPanel() {
   const [intents, setIntents] = useState({
@@ -20,6 +21,7 @@ function AdminPanel() {
   const [showPopup, setShowPopup] = useState(false);
   const [dataset, setDataset] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false); // Flag to determine if updating intent
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch Unrecognized Intents from API
@@ -218,39 +220,58 @@ function AdminPanel() {
     setShowPopup(false);
   };
 
+  // Handle redirection from Statistiques to specific language table
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const targetLanguage = decodeURIComponent(hash.replace('#', ''));
+      const targetIndex = languages.indexOf(targetLanguage);
+      if (targetIndex !== -1) {
+        setCurrentIndex(targetIndex);
+        document.getElementById(targetLanguage)?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [languages]);
+
   return (
     <div className="container mx-auto mt-10">
       <Header /> {/* Add the Header component here */}
-      
+
       <div className="unrecognized-intents-container">
         <h2 className="text-center text-blue-600 mb-4">List of Unrecognized Intents</h2>
-        <div className="carousel-container flex items-center justify-between my-4">
-          <button onClick={prevIntent} className="arrow-btn p-2 bg-gray-200 rounded-full hover:bg-gray-300">
+        <div className="relative w-full flex items-center">
+          <button onClick={prevIntent} className="arrow-btn p-2 bg-gray-200 rounded-full hover:bg-gray-300 absolute left-0 z-10">
             <ArrowLeft />
           </button>
 
           <div className="intent-card p-4 mx-4 text-center w-full flex items-center flex-col">
             <h3 className="text-lg font-bold">{currentLanguage}</h3>
-            <ul className="intent-list flex flex-row gap-x-2">
-              {currentIntents.map((intent, index) => (
-                <li
-                  key={index}
-                  className="intent-item py-1 bg-white shadow-md rounded-md px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center"
-                  onClick={() => handleWordClick(intent)}
-                >
-                  {intent}
-                  <button
-                    className="ml-2 text-red-500 hover:text-red-700"
-                    onClick={(e) => handleIgnoreIntent(currentLanguage, intent, e)}
-                  >
-                    <CircleX />
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <div className="intent-list-container w-full overflow-x-auto whitespace-nowrap p-4 bg-gray-100 rounded-md">
+              {currentIntents.length === 0 ? (
+                <p>Aucune intention a ete detectee</p>
+              ) : (
+                <ul className="intent-list flex gap-x-4">
+                  {currentIntents.map((intent, index) => (
+                    <li
+                      key={index}
+                      className="intent-item inline-block py-1 bg-white shadow-md rounded-full px-4 py-2 cursor-pointer hover:bg-gray-200 flex items-center"
+                      onClick={() => handleWordClick(intent)}
+                    >
+                      {intent}
+                      <button
+                        className="ml-2 text-red-500 hover:text-red-700"
+                        onClick={(e) => handleIgnoreIntent(currentLanguage, intent, e)}
+                      >
+                        <CircleX />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
 
-          <button onClick={nextIntent} className="arrow-btn p-2 bg-gray-200 rounded-full hover:bg-gray-300">
+          <button onClick={nextIntent} className="arrow-btn p-2 bg-gray-200 rounded-full hover:bg-gray-300 absolute right-0 z-10">
             <ArrowRight />
           </button>
         </div>
@@ -268,7 +289,7 @@ function AdminPanel() {
         </thead>
         <tbody>
           {Object.entries(intents).map(([language, intent], index) => (
-            <tr key={language} className="text-center border-t">
+            <tr key={language} id={language} className="text-center border-t">
               <td className="border-r border-b p-2">{language}</td>
               <td className="p-2">
                 <div className="flex items-center">
@@ -349,19 +370,19 @@ function AdminPanel() {
         </button>
         {showLanguages && (
           <div className="ml-4 flex space-x-2">
-            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('darija')}>
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => navigate(`/admin#${encodeURIComponent('darija')}`)}>
               dr
             </button>
-            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('الدارجة')}>
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => navigate(`/admin#${encodeURIComponent('الدارجة')}`)}>
               در
             </button>
-            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('العربية')}>
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => navigate(`/admin#${encodeURIComponent('العربية')}`)}>
               ar
             </button>
-            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('english')}>
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => navigate(`/admin#${encodeURIComponent('english')}`)}>
               en
             </button>
-            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => handleLanguageClick('francais')}>
+            <button className="bg-gray-200 p-2 rounded hover:bg-gray-300" onClick={() => navigate(`/admin#${encodeURIComponent('francais')}`)}>
               fr
             </button>
           </div>

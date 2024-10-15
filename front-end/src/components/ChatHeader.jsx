@@ -1,7 +1,7 @@
 import React from 'react'
-import { IoCloseOutline, IoRefresh, IoContract, IoExpand } from "react-icons/io5";
+import { IoCloseOutline, IoRefresh } from "react-icons/io5";
 
-export default function ChatHeader({ isExtended, toggleChatSize, toggleChatBox, resetChat }) {
+export default function ChatHeader({ toggleChatBox, resetChat }) {
     return (
         <div
             style={{
@@ -13,17 +13,6 @@ export default function ChatHeader({ isExtended, toggleChatSize, toggleChatBox, 
                 <img src="logo.png" alt="logo" style={{ height: "1.5rem", width: "7rem" }} />
             </button>
             <div className="d-flex align-items-center">
-                <button
-                    onClick={toggleChatSize}
-                    className="btn btn-link p-2"
-                    title={isExtended ? "Minimize Chat" : "Extend Chat"}
-                >
-                    {isExtended ? (
-                        <IoContract className="text-white" style={{ fontSize: "1.5rem" }} />
-                    ) : (
-                        <IoExpand className="text-white" style={{ fontSize: "1.5rem" }} />
-                    )}
-                </button>
                 <button
                     onClick={resetChat}
                     className="btn btn-link p-2"

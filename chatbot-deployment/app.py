@@ -14,9 +14,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Load sensitive information from environment variables
-JWT_TOKEN = os.getenv("JWT_TOKEN")
-
 # MongoDB connection setup
 client = MongoClient(
     os.getenv("MONGO_URI"),

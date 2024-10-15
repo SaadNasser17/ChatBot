@@ -14,6 +14,7 @@
     "@ng-bootstrap/ng-bootstrap": "^17.0.0",
     "axios": "^1.7.3",
     "bootstrap": "^5.3.3",
+    "daisyUI": "npm:daisyui@^4.12.13",
     "embla-carousel-react": "^8.0.4",
     "framer-motion": "^11.2.0",
     "lucide-react": "^0.439.0",
