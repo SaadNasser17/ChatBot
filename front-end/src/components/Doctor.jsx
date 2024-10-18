@@ -39,90 +39,105 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
     setCurrentSpecialty(specialtyName);
     setLoading(true);
     try {
-      const response = await fetch(
-        "https://apipreprod.nabady.ma/api/users/medecin/search",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query: specialtyName,
-            consultation: "undefined",
-            page: 1,
-            result: 15,
-            isIframe: false,
-            referrer: "",
-          }),
-        }
-      );
-      if (!response.ok) throw new Error("Network response was not ok.");
-      const data = await response.json();
-      displayDoctors(data.praticien.data);
-    } catch (error) {
-      console.log("Error fetching doctors:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const displayDoctors = async (doctorData) => {
-    const filteredDoctors = await Promise.all(
-      doctorData.map(async (item) => {
-        const doctor = item["0"];
-        const doctorDetails = {
-          name: `Dr. ${doctor.lastname} ${doctor.firstname}`,
-          PcsID: doctor.praticienCentreSoins[0].id,
-          tel: doctor.tel,
-          email: doctor.email,
-          address: doctor.adresse,
-          agendaConfig: doctor.praticienCentreSoins[0].agendaConfig,
-          unavailable_times: [],
-        };
-        const response = await fetch(
-          `https://apipreprod.nabady.ma/api/holidays/praticienCs/${doctorDetails.PcsID}/day/0/limit/2`
-        );
+        const response = await fetch("http://localhost:5000/get_doctors", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ specialty_name: specialtyName }),
+        });
+        if (!response.ok) throw new Error("Network response was not ok.");
         const data = await response.json();
-        doctorDetails.unavailable_times = data.rdv;
-        return doctorDetails;
-      })
-    );
-
-    setDoctors(
-      filteredDoctors.filter((doctor) => hasAvailableSlots(doctor.agendaConfig))
-    );
-  };
-
-  const hasAvailableSlots = (agendaConfig) => {
-    if (!agendaConfig) {
-      return false;
+        displayDoctors(data);
+    } catch (error) {
+        console.error("Error fetching doctors:", error);
+    } finally {
+        setLoading(false);
     }
-  
+};
+
+const displayDoctors = async (doctorData) => {
+    console.log("doctorData received from API:", doctorData); // Log full doctor data from the API
+
+    const filteredDoctors = await Promise.all(
+        doctorData.map(async (item, index) => {
+            // Check if "0" key is present
+            if (!item["0"]) {
+                console.error(`Missing "0" key in item at index ${index}`, item); // Error log if '0' is missing
+                return null;
+            }
+
+            const doctor = item["0"].praticien;  // Access 'praticien' inside '0'
+            if (!doctor) {
+                console.error(`Missing 'praticien' key in item at index ${index}`, item["0"]); // Error log if 'praticien' is missing
+                return null;
+            }
+
+            // Log the full doctor object including praticienCentreSoins
+            //console.log("Full doctor object: ", item["0"]);
+
+            // Extract the PcsID from praticienCentreSoins URL
+            const pcsIdUrl = item["0"].praticien?.praticienCentreSoins?.[0];
+            const PcsID = pcsIdUrl ? pcsIdUrl.split("/").pop() : 'No PcsID';
+            console.log(`Doctor details for ${doctor.lastname || 'Unknown'} with PcsID: ${PcsID}`); // Log extracted PcsID
+
+            const doctorDetails = {
+                name: `Dr. ${doctor.lastname || 'Unknown'} ${doctor.firstname || 'Unknown'}`,
+                PcsID,  // Use the extracted PcsID
+                tel: doctor.tel || 'N/A',
+                email: doctor.email || 'N/A',
+                address: doctor.adresse || 'N/A',
+                agendaConfig: item["0"].agendaConfig || {},
+                unavailable_times: [],
+            };
+
+            //console.log(`Doctor details for ${doctor.lastname || 'Unknown'}:`, doctorDetails);  // Log doctor details
+
+            // Fetch unavailable times for the doctor
+            const response = await fetch(
+                `https://apipreprod.nabady.ma/api/holidays/praticienCs/${doctorDetails.PcsID}/day/0/limit/2`
+            );
+            const data = await response.json();
+            doctorDetails.unavailable_times = data.rdv || [];
+            return doctorDetails;
+        })
+    );
+
+    // Filter and set the doctors who have available slots
+    const validDoctors = filteredDoctors.filter(Boolean);  // Filter out null values
+    setDoctors(validDoctors.filter((doctor) => hasAvailableSlots(doctor.agendaConfig)));
+};
+
+
+const hasAvailableSlots = (agendaConfig) => {
+    if (!agendaConfig) {
+        return false;
+    }
+
     const now = new Date();
     const { heureOuverture, heureFermeture } = agendaConfig;
     const openingHour = parseInt(heureOuverture.split(":")[0], 10);
     const closingHour = parseInt(heureFermeture.split(":")[0], 10);
-  
+
     let closingTime = new Date();
     closingTime.setHours(
-      closingHour,
-      parseInt(heureFermeture.split(":")[1], 10),
-      0
-    );
-  
-    if (now >= closingTime) {
-      // If the current time is after the closing time, consider the next day's opening time
-      const nextDay = new Date(now.getTime());
-      nextDay.setDate(nextDay.getDate() + 1);
-      nextDay.setHours(
-        openingHour,
-        parseInt(heureOuverture.split(":")[1], 10),
+        closingHour,
+        parseInt(heureFermeture.split(":")[1], 10),
         0
-      );
-      closingTime = nextDay;
+    );
+
+    if (now >= closingTime) {
+        // If the current time is after the closing time, consider the next day's opening time
+        const nextDay = new Date(now.getTime());
+        nextDay.setDate(nextDay.getDate() + 1);
+        nextDay.setHours(
+            openingHour,
+            parseInt(heureOuverture.split(":")[1], 10),
+            0
+        );
+        closingTime = nextDay;
     }
-  
+
     return now < closingTime;
-  };
-  
+};
 
   const createAgendaGrid = (agendaConfig, doctor) => {
     const now = new Date();
@@ -219,10 +234,12 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
     // Create the ISO-like string manually without converting to UTC
     const formattedDate = `${year}-${month}-${day}T${hour}:${minute}:00.000Z`;
   
+    console.log(`Debug: Selected Doctor - ${doctorName}, PcsID - ${PcsID}, Slot - ${formattedDate}`); // Debug statement to log selected details
+  
     // Call the provided callback with the selected doctor details and time slot
     onSlotClick(doctorName, PcsID, formattedDate);
-  };
-  
+};
+
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

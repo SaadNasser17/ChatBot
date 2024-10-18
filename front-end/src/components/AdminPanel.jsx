@@ -280,11 +280,46 @@ function AdminPanel() {
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
           <tr>
-            <th className="border text-center p-2">Language</th>
-            <th className="border text-center p-2">Tag</th>
-            <th className="border text-center p-2">Pattern</th>
-            <th className="border text-center p-2">Response</th>
-            <th className="border text-center p-2">Action</th>
+            <th
+              className="border text-center p-2 relative group"
+            >
+              Language
+              <div id="tooltip-language" role="tooltip" className="tooltip-class hidden group-hover:block absolute top-full mt-1 bg-gray-700 text-white text-sm p-2 rounded">
+                selection de langue
+              </div>
+            </th>
+            <th
+              className="border text-center p-2 relative group"
+            >
+              Tag
+              <div id="tooltip-tag" role="tooltip" className="tooltip-class hidden group-hover:block absolute top-full mt-1 bg-gray-700 text-white text-sm p-2 rounded">
+                titre de l'intention
+              </div>
+            </th>
+            <th
+              className="border text-center p-2 relative group"
+            >
+              Pattern
+              <div id="tooltip-pattern" role="tooltip" className="tooltip-class hidden group-hover:block absolute top-full mt-1 bg-gray-700 text-white text-sm p-2 rounded">
+                message/input du patient
+              </div>
+            </th>
+            <th
+              className="border text-center p-2 relative group"
+            >
+              Response
+              <div id="tooltip-response" role="tooltip" className="tooltip-class hidden group-hover:block absolute top-full mt-1 bg-gray-700 text-white text-sm p-2 rounded">
+                reponse de nabadybot
+              </div>
+            </th>
+            <th
+              className="border text-center p-2 relative group"
+            >
+              Action
+              <div id="tooltip-action" role="tooltip" className="tooltip-class hidden group-hover:block absolute top-full mt-1 bg-gray-700 text-white text-sm p-2 rounded">
+                ajouter ou modifier
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody>

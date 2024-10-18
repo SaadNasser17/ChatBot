@@ -331,32 +331,119 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         "page": page,
         "result": result,
         "isIframe": isIframe,
-        "referrer": referrer
+        "referrer": referrer,
+        "domain": "ma"
     }
+
+    # Assuming api_post_request is a function that sends the POST request
     response = api_post_request("https://apipreprod.nabady.ma/api/users/medecin/search", data)
+
     if response:
+        # Parse the response
         doctors = response.json().get('praticien', {}).get('data', [])
+        
         for doctor in doctors:
-            pcs_id = doctor['PcsID']
-            appointments_response = api_get_request(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/2")
-            if appointments_response:
-                unavailable_times = appointments_response.json()
-                doctor['available_slots'] = filter_available_slots(doctor['agendaConfig'], unavailable_times)
+            # Debug log to inspect the full doctor object
+            #print(f"Debug: Full Doctor Data - {doctor}")
+
+            # Step 1: Access the correct nested structure
+            praticien_info = doctor.get("0", {}).get("praticien", {})
+            if not praticien_info:
+                print(f"Error: Missing praticien info in doctor data - {doctor}")
+                continue
+
+            # Step 2: Extract praticienCentreSoins
+            praticien_centre_soins = praticien_info.get("praticienCentreSoins", [])
+            #print(f"Debug: praticienCentreSoins - {praticien_centre_soins}")
+
+            if praticien_centre_soins and isinstance(praticien_centre_soins[0], str):
+                pcs_id = praticien_centre_soins[0].split("/")[-1]
+            else:
+                pcs_id = None
+            
+            #print(f"Debug: Extracted PcsID - {pcs_id}")
+
+            # Step 3: Fetch unavailable appointment times for each doctor
+            if pcs_id:
+                appointments_response = api_get_request(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/2")
+                if appointments_response:
+                    unavailable_times = appointments_response.json()
+                    # Filter available slots
+                    doctor['available_slots'] = filter_available_slots(doctor.get("0", {}).get('agendaConfig', {}), unavailable_times)
+                else:
+                    doctor['available_slots'] = []
             else:
                 doctor['available_slots'] = []
+
+        # Log the final response before sending it to the frontend
+        #print(f"Final doctor data to be sent: {doctors}")
         return doctors
-    return None
+
 
 @app.route("/get_doctors", methods=["POST"])
 def get_doctors():
     data = request.get_json()
     specialty_name = data.get("specialty_name")
+    #print(f"Received specialty_name: {specialty_name}")
+    
     doctors_data = fetch_doctors_from_api(query=specialty_name)
     if doctors_data:
+        #print("Sending doctor data with PcsID:", doctors_data)
         return jsonify(doctors_data), 200
     else:
         return jsonify({"error": "Failed to fetch doctors"}), 500
+
+
+def filter_available_slots(agendaConfig, unavailable_times):
+    available_slots = []
     
+    # Safely parse heureOuverture and heureFermeture
+    opening_hour = int(agendaConfig['heureOuverture'].split(":")[0])
+    closing_hour = int(agendaConfig['heureFermeture'].split(":")[0])
+
+    # Safely parse the granularity and handle cases where it's not exactly two parts
+    granularite_split = agendaConfig['granularite'].split(":")
+    
+    if len(granularite_split) == 2:
+        granularity_hours, granularity_minutes = map(int, granularite_split)
+    else:
+        print(f"Error: Invalid granularity format - {agendaConfig['granularite']}")
+        granularity_hours, granularity_minutes = 0, 30  # Default to 30 minutes if invalid
+    
+    slot_time = opening_hour * 60
+    end_time = closing_hour * 60
+
+    unavailable_starts = [entry["currentStart"].split(" ")[1][:5] for entry in unavailable_times['rdv']]
+
+    while slot_time < end_time:
+        hour = slot_time // 60
+        minute = slot_time % 60
+        slot_str = f"{hour:02}:{minute:02}"
+        if slot_str not in unavailable_starts:
+            available_slots.append(slot_str)
+        slot_time += granularity_hours * 60 + granularity_minutes
+
+    return available_slots
+
+
+@app.route('/get_doctors_agenda', methods=['GET'])
+def get_doctors_agenda():
+    response = fetch_doctors_from_api(query="")
+    if response.status_code == 200:
+        doctors = response.json()['praticien']['data']
+        results = []
+        for doctor in doctors:
+            agenda_config = doctor['praticienCentreSoins'][0]['agendaConfig']
+            results.append({
+                'name': f"{doctor['0']['firstname']} {doctor['0']['lastname']}",
+                'praticien_centre_soin_id': doctor['praticienCentreSoins'][0]['id'],
+                'agenda_config': agenda_config
+            })
+        return jsonify(results)
+    else:
+        return jsonify({'error': 'Failed to fetch doctors'}), response.status_code
+
+
 def send_appointment_to_api(appointment_details, email):
     appointment_data = {
         "praticienCs": appointment_details["praticien"]["PraticienCentreSoinID"],
@@ -431,46 +518,6 @@ def register_user():
         error_message = f"Error: {response.status_code} - {response.text}" if response else "No response from server"
         print(error_message)
         return jsonify({'error': 'Failed to register user'}), response.status_code if response else 500
-
-
-
-@app.route('/get_doctors_agenda', methods=['GET'])
-def get_doctors_agenda():
-    response = fetch_doctors_from_api(query="")
-    if response.status_code == 200:
-        doctors = response.json()['praticien']['data']
-        results = []
-        for doctor in doctors:
-            agenda_config = doctor['praticienCentreSoins'][0]['agendaConfig']
-            results.append({
-                'name': f"{doctor['0']['firstname']} {doctor['0']['lastname']}",
-                'praticien_centre_soin_id': doctor['praticienCentreSoins'][0]['id'],
-                'agenda_config': agenda_config
-            })
-        return jsonify(results)
-    else:
-        return jsonify({'error': 'Failed to fetch doctors'}), response.status_code
-
-def filter_available_slots(agendaConfig, unavailable_times):
-    available_slots = []
-    opening_hour = int(agendaConfig['heureOuverture'].split(":")[0])
-    closing_hour = int(agendaConfig['heureFermeture'].split(":")[0])
-    granularity_hours, granularity_minutes = map(int, agendaConfig['granularite'].split(":"))
-
-    slot_time = opening_hour * 60
-    end_time = closing_hour * 60
-
-    unavailable_starts = [entry["currentStart"].split(" ")[1][:5] for entry in unavailable_times['rdv']]
-
-    while slot_time < end_time:
-        hour = slot_time // 60
-        minute = slot_time % 60
-        slot_str = f"{hour:02}:{minute:02}"
-        if slot_str not in unavailable_starts:
-            available_slots.append(slot_str)
-        slot_time += granularity_hours * 60 + granularity_minutes
-
-    return available_slots
 
 @app.route('/submit_details', methods=['POST'])
 def submit_details():
