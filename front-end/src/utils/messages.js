@@ -62,6 +62,20 @@ const messages = {
       francais: "Vous allez recevoir un code par SMS, veuillez me le donner pour confirmer le rendez-vous.",
       english: "You will receive a code via SMS, please provide it to confirm the appointment.",
     },
+    resend_otp: {
+      darija: "3awd 3tini l code.",
+      "الدارجة": "عاود إرسال الرمز من جديد.",
+      "العربية": "أعد إرسال الرمز من جديد.",
+      francais: "Renvoyer le code.",
+      english: "Resend code."
+    },
+    otp_resent: {
+      darija: "lcode tsift lik men jdid!",
+      "الدارجة": "تم إعادة إرسال الرمز!",
+      "العربية": "تم إعادة إرسال الرمز!",
+      francais: "Le code a été renvoyé!",
+      english: "The code has been resent!"
+  },
     confirm_success: {
       darija: "lmaw3id t2eked lik!",
       "الدارجة": "الموعد تأكد ليك!",

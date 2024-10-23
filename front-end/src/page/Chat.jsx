@@ -39,6 +39,7 @@ export default function Chat() {
   const [showSendIcon, setShowSendIcon] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [showBanner, setShowBanner] = useState(true);
+  const [showResendButton, setShowResendButton] = useState(false); // New state for Resend OTP button
 
   // Initialize word lists from MongoDB
   const [wordLists, setWordLists] = useState({
@@ -65,6 +66,16 @@ export default function Chat() {
     }
     setWaitingForConfirmation(false);
   }, [initialMessageSet]);
+
+  // New useEffect to show the Resend OTP button after 20 seconds when waiting for SMS code
+  useEffect(() => {
+    if (waitingForSmsCode) {
+      const timer = setTimeout(() => {
+        setShowResendButton(true);
+      }, 20000);
+      return () => clearTimeout(timer);
+    }
+  }, [waitingForSmsCode]);
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen);
@@ -114,6 +125,32 @@ export default function Chat() {
     setShowSendIcon(false);
   };
 
+  const handleResendOtp = () => {
+    fetch('http://localhost:5000/resend_otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: appointmentRef }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to resend OTP');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.message || data.status === 'success') {
+        displayBotMessage(getMessageForLanguage(selectedLanguage, 'otp_resent'));
+        // Do NOT hide the button here
+      } else {
+        displayBotMessage(getMessageForLanguage(selectedLanguage, 'error'));
+      }
+    })
+    .catch(error => {
+      console.error('Error resending OTP:', error);
+      displayBotMessage(getMessageForLanguage(selectedLanguage, 'error'));
+    });
+  };
+  
   const isAppointmentRelated = (message) => {
     const { actionWords, appointmentKeywords, medicalWords } = wordLists;
     const processedMessage = message
@@ -311,45 +348,30 @@ export default function Chat() {
 
   const handleSmsCodeInput = async (code) => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/confirm_appointment",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            code,
-            ref: appointmentRef,
-          }),
-        }
-      );
-
-      if (response.status === 404) {
-        throw new Error("Invalid OTP");
-      }
-
-      if (!response.ok)
-        throw new Error(getMessageForLanguage(selectedLanguage, "confirm_error"));
-
+      const response = await fetch("http://localhost:5000/confirm_appointment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, ref: appointmentRef }),
+      });
+  
+      if (response.status === 404) throw new Error("Invalid OTP");
+      if (!response.ok) throw new Error(getMessageForLanguage(selectedLanguage, "confirm_error"));
+  
       displayBotMessage(getMessageForLanguage(selectedLanguage, "confirm_success"));
       resetAppointmentDetails();
       setAppointmentStep(0);
       setWaitingForSmsCode(false);
+      setShowResendButton(false); // Hide the button only after successful confirmation
     } catch (error) {
       console.error("Error confirming appointment:", error);
       if (error.message === "Invalid OTP") {
-        displayBotMessage(
-          getMessageForLanguage(selectedLanguage, "invalid_code")
-        );
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "invalid_code"));
       } else {
-        displayBotMessage(
-          getMessageForLanguage(selectedLanguage, "confirm_error")
-        );
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "confirm_error"));
       }
     }
   };
-
+  
   const fetchDoctorsForSpecialty = async (specialtyName) => {
     setSelectedSpecialty({ name: specialtyName });
     setShowDoctors(true);
@@ -541,8 +563,20 @@ export default function Chat() {
             setAppointmentStep={setAppointmentStep}
             waitingForConfirmation={waitingForConfirmation}
             handleConfirmation={handleConfirmation}
+            smsSent={waitingForSmsCode} // Pass SMS status to MessagesList
+            appointmentRef={appointmentRef} // Pass appointment reference
           />
 
+        {showResendButton && (
+          <div className="d-flex justify-content-center my-2">
+            <button
+              onClick={handleResendOtp}
+              className="btn btn-primary" // Blue button
+            >
+              {getMessageForLanguage(selectedLanguage, 'resend_otp')}
+            </button>
+          </div>
+        )}
           <ChatFooter
             userMessage={userMessage}
             setUserMessage={setUserMessage}

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import json
 import random
@@ -537,18 +537,18 @@ def process_response():
     step = data.get('step')
 
     if 'appointment_details' not in session:
-        session['appointment_details'] = {}
+        requests.session['appointment_details'] = {}
 
     if step == 1:
-        session['appointment_details']['first_name'] = response
+        requests.session['appointment_details']['first_name'] = response
     elif step == 2:
-        session['appointment_details']['last_name'] = response
+        requests.session['appointment_details']['last_name'] = response
     elif step == 3:
-        session['appointment_details']['phone_number'] = response
+        requests.session['appointment_details']['phone_number'] = response
 
         return jsonify({"message": "Response processed", "next_step": step + 1, "complete": True})
     
-    session.modified = True
+    requests.session.modified = True
     return jsonify({"message": "Response processed", "next_step": step + 1})
 
 @app.route('/save_appointment', methods=['POST'])
@@ -635,10 +635,15 @@ def confirm_appointment():
     code = data.get('code')
     ref = data.get('ref')
 
+    if not code or not ref:
+        return jsonify({'error': 'Code or Reference ID is missing'}), 400
+
+    # Confirmation payload
     confirmation_data = {
         "code": code,
         "type": "R",
-        "ref": ref
+        "ref": ref,
+        "statusRdv": "NEW"
     }
 
     headers = {
@@ -677,7 +682,35 @@ def confirm_appointment():
 
         return jsonify({"message": "Appointment confirmed successfully!"}), 200
     else:
-        return jsonify({"error": "Failed to confirm appointment."}), response.status_code
+        return jsonify({'error': 'Failed to confirm appointment.'}), response.status_code
+
+@app.route('/resend_otp', methods=['POST'])
+def resend_otp():
+    data = request.get_json()
+    ref = data.get('ref')
+
+    if not ref:
+        return jsonify({'error': 'Reference ID is missing'}), 400
+
+    # Resend OTP payload
+    resend_data = {
+        "type": "R",
+        "ref": ref,
+        "typeNotif": "sms"
+    }
+
+    headers = {
+        "Origin": "nabadyChatbot",
+        "Content-Type": "application/json"
+    }
+
+    # Call the correct resend-sms API
+    response = requests.post('https://apipreprod.nabady.ma/api/sms/resend-sms', json=resend_data, headers=headers)
+
+    if response.status_code == 200:
+        return jsonify({'message': 'OTP resent successfully'}), 200
+    else:
+        return jsonify({'error': 'Failed to resend OTP'}), response.status_code
 
 @app.route('/appointment_stats', methods=['GET'])
 def get_appointment_stats():

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useEffect, useState } from 'react';
 import AniText from "./Anitext.jsx";
 import DOt from "./DOt.jsx";
 import SpecialtiesDropdown from './SpecialtiesDropdown.jsx';
@@ -23,14 +23,55 @@ export default function MessagesList({
   setAppointmentStep,
   waitingForConfirmation,
   handleConfirmation,
+  smsSent,
+  appointmentRef
 }) {
   const messagesEndRef = useRef(null);
+  const [showResendButton, setShowResendButton] = useState(false);
 
+  // Scroll to the latest message when new messages arrive or other states change
   useLayoutEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isBotTyping, showSpecialtiesDropdown, showDoctors, waitingForConfirmation, selectedSpecialty]);
+
+  // Start a timer to show the Resend OTP button after 20 seconds when SMS is sent
+  useEffect(() => {
+    if (smsSent) {
+      const timer = setTimeout(() => {
+        setShowResendButton(true);
+      }, 10000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [smsSent]);
+
+  const handleResendOtp = () => {
+    fetch('http://localhost:5000/resend_otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: appointmentRef }),
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Resend failed');
+      }
+    })
+    .then(data => {
+      // Check if the response contains success information
+      if (data.message || data.status === 'success') {
+        displayBotMessage(getMessageForLanguage(selectedLanguage, 'otp_resent'));
+        setShowResendButton(false); // Hide the button after resend
+      } else {
+        displayBotMessage(getMessageForLanguage(selectedLanguage, 'error'));
+      }
+    })
+    .catch(() => displayBotMessage(getMessageForLanguage(selectedLanguage, 'error')));
+  };
+  
 
   return (
     <div
@@ -165,6 +206,8 @@ export default function MessagesList({
           </button>
         </div>
       )}
+
+
       <div ref={messagesEndRef} />
     </div>
   );
