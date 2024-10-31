@@ -24,7 +24,7 @@ function AdminPanel() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch Unrecognized Intents from API
+    // Fetch Unrecognized Intents from http://localhost:5000
     fetch('http://localhost:5000/unrecognized_intents')
       .then((response) => {
         if (!response.ok) {

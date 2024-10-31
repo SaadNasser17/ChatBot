@@ -48,7 +48,7 @@ GLOBAL_HEADERS = {
       "Synchronize":"true" 
 }
 
-# Function for making GET requests with global headers
+# Function for making GET requests with global headers and error handling
 def api_get_request(url):
     try:
         response = requests.get(url, headers=GLOBAL_HEADERS)
@@ -58,7 +58,8 @@ def api_get_request(url):
         print(f"Error fetching data from {url}: {e}")
         return None
 
-# Function for making POST requests with global headers
+
+# Function for making POST requests with global headers and error handling
 def api_post_request(url, data):
     try:
         response = requests.post(url, json=data, headers=GLOBAL_HEADERS)
@@ -67,6 +68,7 @@ def api_post_request(url, data):
     except requests.exceptions.RequestException as e:
         print(f"Error sending data to {url}: {e}")
         return None
+
     
 @app.route('/get_word_lists', methods=['GET'])
 def get_word_lists():
@@ -320,9 +322,15 @@ def serve_admin():
 def get_specialties():
     response = api_get_request("https://apipreprod.nabady.ma/api/specialites")
     if response:
-        return jsonify(response.json()), 200
+        if response.status_code == 200:
+            return jsonify(response.json()), 200
+        elif response.status_code == 404:
+            return jsonify({"error": "Specialties not found"}), 404
+        elif response.status_code == 500:
+            return jsonify({"error": "Server error occurred while fetching specialties"}), 500
     else:
-        return jsonify({"error": "Failed to fetch specialties"}), 500
+        return jsonify({"error": "Failed to connect to specialties API"}), 502
+
 
 def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, isIframe=False, referrer=""):
     data = {
@@ -335,63 +343,51 @@ def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, is
         "domain": "ma"
     }
 
-    # Assuming api_post_request is a function that sends the POST request
     response = api_post_request("https://apipreprod.nabady.ma/api/users/medecin/search", data)
 
     if response:
-        # Parse the response
-        doctors = response.json().get('praticien', {}).get('data', [])
-        
-        for doctor in doctors:
-            # Debug log to inspect the full doctor object
-            #print(f"Debug: Full Doctor Data - {doctor}")
+        if response.status_code == 200:
+            doctors = response.json().get('praticien', {}).get('data', [])
+            for doctor in doctors:
+                praticien_info = doctor.get("0", {}).get("praticien", {})
+                if not praticien_info:
+                    print(f"Error: Missing praticien info in doctor data - {doctor}")
+                    continue
 
-            # Step 1: Access the correct nested structure
-            praticien_info = doctor.get("0", {}).get("praticien", {})
-            if not praticien_info:
-                print(f"Error: Missing praticien info in doctor data - {doctor}")
-                continue
+                praticien_centre_soins = praticien_info.get("praticienCentreSoins", [])
+                if praticien_centre_soins and isinstance(praticien_centre_soins[0], str):
+                    pcs_id = praticien_centre_soins[0].split("/")[-1]
+                else:
+                    pcs_id = None
 
-            # Step 2: Extract praticienCentreSoins
-            praticien_centre_soins = praticien_info.get("praticienCentreSoins", [])
-            #print(f"Debug: praticienCentreSoins - {praticien_centre_soins}")
-
-            if praticien_centre_soins and isinstance(praticien_centre_soins[0], str):
-                pcs_id = praticien_centre_soins[0].split("/")[-1]
-            else:
-                pcs_id = None
-            
-            #print(f"Debug: Extracted PcsID - {pcs_id}")
-
-            # Step 3: Fetch unavailable appointment times for each doctor
-            if pcs_id:
-                appointments_response = api_get_request(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/2")
-                if appointments_response:
-                    unavailable_times = appointments_response.json()
-                    # Filter available slots
-                    doctor['available_slots'] = filter_available_slots(doctor.get("0", {}).get('agendaConfig', {}), unavailable_times)
+                if pcs_id:
+                    appointments_response = api_get_request(f"https://apipreprod.nabady.ma/api/holidays/praticienCs/{pcs_id}/day/0/limit/2")
+                    if appointments_response and appointments_response.status_code == 200:
+                        unavailable_times = appointments_response.json()
+                        doctor['available_slots'] = filter_available_slots(doctor.get("0", {}).get('agendaConfig', {}), unavailable_times)
+                    else:
+                        doctor['available_slots'] = []
                 else:
                     doctor['available_slots'] = []
-            else:
-                doctor['available_slots'] = []
+            return doctors
+        else:
+            print(f"Error fetching doctors: Status code {response.status_code}, {response.text}")
+    else:
+        print("Error: No response from the server.")
+    return None
 
-        # Log the final response before sending it to the frontend
-        #print(f"Final doctor data to be sent: {doctors}")
-        return doctors
 
 
 @app.route("/get_doctors", methods=["POST"])
 def get_doctors():
     data = request.get_json()
     specialty_name = data.get("specialty_name")
-    #print(f"Received specialty_name: {specialty_name}")
-    
     doctors_data = fetch_doctors_from_api(query=specialty_name)
     if doctors_data:
-        #print("Sending doctor data with PcsID:", doctors_data)
         return jsonify(doctors_data), 200
     else:
         return jsonify({"error": "Failed to fetch doctors"}), 500
+
 
 
 def filter_available_slots(agendaConfig, unavailable_times):
@@ -463,20 +459,18 @@ def send_appointment_to_api(appointment_details, email):
 
     response = requests.post('https://apipreprod.nabady.ma/api/agenda_evenements/prise-rdv', json=appointment_data, headers=headers)
 
-    if response.status_code in [200, 201]:
+    if response and response.status_code in [200, 201]:
         response_data = response.json()
         ref = response_data.get('id')
         print("Appointment created successfully. Response:", response_data)
         return ref
     else:
-        # Remplacez cet appel à log_error par un simple print
-        print(f"Failed to create appointment. Status code: {response.status_code}, Response: {response.text}")
-        print({
-            "status_code": response.status_code,
-            "response_text": response.text,
-            "request_body": appointment_data
-        })
-        return None
+        if response:
+            print(f"Failed to create appointment. Status code: {response.status_code}, Response: {response.text}")
+            return None
+        else:
+            print("Error: No response from the server.")
+            return None
 
 @app.route('/register_user', methods=['POST'])
 def register_user():
@@ -505,7 +499,6 @@ def register_user():
         "validateBYCode": False
     }
 
-    # Use the global headers and post request function
     response = api_post_request('https://apipreprod.nabady.ma/api/users/register', user_data)
 
     if response and response.status_code == 201:
@@ -514,10 +507,12 @@ def register_user():
         gpatient_id = data["user"]["gpatient"]["id"]
         print(f"Patient ID: {patient_id}, GPatient ID: {gpatient_id}")
         return jsonify({'message': 'User registered successfully!', 'patient_id': patient_id, 'gpatient_id': gpatient_id}), 201
+    elif response:
+        print(f"Error registering user: Status code {response.status_code}, {response.text}")
+        return jsonify({'error': 'Failed to register user'}), response.status_code
     else:
-        error_message = f"Error: {response.status_code} - {response.text}" if response else "No response from server"
-        print(error_message)
-        return jsonify({'error': 'Failed to register user'}), response.status_code if response else 500
+        print("Error: No response from the server.")
+        return jsonify({'error': 'No response from register API'}), 502
 
 @app.route('/submit_details', methods=['POST'])
 def submit_details():
@@ -638,7 +633,6 @@ def confirm_appointment():
     if not code or not ref:
         return jsonify({'error': 'Code or Reference ID is missing'}), 400
 
-    # Confirmation payload
     confirmation_data = {
         "code": code,
         "type": "R",
@@ -653,36 +647,22 @@ def confirm_appointment():
 
     response = requests.post('https://apipreprod.nabady.ma/api/sms/confirm', json=confirmation_data, headers=headers)
 
-    if response.status_code == 200:
-        # Increment statistics upon successful appointment confirmation
+    if response and response.status_code == 200:
         today = datetime.now().strftime("%Y-%m-%d")
         current_week = datetime.now().isocalendar()[1]
         current_year = datetime.now().year
 
-        # Increment the daily counter
-        appointments_collection.update_one(
-            {"type": "daily", "date": today},
-            {"$inc": {"count": 1}},
-            upsert=True
-        )
-
-        # Increment the weekly counter
-        appointments_collection.update_one(
-            {"type": "weekly", "week": current_week, "year": current_year},
-            {"$inc": {"count": 1}},
-            upsert=True
-        )
-
-        # Increment the total counter
-        appointments_collection.update_one(
-            {"type": "total"},
-            {"$inc": {"count": 1}},
-            upsert=True
-        )
+        appointments_collection.update_one({"type": "daily", "date": today}, {"$inc": {"count": 1}}, upsert=True)
+        appointments_collection.update_one({"type": "weekly", "week": current_week, "year": current_year}, {"$inc": {"count": 1}}, upsert=True)
+        appointments_collection.update_one({"type": "total"}, {"$inc": {"count": 1}}, upsert=True)
 
         return jsonify({"message": "Appointment confirmed successfully!"}), 200
-    else:
+    elif response:
+        print(f"Error confirming appointment: Status code {response.status_code}, {response.text}")
         return jsonify({'error': 'Failed to confirm appointment.'}), response.status_code
+    else:
+        print("Error: No response from the server.")
+        return jsonify({'error': 'No response from confirmation API'}), 502
 
 @app.route('/resend_otp', methods=['POST'])
 def resend_otp():
@@ -692,7 +672,6 @@ def resend_otp():
     if not ref:
         return jsonify({'error': 'Reference ID is missing'}), 400
 
-    # Resend OTP payload
     resend_data = {
         "type": "R",
         "ref": ref,
@@ -704,13 +683,17 @@ def resend_otp():
         "Content-Type": "application/json"
     }
 
-    # Call the correct resend-sms API
     response = requests.post('https://apipreprod.nabady.ma/api/sms/resend-sms', json=resend_data, headers=headers)
 
-    if response.status_code == 200:
+    if response and response.status_code == 200:
         return jsonify({'message': 'OTP resent successfully'}), 200
-    else:
+    elif response:
+        print(f"Error resending OTP: Status code {response.status_code}, {response.text}")
         return jsonify({'error': 'Failed to resend OTP'}), response.status_code
+    else:
+        print("Error: No response from the server.")
+        return jsonify({'error': 'No response from resend-sms API'}), 502
+
 
 @app.route('/appointment_stats', methods=['GET'])
 def get_appointment_stats():

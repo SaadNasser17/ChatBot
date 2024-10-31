@@ -40,6 +40,7 @@ export default function Chat() {
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [showBanner, setShowBanner] = useState(true);
   const [showResendButton, setShowResendButton] = useState(false); // New state for Resend OTP button
+  const chatBoxRef = useRef(null); 
 
   // Initialize word lists from MongoDB
   const [wordLists, setWordLists] = useState({
@@ -56,6 +57,26 @@ export default function Chat() {
     };
     fetchWordLists();
   }, []);
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    // Check if the click was outside the chat box
+    if (chatBoxRef.current && !chatBoxRef.current.contains(event.target)) {
+      setIsOpen(false); // Close the chat box
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside); // Add event listener
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside); // Cleanup on unmount
+  };
+}, []); // Run once on mount
+
+// Function to dynamically set z-index based on chat state
+const getZIndex = () => {
+  return isOpen ? 1000 : -1; // High z-index when open, low when closed
+};
 
   useEffect(() => {
     if (!initialMessageSet) {
@@ -78,9 +99,9 @@ export default function Chat() {
   }, [waitingForSmsCode]);
 
   const toggleChatBox = () => {
-    setIsOpen(!isOpen);
-    setShowBanner(false);
+    setIsOpen((prevIsOpen) => !prevIsOpen);
   };
+  
 
   const handleUserInput = async () => {
     if (userMessage.trim()) {
@@ -293,6 +314,11 @@ export default function Chat() {
         }),
       });
 
+      if (!response.ok) {
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
+        return;
+    }
+
       if (!response.ok) throw new Error("Network response was not ok.");
 
       const data = await response.json();
@@ -331,6 +357,7 @@ export default function Chat() {
         const errorData = await response.json();
         throw new Error(
           `Failed to save appointment details: ${errorData.error || "Unknown error"}`
+          
         );
       }
 
@@ -368,6 +395,7 @@ export default function Chat() {
         displayBotMessage(getMessageForLanguage(selectedLanguage, "invalid_code"));
       } else {
         displayBotMessage(getMessageForLanguage(selectedLanguage, "confirm_error"));
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
       }
     }
   };
@@ -433,15 +461,24 @@ export default function Chat() {
 
   const fetchSpecialties = () => {
     fetch("http://localhost:5000/get_specialties")
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
+          return; // To avoid further processing
+        }
+        return response.json();
+      })
       .then((data) => {
-        setSpecialties(data["hydra:member"]);
+        if (data) {
+          setSpecialties(data["hydra:member"]);
+        }
       })
       .catch((error) => {
         console.log("Error fetching specialties:", error);
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "error"));
       });
   };
-
+  
   const resetChat = () => {
     setMessages([]);
     setUserMessage("");
@@ -480,9 +517,10 @@ export default function Chat() {
       style={{
         justifyContent: "center",
         alignItems: "center",
+        zIndex: isOpen ? 1000 : 1,
       }}
     >
-      {showBanner && (
+      {showBanner && !isOpen && ( // Ensure banner only shows when chat is closed
         <div className="chat-banner slide-in-right">
           <div className="banner-content">
             <h2 style={{ textAlign: "center", fontSize: "1.1rem", padding: "5px" }}>
@@ -515,7 +553,7 @@ export default function Chat() {
           </div>
         </div>
       )}
-
+  
       {!isOpen && (
         <div className="btn-chat-container">
           <button onClick={toggleChatBox} className="btn-chat-rectangle">
@@ -526,10 +564,11 @@ export default function Chat() {
           </button>
         </div>
       )}
-
+  
       {isOpen && (
         <div
-          className="bg-light d-flex flex-column justify-content-between rounded shadow"
+          ref={chatBoxRef}
+          className="chatbot-container"
           style={{
             width: "390px",
             height: "480px",
@@ -537,13 +576,11 @@ export default function Chat() {
             bottom: "1rem",
             right: "1rem",
             transition: "all 0.3s ease-in-out",
+            zIndex: 1000,
           }}
         >
-          <ChatHeader
-            toggleChatBox={toggleChatBox}
-            resetChat={resetChat}
-          />
-
+          <ChatHeader toggleChatBox={toggleChatBox} resetChat={resetChat} />
+  
           <MessagesList
             messages={messages}
             isBotTyping={isBotTyping}
@@ -563,20 +600,21 @@ export default function Chat() {
             setAppointmentStep={setAppointmentStep}
             waitingForConfirmation={waitingForConfirmation}
             handleConfirmation={handleConfirmation}
-            smsSent={waitingForSmsCode} // Pass SMS status to MessagesList
-            appointmentRef={appointmentRef} // Pass appointment reference
+            smsSent={waitingForSmsCode}
+            appointmentRef={appointmentRef}
           />
-
-        {showResendButton && (
-          <div className="d-flex justify-content-center my-2">
-            <button
-              onClick={handleResendOtp}
-              className="btn btn-primary" // Blue button
-            >
-              {getMessageForLanguage(selectedLanguage, 'resend_otp')}
-            </button>
-          </div>
-        )}
+  
+          {showResendButton && (
+            <div className="d-flex justify-content-center my-2">
+              <button
+                onClick={handleResendOtp}
+                className="btn btn-primary"
+              >
+                {getMessageForLanguage(selectedLanguage, 'resend_otp')}
+              </button>
+            </div>
+          )}
+  
           <ChatFooter
             userMessage={userMessage}
             setUserMessage={setUserMessage}
@@ -589,4 +627,6 @@ export default function Chat() {
       )}
     </div>
   );
+  
+  
 }

@@ -6,6 +6,13 @@ const messages = {
       francais: "Bonjour, je suis NabadyBot, comment puis-je vous aider?",
       english: "Hello, I am NabadyBot, how can I assist you?",
     },
+    error: {
+      darija: "sma7 lina 3ndna mochkil ti9ni, chwiya o 3awd jereb",
+      "الدارجة": "سمح لينا عندنا مشكل تقني، شويا و عاود جرب",
+      "العربية": "المعذرة نحن نواجه مشاكل تقنية المرجو المحاولة من جديد بعد قليل",
+      francais: "Désolé, un problème technique est survenu. Veuillez réessayer dans un moment.",
+      english: "Sorry, we're facing technical issues. Please try again shortly."
+    },
     select_specialty: {
       darija: "hahoma les specialités li kaynin khtar li bghit",
       "الدارجة": "هاهوما الإختصاصات لي كينين ، ختار لي بغيتي",
@@ -96,13 +103,6 @@ const messages = {
       "العربية": "حدث خطأ، الموعد لم يتم تأكيده!",
       francais: "Une erreur est survenue, le rendez-vous n'a pas été confirmé!",
       english: "An error occurred, the appointment was not confirmed!",
-    },
-    error: {
-      darija: "An error occurred, please try again.",
-      "الدارجة": "وقع خطأ، المرجو إعادة المحاولة.",
-      "العربية": "وقع خطأ، المرجو إعادة المحاولة.",
-      francais: "Une erreur s'est produite, veuillez réessayer.",
-      english: "An error occurred, please try again.",
     },
     default: {
       darija: "Ma fhmtsh, 3afak 3awd ghi mra.",

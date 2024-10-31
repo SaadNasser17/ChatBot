@@ -49,6 +49,7 @@ function Doctor({ specialty, onSlotClick, selectedLanguage, isExtended }) {
         displayDoctors(data);
     } catch (error) {
         console.error("Error fetching doctors:", error);
+        displayBotMessage(getMessageForLanguage(selectedLanguage, "error"))
     } finally {
         setLoading(false);
     }

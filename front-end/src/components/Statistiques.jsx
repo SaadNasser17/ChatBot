@@ -13,7 +13,7 @@ const Statistiques = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetching unrecognized intents counts from API
+    // Fetching unrecognized intents counts from http://localhost:5000
     fetch('http://localhost:5000/unrecognized_intents')
       .then(response => response.json())
       .then(data => {
