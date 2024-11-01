@@ -44,8 +44,7 @@ fallback_messages = {
 
 # Define global headers for all API calls
 GLOBAL_HEADERS = {
-    "Origin": "chatbotNabady",
-      "Synchronize":"true" 
+    "Origin": "chatbotNabady"
 }
 
 # Function for making GET requests with global headers and error handling
@@ -332,7 +331,7 @@ def get_specialties():
         return jsonify({"error": "Failed to connect to specialties API"}), 502
 
 
-def fetch_doctors_from_api(query, consultation='undefined', page=1, result=5, isIframe=False, referrer=""):
+def fetch_doctors_from_api(query, consultation='undefined', page=1, result=15, isIframe=False, referrer=""):
     data = {
         "query": query,
         "consultation": consultation,
@@ -453,7 +452,7 @@ def send_appointment_to_api(appointment_details, email):
     }
 
     headers = {
-        "Origin": "nabadyChatbot",
+        "Origin": "https://preprod.nabady.ma",
         "Content-Type": "application/json"
     }
 
@@ -641,7 +640,7 @@ def confirm_appointment():
     }
 
     headers = {
-        "Origin": "nabadyChatbot",
+        "Origin": "https://preprod.nabady.ma",
         "Content-Type": "application/json"
     }
 
@@ -679,7 +678,7 @@ def resend_otp():
     }
 
     headers = {
-        "Origin": "nabadyChatbot",
+        "Origin": "https://preprod.nabady.ma",
         "Content-Type": "application/json"
     }
 

@@ -99,9 +99,13 @@ const getZIndex = () => {
   }, [waitingForSmsCode]);
 
   const toggleChatBox = () => {
-    setIsOpen((prevIsOpen) => !prevIsOpen);
+    if (!isOpen) {
+      // Chat is being opened, set banner as shown
+      localStorage.setItem("bannerShown", "true");
+      setShowBanner(false);
+    }
+    setIsOpen(!isOpen);
   };
-  
 
   const handleUserInput = async () => {
     if (userMessage.trim()) {
@@ -520,7 +524,7 @@ const getZIndex = () => {
         zIndex: isOpen ? 1000 : 1,
       }}
     >
-      {showBanner && !isOpen && ( // Ensure banner only shows when chat is closed
+ {showBanner && !isOpen && (
         <div className="chat-banner slide-in-right">
           <div className="banner-content">
             <h2 style={{ textAlign: "center", fontSize: "1.1rem", padding: "5px" }}>
@@ -553,7 +557,7 @@ const getZIndex = () => {
           </div>
         </div>
       )}
-  
+
       {!isOpen && (
         <div className="btn-chat-container">
           <button onClick={toggleChatBox} className="btn-chat-rectangle">
@@ -577,6 +581,7 @@ const getZIndex = () => {
             right: "1rem",
             transition: "all 0.3s ease-in-out",
             zIndex: 1000,
+            backgroundColor: "#ffffff", 
           }}
         >
           <ChatHeader toggleChatBox={toggleChatBox} resetChat={resetChat} />
